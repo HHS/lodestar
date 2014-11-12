@@ -15,9 +15,7 @@ var exampleQueries = [
     {
         shortname : "MeSH Linked Data Predicates",
         description: "Retrieve the list of distinct predicates in MeSH RDF",
-        query: 	"PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#>\n"+
-	        "PREFIX mesh: <http://id.nlm.nih.gov/mesh/>\n"+
-	        "SELECT DISTINCT ?p\n" +
+        query: 	"SELECT DISTINCT ?p\n" +
 				"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
 				" WHERE {\n" +
 				"  ?s ?p ?o\n" +
@@ -29,10 +27,7 @@ var exampleQueries = [
 	{
         shortname : "Ofloxacin Pharmacological Actions",
         description: "The Pharmacological Actions of Oflaxacin and their labels",
-        query: "PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#>\n"+
-	       "PREFIX mesh: <http://id.nlm.nih.gov/mesh/>\n"+
-	       "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
-	       "SELECT *\n" +
+        query:	"SELECT *\n" +
 				"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
 				"WHERE {\n" +
 				"  mesh:D015242 meshv:pharmacologicalAction ?pa .\n" +
@@ -43,10 +38,7 @@ var exampleQueries = [
 	{
         shortname : "Allowable Qualifiers",
         description: "Any MeSH descriptor that has an allowable qualifier of 'drug effects'.",
-        query: "PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#>\n"+
-	       "PREFIX mesh: <http://id.nlm.nih.gov/mesh/>\n"+
-	       "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
-	       "SELECT distinct ?d ?dLabel \n" +
+        query:	"SELECT distinct ?d ?dLabel \n" +
 				"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
 				"WHERE {\n" +
 				"  ?d meshv:allowableQualifier ?q .\n" +
@@ -59,10 +51,7 @@ var exampleQueries = [
 	{
         shortname : "String search on 'infection'",
         description: "Any MeSH term ('D' or 'M') that has 'infection' as part of its name.",
-        query: "PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#>\n"+
-	       "PREFIX mesh: <http://id.nlm.nih.gov/mesh/>\n"+
-	       "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+    
-	       "SELECT ?d ?dName ?c ?cName\n" +
+        query:	"SELECT ?d ?dName ?c ?cName\n" +
 				"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
 				"WHERE {\n" +
 				"  ?d meshv:concept ?c .\n" +
