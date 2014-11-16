@@ -1071,15 +1071,18 @@ function renderAllResourceTypes(element, exclude) {
  */
 function getIdentifier(href) {
     var match = href.match(/\?(.*)/);
+    var formMatch  = href.match(/http:\/\/[^\/]+\/[^\/]+\/([^\.]+)/);
     if (match) {
         var queryString = match[1];
         var uriMatch = queryString.match(/uri=([^&]+)/)
         if (uriMatch) {
             return uriMatch[1];
         }
+    } else if (formMatch) {
+        return lodestarDefaultUriBase + formMatch[1];
+    } else {
+        return null;
     }
-    var formMatch = href.match(/http:\/\/[^\/]+\/[^\/]+\/([^\.]+)/);
-    return formMatch ? lodestarDefaultUriBase + formMatch[1] : null;
 }
 
 function renderDepiction (element) {

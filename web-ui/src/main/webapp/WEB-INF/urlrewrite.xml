@@ -73,7 +73,10 @@
     <to>/servlet/explore?id=$1&amp;format=$2</to>
   </rule>
 
-
+  <rule>
+    <from casesensitive="true">^/vocab.*$</from>
+    <to type="redirect">http://id.nlm.nih.gov/mesh/schema.owl</to> 
+  </rule>
 
 <!--
     <rule>
