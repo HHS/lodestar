@@ -88,7 +88,7 @@ function _parseOptions(options) {
         'results_per_page' : 50,
         'inference' : true,
         'logging' : false,
-        'default_query' : "SELECT DISTINCT ?class \nFROM <http://id.nlm.nih.gov/mesh2014>\nWHERE {[] a ?class}",
+        'default_query' : "SELECT DISTINCT ?class\nFROM <http://id.nlm.nih.gov/mesh2014>\nWHERE { [] a ?class . }\n ORDER BY ?class\n",
         'void_query' : "SELECT DISTINCT ?s ?p ?o \nwhere {?s a <http://rdfs.org/ns/void#Dataset>\n OPTIONAL {?s ?p ?o} }",
         'namespaces' : {
             rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
