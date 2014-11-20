@@ -88,7 +88,7 @@ function _parseOptions(options) {
         'results_per_page' : 50,
         'inference' : true,
         'logging' : false,
-        'default_query' : "SELECT DISTINCT ?class \nFROM <http://id.nlm.nih.gov/mesh2014>\nWHERE {[] a ?class}",
+        'default_query' : "SELECT DISTINCT ?class\nFROM <http://id.nlm.nih.gov/mesh2014>\nWHERE { [] a ?class . }\nORDER BY ?class\n",
         'void_query' : "SELECT DISTINCT ?s ?p ?o \nwhere {?s a <http://rdfs.org/ns/void#Dataset>\n OPTIONAL {?s ?p ?o} }",
         'namespaces' : {
             rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
@@ -1071,15 +1071,18 @@ function renderAllResourceTypes(element, exclude) {
  */
 function getIdentifier(href) {
     var match = href.match(/\?(.*)/);
+    var formMatch  = href.match(/http:\/\/[^\/]+\/[^\/]+\/([^\.]+)/);
     if (match) {
         var queryString = match[1];
         var uriMatch = queryString.match(/uri=([^&]+)/)
         if (uriMatch) {
             return uriMatch[1];
         }
+    } else if (formMatch) {
+        return lodestarDefaultUriBase + formMatch[1];
+    } else {
+        return null;
     }
-    var formMatch = href.match(/http:\/\/[^\/]+\/[^\/]+\/([^\.]+)/);
-    return formMatch ? lodestarDefaultUriBase + formMatch[1] : null;
 }
 
 function renderDepiction (element) {

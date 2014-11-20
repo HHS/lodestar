@@ -13,6 +13,15 @@
 var exampleQueries = [
 
     {
+        shortname : "MeSH Linked Data Classes",
+        description: "Retrieve the list of distinct classes in MeSH RDF.",
+        query: 	"SELECT DISTINCT ?class\n" +
+		"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
+		"WHERE { [] a ?class . }\n"+
+		"ORDER BY ?class\n"
+    },
+
+    {
         shortname : "MeSH Linked Data Predicates",
         description: "Retrieve the list of distinct predicates in MeSH RDF.",
         query: 	"SELECT DISTINCT ?p\n" +
@@ -25,7 +34,7 @@ var exampleQueries = [
 	
     {
         shortname : "Ofloxacin Pharmacological Actions",
-        description: "The Pharmacological Actions of Oflaxacin and their labels.",
+        description: "The Pharmacological Actions of Ofloxacin and their labels.",
         query:	"SELECT * \n" +
 		"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
 		"WHERE {\n" +    		
@@ -36,7 +45,7 @@ var exampleQueries = [
 
     {
         shortname : "Allowable Qualifiers",
-        description: "Any MeSH descriptor that has an allowable qualifier of 'drug effects'.",
+        description: "Any MeSH descriptor that has an allowable qualifier of 'adverse effects'.",
         query:	"SELECT distinct ?d ?dLabel \n" +
 		"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
 		"WHERE {\n" +
