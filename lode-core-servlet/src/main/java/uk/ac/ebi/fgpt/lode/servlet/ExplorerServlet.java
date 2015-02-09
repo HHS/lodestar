@@ -80,6 +80,106 @@ public class ExplorerServlet {
 
 
 
+    @RequestMapping (produces="application/rdf+xml")
+    public @ResponseBody
+    void describeResourceAsXml (
+            @RequestParam(value = "id", required = true ) String id,
+            HttpServletResponse response) throws IOException, LodeException {
+        if (id != null && id.length() > 0) {
+            String query = "DESCRIBE <http://id.nlm.nih.gov/mesh/" + id + ">";
+            log.info("querying for graph rdf+xml");
+            response.setContentType("application/rdf+xml");
+            ServletOutputStream out = response.getOutputStream();
+            out.println();
+            out.println();
+            getSparqlService().query(query, "RDF/XML", false, out);
+            out.close();
+        }
+        else {
+	    handleBadUriException(new Exception("Malformed or empty ID request: " + id));
+        }
+    }
+
+    @RequestMapping (produces="application/rdf+n3")
+    public @ResponseBody
+    void describeResourceAsN3 (
+            @RequestParam(value = "id", required = true ) String id,
+            HttpServletResponse response) throws IOException, LodeException {
+        if (id != null && id.length() > 0) {
+            String query = "DESCRIBE <http://id.nlm.nih.gov/mesh/" + id + ">";
+            log.info("querying for graph rdf+n3");
+            response.setContentType("application/rdf+n3");
+            ServletOutputStream out = response.getOutputStream();
+            out.println();
+            out.println();
+            getSparqlService().query(query, "N3", false, out);
+            out.close();
+        }
+        else {
+            handleBadUriException(new Exception("Malformed or empty ID request: " + id));
+        }
+    }
+
+    @RequestMapping (produces="application/x-turtle")
+    public @ResponseBody
+    void describeResourceAsTurtle (
+            @RequestParam(value = "id", required = true ) String id,
+            HttpServletResponse response) throws IOException, LodeException {
+        if (id != null && id.length() > 0) {
+            String query = "DESCRIBE <http://id.nlm.nih.gov/mesh/" + id + ">";
+            log.info("querying for graph rdf+turtle");
+            response.setContentType("application/x-turtle");
+            ServletOutputStream out = response.getOutputStream();
+            out.println();
+            out.println();
+            getSparqlService().query(query, "TURTLE", false, out);
+            out.close();
+        }
+        else {
+            handleBadUriException(new Exception("Malformed or empty ID request: " + id));
+        }
+    }
+
+    @RequestMapping (produces="application/rdf+json")
+    public @ResponseBody
+    void describeResourceAsJson (
+            @RequestParam(value = "id", required = true ) String id,
+            HttpServletResponse response) throws IOException, LodeException {
+        if (id != null && id.length() > 0) {
+            String query = "DESCRIBE <http://id.nlm.nih.gov/mesh/" + id + ">";
+            log.info("querying for graph rdf+json");
+            response.setContentType("application/rdf+json");
+            ServletOutputStream out = response.getOutputStream();
+            out.println();
+            out.println();
+            getSparqlService().query(query, "JSON-LD", false, out);
+            out.close();
+        }
+        else {
+            handleBadUriException(new Exception("Malformed or empty ID request: " + id));
+        }
+    }
+
+    @RequestMapping (produces="text/plain")
+    public @ResponseBody
+    void describeResourceAsNtriples (
+            @RequestParam(value = "id", required = true ) String id,
+            HttpServletResponse response) throws IOException, LodeException {
+        if (id != null && id.length() > 0) {
+            String query = "DESCRIBE <http://id.nlm.nih.gov/mesh/" + id + ">";
+            log.info("querying for graph rdf+ntriples");
+            response.setContentType("text/plain");
+            ServletOutputStream out = response.getOutputStream();
+            out.println();
+            out.println();
+            getSparqlService().query(query, "N-TRIPLES", false, out);
+            out.close();
+        }
+        else {
+            handleBadUriException(new Exception("Malformed or empty ID request: " + id));
+        }
+    }
+
     @RequestMapping
     public @ResponseBody
     void describeResource (
@@ -95,30 +195,30 @@ public class ExplorerServlet {
         if (id != null && id.length() > 0) {
             String query = "DESCRIBE <http://id.nlm.nih.gov/mesh/" + id + ">";
 
-            String out_content_type = 
-                format.equals("rdf") || format.equals("xml") ? "application/rdf+xml" :
-                format.equals("n3")                          ? "application/rdf+n3" :
-                format.equals("json")                        ? "application/rdf+json" :
-		format.equals("ttl")                         ? "application/x-turtle" :
-		format.equals("ntriples")                    ? "text/plain" :
-                                                               "text/plain";
-            response.setContentType(out_content_type);
-
-            ServletOutputStream out = response.getOutputStream();
-            String format_spec = 
-                format.equals("rdf") || format.equals("xml") ? "RDF/XML" :
-                format.equals("n3")                          ? "N3" :
-                format.equals("json")                        ? "JSON-LD" :
-		format.equals("ttl")                         ? "TURTLE"  : 
-		format.equals("ntriples")                    ? "N-TRIPLES" :
-                                                               "N-TRIPLES" ;
-            getSparqlService().query(query, format_spec, false, out);
-            out.close();
+           if (format==null) {
+               describeResourceAsNtriples(id, response);
+           } else if (format.toLowerCase().equals("rdf") || format.toLowerCase().equals("xml") || format.toLowerCase().equals("rdf/xml")) {
+                describeResourceAsXml(id, response);
+            }
+            else if (format.toLowerCase().equals("n3")) {
+                describeResourceAsN3(id, response);
+            }
+            else if (format.toLowerCase().equals("ttl") || format.toLowerCase().equals("turtle")) {
+                describeResourceAsTurtle(id, response);
+            }
+            else if (format.toLowerCase().equals("json") || format.toLowerCase().equals("json-ld")) {
+                describeResourceAsJson(id, response);
+            }
+            else {
+                describeResourceAsNtriples(id, response);
+            } 
         }
         else {
             handleBadUriException(new Exception("Malformed or empty ID request: " + id));
         }
     }
+
+
 
 
     @RequestMapping(value = "/resourceTypes", method = RequestMethod.GET)
