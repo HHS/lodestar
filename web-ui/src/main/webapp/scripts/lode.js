@@ -1430,45 +1430,53 @@ function renderRelatedFromSubjects(element) {
     }
 }
 
+
 function renderXML(uri) {
-    var match = document.location.href.match(/\?(.*)/);
-    var queryString = match ? match[1] : '';
-
-    if (queryString.match(/uri=/)) {
-        var param = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
-        location.href = loadestarQueryService + "?query=" + encodeURIComponent("describe<" + param + ">") + "&format=RDF/XML";
+    var match_id = document.location.href.match(/\/([DQTMC][0-9]+)/);
+    var idString = match_id ? match_id[1] : '';
+    if ( idString ) {
+        location.href = loadstarExploreService + "?id=" + idString + "&format=rdf";
+    } else {
+        var match_query = document.location.href.match(/\?(.*)/);
+		var queryString = match_query ? match_query[1] : '';
+		if (queryString.match(/uri=/)) {
+            var param = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
+            location.href = loadestarQueryService + "?query=" + encodeURIComponent("describe<" + param + ">") + "&format=RDF/XML";
+        }
     }
-    else if (uri != undefined) {
-        location.href = loadestarQueryService + "?query=" + encodeURIComponent("describe<" + uri + ">") + "&format=RDF/XML";
-    }
-
 }
 
 function renderN3(uri) {
-    var match = document.location.href.match(/\?(.*)/);
-    var queryString = match ? match[1] : '';
-
-    if (queryString.match(/uri=/)) {
-        var param = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
-        location.href = loadestarQueryService + "?query=" + encodeURIComponent("describe<" + param + ">") + "&format=N3";
-    }
-    else if (uri != undefined) {
-        location.href = loadestarQueryService + "?query=" + encodeURIComponent("describe<" + uri + ">") + "&format=N3";
+    var match_id = document.location.href.match(/\/([DQTMC][0-9]+)/);
+    var idString = match_id ? match_id[1] : '';
+    if ( idString ) {
+        location.href = loadstarExploreService + "?id=" + idString + "&format=n3";
+    } else {
+        var match_query = document.location.href.match(/\?(.*)/);
+		var queryString = match_query ? match_query[1] : '';
+		if (queryString.match(/uri=/)) {
+            var param = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
+            location.href = loadestarQueryService + "?query=" + encodeURIComponent("describe<" + param + ">") + "&format=N3";
+        }
     }
 }
 
 function renderJson(uri) {
-    var match = document.location.href.match(/\?(.*)/);
-    var queryString = match ? match[1] : '';
-
-    if (queryString.match(/uri=/)) {
-        var param = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
-        location.href = loadestarQueryService + "?query=" + encodeURIComponent("describe<" + param + ">") + "&format=JSON-LD";
-    }
-    else if (uri != undefined) {
-        location.href = loadestarQueryService + "?query=" + encodeURIComponent("describe<" + uri + ">") + "&format=JSON-LD";
+    var match_id = document.location.href.match(/\/([DQTMC][0-9]+)/);
+    var idString = match_id ? match_id[1] : '';
+    if ( idString ) {
+        location.href = loadstarExploreService + "?id=" + idString + "&format=json";
+    } else {
+        var match_query = document.location.href.match(/\?(.*)/);
+		var queryString = match_query ? match_query[1] : '';
+		if (queryString.match(/uri=/)) {
+            var param = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
+            location.href = loadestarQueryService + "?query=" + encodeURIComponent("describe<" + param + ">") + "&format=JSON-LD";
+        }
     }
 }
+
+
 
 function _getPrefixes () {
     var prefixes = '';
