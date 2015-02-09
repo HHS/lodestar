@@ -53,25 +53,47 @@
   -->
   <rule>
     <condition name="Accept" type="header">text/html</condition>
-    <from casesensitive="true">^/([DQTMC][^.]*)$</from>
+    <from casesensitive="true">^/([DQMC]\d{4,})$</from>
     <to type="redirect" qsappend="false">$1.html</to>
   </rule>
 
   <rule>
-    <from casesensitive="true">^/[DQTMC].*\.html$</from>
+    <from casesensitive="true">^/[DQMC].*\.html$</from>
     <to>/explore.html</to>
   </rule>
 
   <rule>
     <condition name="Accept" type="header" operator="notequal">text/html</condition>
-    <from casesensitive="true">^/([DQTMC][^.]*)$</from>
+    <from casesensitive="true">^/([DQMC]\d{4,})$</from>
     <to>/servlet/explore?id=$1</to>
   </rule>
 
   <rule>
-    <from casesensitive="true">^/([DQTMC].*)\.(.*)$</from>
+    <from casesensitive="true">^/([DQMC]\d{4,})\.(.*)$</from>
     <to>/servlet/explore?id=$1&amp;format=$2</to>
   </rule>
+
+  <!-- 
+    to be fixed tree number
+  -->
+  <rule>
+      <condition name="Accept" type="header">text/html</condition>
+      <from casesensitive="true">^/([ABCDEFGHIJKLMNVZ]\d{2}(?:\.\d+)*)(?:\.html|\.htm)?$</from>
+      <to type="redirect">http://id.nlm.nih.gov/mesh/describe?uri=http://id.nlm.nih.gov/mesh/$1</to>
+  </rule>
+
+  <rule>
+      <condition name="Accept" type="header" operator="notequal">text/html</condition>
+      <from casesensitive="true">^/([ABCDEFGHIJKLMNVZ]\d{2}(?:\.\d+)*)$</from>
+      <to>/servlet/explore?id=$1</to>
+  </rule>
+
+  <rule>
+      <from casesensitive="true">^/([ABCDEFGHIJKLMNVZ]\d{2}(?:\.\d+)*)\.(.*)$</from>
+      <to>/servlet/explore?id=$1&amp;format=$2</to>
+  </rule>
+
+
 
   <rule>
     <from casesensitive="true">^/vocab.*$</from>
