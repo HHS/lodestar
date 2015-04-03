@@ -15,6 +15,7 @@ package uk.ac.ebi.fgpt.lode.impl;
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QuerySolutionMap;
+import com.hp.hpl.jena.query.QueryExecution;
 import org.springframework.beans.factory.annotation.Value;
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.service.JenaQueryExecutionService;
@@ -34,44 +35,44 @@ import java.sql.SQLException;
 public class JenaOracleConnectionPoolService implements JenaQueryExecutionService {
 
 
-    @Value("${lode.explorer.virtuoso.inferencerule}")
-    private String virtuosoInferenceRule;
+    @Value("${lode.explorer.oracle.inferencerule}")
+    private String inferenceRule;
 
-    @Value("${lode.explorer.virtuoso.allgraphs}")
-    private boolean virtuosoAllGraphs;
+    @Value("${lode.explorer.oracle.allgraphs}")
+    private boolean allGraphs;
 
-    @Value("${lode.explorer.virtuoso.querytimeout}")
-    private int virtuosoQueryTimeout;
+    @Value("${lode.explorer.oracle.querytimeout}")
+    private int queryTimeout;
 
 
-    public String getVirtuosoInferenceRule() {
-        return virtuosoInferenceRule;
+    public String getInferenceRule() {
+        return inferenceRule;
     }
 
-    public int getVirtuosoQueryTimeout() {
-        return virtuosoQueryTimeout;
+    public int getQueryTimeout() {
+        return queryTimeout;
     }
 
-    public void setVirtuosoInferenceRule(String virtuosoInferenceRule) {
-        this.virtuosoInferenceRule = virtuosoInferenceRule;
+    public void setInferenceRule(String inferenceRule) {
+        this.inferenceRule = inferenceRule;
     }
 
-    public boolean isVirtuosoAllGraphs() {
-        return virtuosoAllGraphs;
+    public boolean isAllGraphs() {
+        return allGraphs;
     }
 
-    public void setVirtuosoAllGraphs(boolean virtuosoAllGraphs) {
-        this.virtuosoAllGraphs = virtuosoAllGraphs;
+    public void setAllGraphs(boolean allGraphs) {
+        this.allGraphs = allGraphs;
     }
 
     private DatasourceProvider datasourceProvider;
 
-    public JenaVirtuosoConnectionPoolService(DatasourceProvider provider) {
+    public JenaOracleConnectionPoolService(DatasourceProvider provider) {
         this.datasourceProvider  = provider;
-
     }
 
     public Graph getNamedGraph(String graphName) {
+	/*
         virtuoso.jena.driver.VirtGraph set = null;
         DataSource source = null;
         try {
@@ -92,15 +93,16 @@ public class JenaOracleConnectionPoolService implements JenaQueryExecutionServic
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        throw new RuntimeException("Can't create Virtuoso graph from datasource");
+         */
+        throw new RuntimeException("Oracle graph discovery not yet implemented");
     }
 
     public Graph getDefaultGraph() {
         return getNamedGraph(null);
     }
 
-    public VirtuosoQueryExecution getQueryExecution(Graph g, Query query, boolean withInference) throws LodeException {
-
+    public QueryExecution getQueryExecution(Graph g, Query query, boolean withInference) throws LodeException {
+	/*
         VirtGraph set = (VirtGraph) g;
         set.setReadFromAllGraphs(isVirtuosoAllGraphs());
         if (withInference) {
@@ -108,19 +110,19 @@ public class JenaOracleConnectionPoolService implements JenaQueryExecutionServic
         }
 
         if (query.isDescribeType()) {
-            /** todo this is a hack to get virtuoso describe queries
+             ** todo this is a hack to get virtuoso describe queries
              *  for concise bound description of given subject (i.e., SPO + CBD of each blank node object found by SPO, recursively);
-             **/
+             **
             String squery = "DEFINE sql:describe-mode \"CBD\"\n" + query.serialize();
             return virtuoso.jena.driver.VirtuosoQueryExecutionFactory.create(squery, set);
         }
         return virtuoso.jena.driver.VirtuosoQueryExecutionFactory.create(query, set);
-
-
+         */
+        throw new RuntimeException("Oracle query execution not yet implemented");
     }
 
-    public VirtuosoQueryExecution getQueryExecution(Graph g, String query, QuerySolutionMap initialBinding, boolean withInference) throws LodeException {
-
+    public QueryExecution getQueryExecution(Graph g, String query, QuerySolutionMap initialBinding, boolean withInference) throws LodeException {
+	/*
         virtuoso.jena.driver.VirtGraph set = (VirtGraph) g;
 
         set.setReadFromAllGraphs(isVirtuosoAllGraphs());
@@ -130,6 +132,8 @@ public class JenaOracleConnectionPoolService implements JenaQueryExecutionServic
         virtuoso.jena.driver.VirtuosoQueryExecution execution = virtuoso.jena.driver.VirtuosoQueryExecutionFactory.create(query, set);
         execution.setInitialBinding(initialBinding);
         return execution;
+         */
+        throw new RuntimeException("Oracle query execution not yet implemented");
     }
 }
 

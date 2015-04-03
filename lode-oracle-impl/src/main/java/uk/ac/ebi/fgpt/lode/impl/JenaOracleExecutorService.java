@@ -2,6 +2,7 @@ package uk.ac.ebi.fgpt.lode.impl;
 
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.query.*;
+//included above - import com.hp.hpl.jena.query.QueryExecution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,8 +10,15 @@ import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.service.JenaQueryExecutionService;
 
 //import virtuoso.jena.driver.VirtGraph;
+//
+// Analogs for Oracle:
+import oracle.spatial.rdf.client.jena.GraphOracleSem;
+import oracle.spatial.rdf.client.jena.OracleNamedGraph;
+
 //import virtuoso.jena.driver.VirtuosoQueryExecution;
 //import virtuoso.jena.driver.VirtuosoQueryExecutionFactory;
+//
+// Analogs for Oracle unclear:
 
 /**
  * @author Daniel Davis
@@ -21,17 +29,20 @@ public class JenaOracleExecutorService implements JenaQueryExecutionService {
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @Value("${lode.explorer.virtuoso.user}")
-    private String virtuosoUser;
+    @Value("${lode.explorer.oracle.user}")
+    private String user;
 
-    @Value("${lode.explorer.virtuoso.password}")
-    private String virtuosoPassword;
+    @Value("${lode.explorer.oracle.password}")
+    private String password;
 
-    @Value("${lode.explorer.virtuoso.inferencerule}")
-    private String virtuosoInferenceRule;
+    @Value("${lode.explorer.oracle.database}")
+    private String database;
 
-    @Value("${lode.explorer.virtuoso.allgraphs}")
-    private boolean virtuosoAllGraphs;
+    @Value("${lode.explorer.oracle.inferencerule}")
+    private String inferenceRule;
+
+    @Value("${lode.explorer.oracle.allgraphs}")
+    private boolean allGraphs;
 
     public String getEndpointURL() {
         return endpointURL;
@@ -48,32 +59,37 @@ public class JenaOracleExecutorService implements JenaQueryExecutionService {
     @Value("${lode.sparqlendpoint.url}")
     private String endpointURL;
 
-    public String getVirtuosoUser() {
-        return virtuosoUser;
+    public String getUser() {
+        return user;
     }
 
-    public String getVirtuosoPassword() {
-        return virtuosoPassword;
+    public String getPassword() {
+        return password;
     }
 
-    public String getVirtuosoInferenceRule() {
-        return virtuosoInferenceRule;
+    public String getDatabase() {
+        return database;
     }
 
-    public void setVirtuosoInferenceRule(String virtuosoInferenceRule) {
-        this.virtuosoInferenceRule = virtuosoInferenceRule;
+    public String getInferenceRule() {
+        return inferenceRule;
     }
 
-    public boolean isVirtuosoAllGraphs() {
-        return virtuosoAllGraphs;
+    public void setInferenceRule(String inferenceRule) {
+        this.inferenceRule = inferenceRule;
     }
 
-    public void setVirtuosoAllGraphs(boolean virtuosoAllGraphs) {
-        this.virtuosoAllGraphs = virtuosoAllGraphs;
+    public boolean isAllGraphs() {
+        return allGraphs;
+    }
+
+    public void setAllGraphs(boolean allGraphs) {
+        this.allGraphs = allGraphs;
     }
 
 
     public QueryExecution getQueryExecution(Graph g, Query query, boolean withInference) throws LodeException {
+	/*
         if (isNullOrEmpty(getEndpointURL())) {
             log.error("No sparql endpoint");
             throw new LodeException("You must specify a SPARQL endpoint URL");
@@ -84,16 +100,19 @@ public class JenaOracleExecutorService implements JenaQueryExecutionService {
             set.setRuleSet(getVirtuosoInferenceRule());
         }
         if (query.isDescribeType()) {
-            /** todo this is a hack to get virtuoso describe queries
+             ** todo this is a hack to get virtuoso describe queries
              *  for concise bound description of given subject (i.e., SPO + CBD of each blank node object found by SPO, recursively);
-             **/
+             ** 
             String squery = "DEFINE sql:describe-mode \"CBD\"\n" + query.serialize();
             return virtuoso.jena.driver.VirtuosoQueryExecutionFactory.create(squery, set);
         }
         return VirtuosoQueryExecutionFactory.create(query, set);
+	 */
+        throw new RuntimeException("Oracle query execution not yet implemented");
     }
 
     public QueryExecution getQueryExecution(Graph g, String query, QuerySolutionMap initialBinding, boolean withInference) throws LodeException {
+	/*
         if (isNullOrEmpty(getEndpointURL())) {
             log.error("No sparql endpoint");
             throw new LodeException("You must specify a SPARQL endpoint URL");
@@ -106,6 +125,8 @@ public class JenaOracleExecutorService implements JenaQueryExecutionService {
         VirtuosoQueryExecution execution = VirtuosoQueryExecutionFactory.create(query, set);
         execution.setInitialBinding(initialBinding);
         return execution;
+	 */
+        throw new RuntimeException("Oracle query execution not yet implemented");
     }
 
     public static boolean isNullOrEmpty(Object o) {
@@ -116,11 +137,17 @@ public class JenaOracleExecutorService implements JenaQueryExecutionService {
     }
 
     public Graph getDefaultGraph() {
-        return new VirtGraph(getEndpointURL(), getVirtuosoUser() , getVirtuosoPassword());
+	/*
+         return new VirtGraph(getEndpointURL(), getVirtuosoUser() , getVirtuosoPassword());
+	 */
+        throw new RuntimeException("Oracle graph discovery not yet implemented");
     }
 
     public Graph getNamedGraph(String graphName) {
-        return new VirtGraph(graphName, getEndpointURL(), getVirtuosoUser() , getVirtuosoPassword());
+        /*
+	 *return new VirtGraph(graphName, getEndpointURL(), getVirtuosoUser() , getVirtuosoPassword());
+	 */
+        throw new RuntimeException("Oracle graph discovery not yet implemented");
     }
 
 }

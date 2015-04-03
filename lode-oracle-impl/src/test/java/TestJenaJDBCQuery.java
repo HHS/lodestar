@@ -10,7 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.impl.JenaExploreService;
-import uk.ac.ebi.fgpt.lode.impl.JenaVirtuosoExecutorService;
+import uk.ac.ebi.fgpt.lode.impl.JenaOracleExecutorService;
 
 
 import java.net.URI;
@@ -18,9 +18,9 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * @author Simon Jupp
- * @date 08/08/2013
- * Functional Genomics Group EMBL-EBI
+ * @author Daniel Davis
+ * @date 04/03/2015
+ * U.S. National Library of Medicine
  */
 public class TestJenaJDBCQuery {
 
@@ -71,7 +71,7 @@ public class TestJenaJDBCQuery {
     public void testQuery() {
 
         ApplicationContext context = new ClassPathXmlApplicationContext("test-explorer-config.xml");
-        JenaVirtuosoExecutorService sv = (JenaVirtuosoExecutorService) context.getBean("jenaVirtuosoExecutorService");
+        JenaOracleExecutorService sv = (JenaOracleExecutorService) context.getBean("jenaOracleExecutorService");
 
         sv.setEndpointURL("jdbc:virtuoso://orange:1114");
         QuerySolutionMap sol = new QuerySolutionMap();

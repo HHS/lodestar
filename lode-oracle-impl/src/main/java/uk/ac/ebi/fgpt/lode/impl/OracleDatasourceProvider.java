@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2013 EMBL - European Bioinformatics Institute
+ * Copyright (c) 2015 - U.S. National Library of Medicine
+ *
  * Licensed under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
@@ -34,12 +35,17 @@ public class OracleDatasourceProvider implements DatasourceProvider {
 
     private OracleDataSource datasource = null;
 
+
     public OracleDatasourceProvider() {
+	this("OracleSemDS");
+    }
+
+    public OracleDatasourceProvider(String resourceName) {
         // Get the DataSource using JNDI
-        if (source == null) {
+        if (datasource == null) {
             try {
                 Context context = (Context) (new InitialContext()).lookup("java:comp/env");
-                datasource = (OracleDataSource) context.lookup("jdbc/oracle-rdf");
+                datasource = (OracleDataSource) context.lookup(resourceName);
             }
             catch (NamingException e) {
                 throw new IllegalStateException("Oracle JNDI datasource not configured: " + e.getMessage());
