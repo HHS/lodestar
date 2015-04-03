@@ -13,7 +13,7 @@ import java.sql.SQLException;
  * U.S. National Library of Medicine
  */
 public class OracleConnectionPoolDataSourceFactory implements DatasourceProvider {
-    private final OracleConnectionPoolDataSource virtuosoSource;
+    private final OracleConnectionPoolDataSource datasource;
 
     public OracleConnectionPoolDataSourceFactory() {
         try {

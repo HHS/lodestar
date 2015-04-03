@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.lode.utils.DatasourceProvider;
 
-//import virtuoso.jdbc4.VirtuosoDataSource;
+import oracle.jdbc.pool.OracleDataSource;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -32,14 +32,14 @@ import java.sql.SQLException;
 public class OracleDatasourceProvider implements DatasourceProvider {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private OracleDataSource source = null;
+    private OracleDataSource datasource = null;
 
     public OracleDatasourceProvider() {
         // Get the DataSource using JNDI
         if (source == null) {
             try {
                 Context context = (Context) (new InitialContext()).lookup("java:comp/env");
-                virtuosoSource = (VirtuosoDataSource) context.lookup("jdbc/oraclerdf");
+                datasource = (OracleDataSource) context.lookup("jdbc/oracle-rdf");
             }
             catch (NamingException e) {
                 throw new IllegalStateException("Oracle JNDI datasource not configured: " + e.getMessage());
@@ -48,6 +48,6 @@ public class OracleDatasourceProvider implements DatasourceProvider {
     }
 
     public DataSource getDataSource() throws SQLException {
-        return source;
+        return datasource;
     }
 }

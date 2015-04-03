@@ -2,7 +2,7 @@ package uk.ac.ebi.fgpt.lode.impl;
 
 import uk.ac.ebi.fgpt.lode.utils.DatasourceProvider;
 
-//import virtuoso.jdbc4.VirtuosoDataSource;
+import oracle.jdbc.pool.OracleDataSource;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
