@@ -20,11 +20,13 @@ import org.springframework.beans.factory.annotation.Value;
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.service.JenaQueryExecutionService;
 import uk.ac.ebi.fgpt.lode.utils.DatasourceProvider;
-
-//import virtuoso.jena.driver.VirtGraph;
-//import virtuoso.jena.driver.VirtuosoQueryExecution;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
+import oracle.jdbc.pool.OracleDataSource;
+import oracle.spatial.rdf.client.jena.OraclePool;
+import oracle.spatial.rdf.client.jena.ModelOracleSem;
 import java.sql.SQLException;
 
 /**
@@ -34,27 +36,23 @@ import java.sql.SQLException;
  */
 public class JenaOracleConnectionPoolService implements JenaQueryExecutionService {
 
+    private Logger log = LoggerFactory.getLogger(getClass());
 
-    @Value("${lode.explorer.oracle.inferencerule}")
-    private String inferenceRule;
+    @Value("${lode.explorer.oracle.inference.model}")
+    private String inferenceModel;
 
     @Value("${lode.explorer.oracle.allgraphs}")
     private boolean allGraphs;
 
-    @Value("${lode.explorer.oracle.querytimeout}")
-    private int queryTimeout;
+    @Value("${lode.explorer.oracle.model")
+    private String modelName;
 
-
-    public String getInferenceRule() {
-        return inferenceRule;
+    public String getInferenceModel() {
+        return inferenceModel;
     }
 
-    public int getQueryTimeout() {
-        return queryTimeout;
-    }
-
-    public void setInferenceRule(String inferenceRule) {
-        this.inferenceRule = inferenceRule;
+    public void setInferenceModel(String inferenceModel) {
+        this.inferenceModel = inferenceModel;
     }
 
     public boolean isAllGraphs() {
@@ -65,6 +63,14 @@ public class JenaOracleConnectionPoolService implements JenaQueryExecutionServic
         this.allGraphs = allGraphs;
     }
 
+    public String getModelName() {
+        return modelName;
+    }
+
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
+    }
+
     private DatasourceProvider datasourceProvider;
 
     public JenaOracleConnectionPoolService(DatasourceProvider provider) {
@@ -72,68 +78,39 @@ public class JenaOracleConnectionPoolService implements JenaQueryExecutionServic
     }
 
     public Graph getNamedGraph(String graphName) {
-	/*
-        virtuoso.jena.driver.VirtGraph set = null;
-        DataSource source = null;
-        try {
-
-            source = datasourceProvider.getDataSource();
-            VirtGraph g;
-            if (graphName != null) {
-                g = new VirtGraph(graphName, source);
-            }
-            else {
-                g = new VirtGraph(source);
-            }
-            g.setQueryTimeout(getVirtuosoQueryTimeout());
-            g.setReadFromAllGraphs(isVirtuosoAllGraphs());
-
-            return g;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-         */
-        throw new RuntimeException("Oracle graph discovery not yet implemented");
+        throw new RuntimeException("Can't create named Oracle graph \""+graphName+"\" from datasource");
     }
 
     public Graph getDefaultGraph() {
-        return getNamedGraph(null);
+        try {
+            OracleDataSource datasource = (OracleDataSource) dataSourceProvider.getDatasource();
+            OraclePool pool = new OraclePool(datasource);
+            ModelOracleSem model = ModelOracleSem.createInstance(pool.getOracle(), modelName);
+            return model.getGraph();
+        } catch (SQLException e) {
+            log.error("Cannot create graph on model \""+modelName+"\" - "+e.getMessage(), e);
+        }
+        throw new RuntimeException("Can't create Oracle graph from datasource");
     }
 
-    public QueryExecution getQueryExecution(Graph g, Query query, boolean withInference) throws LodeException {
-	/*
-        VirtGraph set = (VirtGraph) g;
-        set.setReadFromAllGraphs(isVirtuosoAllGraphs());
+    public OracleQueryExecution getQueryExecution(Graph g, Query query, boolean withInference) throws LodeException {
+	    OracleGraphBase set = (OracleGraphBase) g;
         if (withInference) {
-            set.setRuleSet(getVirtuosoInferenceRule());
+            // TODO: set.addModelsAndEntailment ?
         }
-
-        if (query.isDescribeType()) {
-             ** todo this is a hack to get virtuoso describe queries
-             *  for concise bound description of given subject (i.e., SPO + CBD of each blank node object found by SPO, recursively);
-             **
-            String squery = "DEFINE sql:describe-mode \"CBD\"\n" + query.serialize();
-            return virtuoso.jena.driver.VirtuosoQueryExecutionFactory.create(squery, set);
-        }
-        return virtuoso.jena.driver.VirtuosoQueryExecutionFactory.create(query, set);
-         */
-        throw new RuntimeException("Oracle query execution not yet implemented");
+        OracleQueryExecution execution = OracleQueryExecutionFactory.create(query, set);
+        return execution;
     }
 
-    public QueryExecution getQueryExecution(Graph g, String query, QuerySolutionMap initialBinding, boolean withInference) throws LodeException {
-	/*
-        virtuoso.jena.driver.VirtGraph set = (VirtGraph) g;
-
-        set.setReadFromAllGraphs(isVirtuosoAllGraphs());
+    public OracleQueryExecution getQueryExecution(Graph g, String query, QuerySolutionMap initialBinding, boolean withInference) throws LodeException {
+        // missed that "query" is a string here and a Query object above...
+        OracleGraphBase set = (OracleGraphBase) g;
         if (withInference) {
-            set.setRuleSet(getVirtuosoInferenceRule());
+            // TODO: set.addModelsAndEntailment ?
         }
-        virtuoso.jena.driver.VirtuosoQueryExecution execution = virtuoso.jena.driver.VirtuosoQueryExecutionFactory.create(query, set);
+        OracleQueryExecution execution = OracleQueryExecutionFactory.create(query, set);
         execution.setInitialBinding(initialBinding);
         return execution;
-         */
-        throw new RuntimeException("Oracle query execution not yet implemented");
     }
 }
 

@@ -1,4 +1,5 @@
 import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.QuerySolutionMap;
 import com.hp.hpl.jena.query.ResultSet;
@@ -71,9 +72,10 @@ public class TestJenaJDBCQuery {
     public void testQuery() {
 
         ApplicationContext context = new ClassPathXmlApplicationContext("test-explorer-config.xml");
-        JenaOracleExecutorService sv = (JenaOracleExecutorService) context.getBean("jenaOracleExecutorService");
+        // TODO: we need to initialize the naming context from a file
+        OracleDatasourceProvider datasourceProvider = new OracleDatasourceProvider();
+        JenaOracleConnectionPoolService sv = (JenaOracleExecutorService) context.getBean("jenaOracleConnectionPoolService");
 
-        sv.setEndpointURL("jdbc:virtuoso://orange:1114");
         QuerySolutionMap sol = new QuerySolutionMap();
         sol.add("study", new ResourceImpl("http://europepmc.org/abstract/MED/2194357") );
         try {
@@ -89,8 +91,6 @@ public class TestJenaJDBCQuery {
                 }
 
             }
-
-
         } catch (LodeException e) {
             e.printStackTrace();
         }
