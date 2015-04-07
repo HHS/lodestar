@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import oracle.jdbc.pool.OracleDataSource;
 import oracle.spatial.rdf.client.jena.OraclePool;
+import oracle.spatial.rdf.client.jena.OracleGraphBase;
 import oracle.spatial.rdf.client.jena.ModelOracleSem;
 import java.sql.SQLException;
 
@@ -93,22 +94,22 @@ public class JenaOracleConnectionPoolService implements JenaQueryExecutionServic
         throw new RuntimeException("Can't create Oracle graph from datasource");
     }
 
-    public OracleQueryExecution getQueryExecution(Graph g, Query query, boolean withInference) throws LodeException {
-	    OracleGraphBase set = (OracleGraphBase) g;
-        if (withInference) {
+    public QueryExecution getQueryExecution(Graph g, Query query, boolean withInference) throws LodeException {
+        OracleGraphBase set = (OracleGraphBase) g;
+        //if (withInference) {
             // TODO: set.addModelsAndEntailment ?
-        }
-        OracleQueryExecution execution = OracleQueryExecutionFactory.create(query, set);
+        //}
+        QueryExecution execution = QueryExecutionFactory.create(query, set);
         return execution;
     }
 
-    public OracleQueryExecution getQueryExecution(Graph g, String query, QuerySolutionMap initialBinding, boolean withInference) throws LodeException {
+    public QueryExecution getQueryExecution(Graph g, String query, QuerySolutionMap initialBinding, boolean withInference) throws LodeException {
         // missed that "query" is a string here and a Query object above...
         OracleGraphBase set = (OracleGraphBase) g;
-        if (withInference) {
+        //if (withInference) {
             // TODO: set.addModelsAndEntailment ?
-        }
-        OracleQueryExecution execution = OracleQueryExecutionFactory.create(query, set);
+        //}
+        QueryExecution execution = QueryExecutionFactory.create(query, set, initialBinding);
         execution.setInitialBinding(initialBinding);
         return execution;
     }
