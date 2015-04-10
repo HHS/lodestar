@@ -11,7 +11,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.impl.JenaExploreService;
-import uk.ac.ebi.fgpt.lode.impl.JenaOracleExecutorService;
+import uk.ac.ebi.fgpt.lode.impl.JenaOracleConnectionPoolService;
+import uk.ac.ebi.fgpt.lode.impl.OracleDatasourceProvider;
 
 
 import java.net.URI;
@@ -23,7 +24,7 @@ import java.util.Iterator;
  * @date 04/03/2015
  * U.S. National Library of Medicine
  */
-public class TestJenaJDBCQuery {
+public class TestJenaOracleQuery {
 
 
 
@@ -74,7 +75,7 @@ public class TestJenaJDBCQuery {
         ApplicationContext context = new ClassPathXmlApplicationContext("test-explorer-config.xml");
         // TODO: we need to initialize the naming context from a file
         OracleDatasourceProvider datasourceProvider = new OracleDatasourceProvider();
-        JenaOracleConnectionPoolService sv = (JenaOracleExecutorService) context.getBean("jenaOracleConnectionPoolService");
+        JenaOracleConnectionPoolService sv = (JenaOracleConnectionPoolService) context.getBean("jenaOracleConnectionPoolService");
 
         QuerySolutionMap sol = new QuerySolutionMap();
         sol.add("study", new ResourceImpl("http://europepmc.org/abstract/MED/2194357") );
@@ -97,7 +98,7 @@ public class TestJenaJDBCQuery {
     }
 
     public static void main(String[] args) {
-        TestJenaJDBCQuery jdbc = new TestJenaJDBCQuery();
+        TestJenaOracleQuery jdbc = new TestJenaOracleQuery();
         jdbc.testQuery();
     }
 

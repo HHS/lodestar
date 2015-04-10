@@ -16,6 +16,7 @@ import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QuerySolutionMap;
 import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
 import org.springframework.beans.factory.annotation.Value;
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.service.JenaQueryExecutionService;
@@ -26,7 +27,7 @@ import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import oracle.jdbc.pool.OracleDataSource;
 import oracle.spatial.rdf.client.jena.OraclePool;
-import oracle.spatial.rdf.client.jena.OracleGraphBase;
+import oracle.spatial.rdf.client.jena.GraphOracleSem;
 import oracle.spatial.rdf.client.jena.ModelOracleSem;
 import java.sql.SQLException;
 
@@ -39,14 +40,13 @@ public class JenaOracleConnectionPoolService implements JenaQueryExecutionServic
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @Value("${lode.explorer.oracle.inference.model}")
     private String inferenceModel;
 
-    @Value("${lode.explorer.oracle.allgraphs}")
     private boolean allGraphs;
 
-    @Value("${lode.explorer.oracle.model")
     private String modelName;
+
+    private OraclePool oraclePool;
 
     public String getInferenceModel() {
         return inferenceModel;
@@ -72,10 +72,14 @@ public class JenaOracleConnectionPoolService implements JenaQueryExecutionServic
         this.modelName = modelName;
     }
 
-    private DatasourceProvider datasourceProvider;
-
-    public JenaOracleConnectionPoolService(DatasourceProvider provider) {
-        this.datasourceProvider  = provider;
+    public JenaOracleConnectionPoolService(DatasourceProvider provider, String modelName, String inferenceModel, String allGraphs) throws SQLException {
+        OracleDataSource datasource = (OracleDataSource) provider.getDataSource();
+	this.oraclePool = new OraclePool(datasource);
+	this.modelName = modelName;
+	this.inferenceModel = inferenceModel;
+	if (allGraphs != null) {
+	    this.allGraphs = Boolean.valueOf(allGraphs);
+	}
     }
 
     public Graph getNamedGraph(String graphName) {
@@ -84,10 +88,8 @@ public class JenaOracleConnectionPoolService implements JenaQueryExecutionServic
 
     public Graph getDefaultGraph() {
         try {
-            OracleDataSource datasource = (OracleDataSource) dataSourceProvider.getDatasource();
-            OraclePool pool = new OraclePool(datasource);
-            ModelOracleSem model = ModelOracleSem.createInstance(pool.getOracle(), modelName);
-            return model.getGraph();
+            GraphOracleSem graph = new GraphOracleSem(oraclePool.getOracle(), modelName);
+            return graph;
         } catch (SQLException e) {
             log.error("Cannot create graph on model \""+modelName+"\" - "+e.getMessage(), e);
         }
@@ -95,22 +97,22 @@ public class JenaOracleConnectionPoolService implements JenaQueryExecutionServic
     }
 
     public QueryExecution getQueryExecution(Graph g, Query query, boolean withInference) throws LodeException {
-        OracleGraphBase set = (OracleGraphBase) g;
+        GraphOracleSem graph = (GraphOracleSem) g;
+	ModelOracleSem model = new ModelOracleSem(graph);
         //if (withInference) {
             // TODO: set.addModelsAndEntailment ?
         //}
-        QueryExecution execution = QueryExecutionFactory.create(query, set);
+        QueryExecution execution = QueryExecutionFactory.create(query, model);
         return execution;
     }
 
     public QueryExecution getQueryExecution(Graph g, String query, QuerySolutionMap initialBinding, boolean withInference) throws LodeException {
-        // missed that "query" is a string here and a Query object above...
-        OracleGraphBase set = (OracleGraphBase) g;
+        GraphOracleSem graph = (GraphOracleSem) g;
+	ModelOracleSem model = new ModelOracleSem(graph);
         //if (withInference) {
             // TODO: set.addModelsAndEntailment ?
         //}
-        QueryExecution execution = QueryExecutionFactory.create(query, set, initialBinding);
-        execution.setInitialBinding(initialBinding);
+        QueryExecution execution = QueryExecutionFactory.create(query, model, initialBinding);
         return execution;
     }
 }
