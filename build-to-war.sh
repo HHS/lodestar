@@ -1,4 +1,5 @@
-#/bin/bash
+#/bin/bash 
+set -e
 if [[ -z "$MESHRDF_HOME" ]]; then 
     echo "You must first define $MESHRDF_HOME\n" 1>&2
     exit 1
