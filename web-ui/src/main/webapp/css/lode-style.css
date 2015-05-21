@@ -20,6 +20,11 @@ a.externallink {
     font-size: 0.9em;
 }
 
+#loadstar-results-table th,
+#loadstar-results-table td
+{
+    padding: 0.3em;
+}
 
 a.pag {
     color: #A67325;
