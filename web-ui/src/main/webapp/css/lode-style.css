@@ -68,6 +68,10 @@ span.pagmes {
     color: inherit;
 }
 
+#lodestar-sparql-form label {
+    margin-right: 1em;
+}
+
 .lodestar-grid12 {
     width: 49.0%;
     display: inline;
