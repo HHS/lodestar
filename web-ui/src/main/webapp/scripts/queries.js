@@ -16,7 +16,7 @@ var exampleQueries = [
         shortname : "MeSH Linked Data Classes",
         description: "Retrieve the list of distinct classes in MeSH RDF.",
         query: 	"SELECT DISTINCT ?class\n" +
-		"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
+		"FROM <http://id.nlm.nih.gov/mesh>\n" +
 		"WHERE { [] a ?class . }\n"+
 		"ORDER BY ?class\n"
     },
@@ -25,7 +25,7 @@ var exampleQueries = [
         shortname : "MeSH Linked Data Predicates",
         description: "Retrieve the list of distinct predicates in MeSH RDF.",
         query: 	"SELECT DISTINCT ?p\n" +
-		"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
+		"FROM <http://id.nlm.nih.gov/mesh>\n" +
 		"WHERE {\n" +
 		"  ?s ?p ?o .\n" +
 		"} \n"+
@@ -36,7 +36,7 @@ var exampleQueries = [
         shortname : "Ofloxacin Pharmacological Actions",
         description: "The Pharmacological Actions of Ofloxacin and their labels.",
         query:	"SELECT * \n" +
-		"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
+		"FROM <http://id.nlm.nih.gov/mesh>\n" +
 		"WHERE {\n" +    		
 		"  mesh:D015242 meshv:pharmacologicalAction ?pa .\n" +
 		"  ?pa rdfs:label ?paLabel .\n" +
@@ -47,7 +47,7 @@ var exampleQueries = [
         shortname : "Allowable Qualifiers",
         description: "Any MeSH descriptor that has an allowable qualifier of 'adverse effects'.",
         query:	"SELECT distinct ?d ?dLabel \n" +
-		"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
+		"FROM <http://id.nlm.nih.gov/mesh>\n" +
 		"WHERE {\n" +
 		"  ?d meshv:allowableQualifier ?q .\n" +
 		"  ?q rdfs:label 'adverse effects' . \n" +
@@ -60,7 +60,7 @@ var exampleQueries = [
         shortname : "String search on 'infection'",
         description: "Any MeSH term ('D' or 'M') that has 'infection' as part of its name. (inference required)",
         query:	"SELECT ?d ?dName ?c ?cName \n" +
-		"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
+		"FROM <http://id.nlm.nih.gov/mesh>\n" +
 		"WHERE {\n" +
 		"  ?d a meshv:Descriptor .\n" +
 		"  ?d meshv:concept ?c .\n" +
