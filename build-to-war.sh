@@ -11,7 +11,7 @@ which mvn >& /dev/null
 if [[ $? -ne 0 ]]; then 
     . $MESHRDF_HOME/set_env_mesh
 fi
-(cd lode-core-api; mvn install)
-(cd lode-core-servlet; mvn install)
-(cd lode-virtuoso-impl; mvn install)
-(cd web-ui; mvn package)
+(cd lode-core-api; mvn clean install)
+(cd lode-core-servlet; mvn clean install)
+(cd lode-virtuoso-impl; mvn clean install)
+(cd web-ui; mvn clean install)

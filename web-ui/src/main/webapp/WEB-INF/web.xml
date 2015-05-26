@@ -83,7 +83,7 @@
     <servlet>
         <description>Status Servlet</description>
         <servlet-name>StatusServlet</servlet-name>
-        <servlet-class>gov.nih.nlm.occs.StatusServlet</servlet-class>
+        <servlet-class>uk.ac.ebi.fgpt.lode.servlet.StatusServlet</servlet-class>
     </servlet>
 
     <!-- Point requests to /status to StatusServlet: E.S. need to know the URL (/status) and the response ("OK" if live) -->
