@@ -36,6 +36,8 @@ import org.slf4j.LoggerFactory;
  */
 public class StatusServlet extends HttpServlet {
 
+    private static final int SC_ENGINEERED_FAILCODE = 524;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private Connection getVirtuosoConnection() {
@@ -55,12 +57,32 @@ public class StatusServlet extends HttpServlet {
         return connection;
     }
 
-    private Boolean canConnectVirtuoso() {
-        Connection connection = getVirtuosoConnection();
-        if (null == connection)
+    private Boolean virtuosoHasData(Connection connection) {
+        if (null == connection) {
             return false;
-        try { connection.close(); } catch (SQLException e) { }
-        return true;
+        }
+        boolean successful = false;
+        try { 
+            Statement stmt = connection.createStatement();
+            ResultSet rset = stmt.executeQuery("SPARQL"
+                    + " PREFIX mesh: <http://id.nlm.nih.gov/mesh/>"
+                    + " PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#>"
+                    + " SELECT COUNT(?pa)"
+                    + " FROM <http://id.nlm.nih.gov/mesh>"
+                    + " WHERE { mesh:D015242 meshv:pharmacologicalAction ?pa . }");
+            if (rset.next()) {
+                Integer count = rset.getInt(1);
+                if (null != count && count == 4) {
+                    successful = true;
+                }
+            }
+            rset.close();
+            stmt.close();
+        }
+        catch (SQLException e) { 
+            log.error("SPARQL query failed", e);
+        }
+        return successful;
     }
 
     private Boolean currentlyUpdating() {
@@ -102,26 +124,44 @@ public class StatusServlet extends HttpServlet {
             status.put("tomcat", true);
 
             // Check status of Virtuoso DB server
-            if (canConnectVirtuoso()) {
-                status.put("Virtuoso", true);
+            Connection connection = getVirtuosoConnection();
+            if (null != connection) {
+                status.put("virtuoso-connect", true);
             } else {
-                status.put("virtuoso", false);
+                status.put("virtuoso-connect", false);
                 if (ok) {
                     ok = false;
-                    resp.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
-                    resp.addHeader("Retry-After", "600");
+                    resp.setStatus(SC_ENGINEERED_FAILCODE);
+                    resp.addHeader("Retry-After", "300");
                 }
+            }
+
+            // Check Virtuoso data
+            if (virtuosoHasData(connection)) {
+                status.put("virtuoso-data", true);
+            } else {
+                status.put("virtuoso-data", false);
+                if (ok) {
+                    ok = false;
+                    resp.setStatus(SC_ENGINEERED_FAILCODE);
+                    resp.addHeader("Retry-After", "300");
+                }
+            }
+
+            // close the connection
+            if (null != connection) {
+                try { connection.close(); } catch (SQLException e) { }
             }
 
             // Check whether we are currently updating
             if (!currentlyUpdating()) {
-                status.put("updating", false);
+                status.put("update-is-idle", true);
             } else {
-                status.put("Updating", true);
+                status.put("update-is-idle", false);
                 if (ok) {
                     ok = false;
-                    resp.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
-                    resp.addHeader("Retry-After", "600");
+                    resp.setStatus(SC_ENGINEERED_FAILCODE);
+                    resp.addHeader("Retry-After", "300");
                 }
             }
 
