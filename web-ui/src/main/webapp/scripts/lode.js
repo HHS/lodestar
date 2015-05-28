@@ -868,8 +868,12 @@ function setExampleQueries() {
 }
 
 function _setTextAreQuery(anchor) {
-    sparqlQueryTextArea.setValue(_getPrefixes() + "\n" + exampleQueries[anchor.id].query);
-//    $('#textarea').val (_getPrefixes() + "\n\n" + exampleQueries[anchor.id].query);
+    var q = exampleQueries[anchor.id];
+    sparqlQueryTextArea.setValue(_getPrefixes() + "\n" + q.query);
+    // Turn inferencing on if needed, but don't turn it off if it's not
+    if (q.hasOwnProperty("inferencing") && q.inferencing) {
+        $('#inference').prop('checked', true);
+    }
 }
 
 function _formatPlainLiteral (node, varName) {
