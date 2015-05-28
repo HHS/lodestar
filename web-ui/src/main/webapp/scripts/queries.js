@@ -68,7 +68,8 @@ var exampleQueries = [
 		"  ?c rdfs:label ?cName\n" +
 		"  FILTER(REGEX(?dName,'infection','i') || REGEX(?cName,'infection','i')) \n"+
 		"} \n" +
-		"ORDER BY ?d \n"
+		"ORDER BY ?d \n",
+        inferencing: true
     }
 
 ];
