@@ -50,7 +50,7 @@ var exampleQueries = [
 		"FROM <http://id.nlm.nih.gov/mesh>\n" +
 		"WHERE {\n" +
 		"  ?d meshv:allowableQualifier ?q .\n" +
-		"  ?q rdfs:label 'adverse effects' . \n" +
+		"  ?q rdfs:label 'adverse effects'@en . \n" +
 		"  ?d rdfs:label ?dLabel . \n" +
 		"} \n" +
 		"ORDER BY ?dLabel \n"
