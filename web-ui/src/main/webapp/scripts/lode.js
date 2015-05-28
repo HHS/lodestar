@@ -870,8 +870,10 @@ function setExampleQueries() {
 function _setTextAreQuery(anchor) {
     var q = exampleQueries[anchor.id];
     sparqlQueryTextArea.setValue(_getPrefixes() + "\n" + q.query);
-    var inferencing = q.hasOwnProperty("inferencing") && q.inferencing;
-    $('#inference').prop('checked', inferencing);
+    // Turn inferencing on if needed, but don't turn it off if it's not
+    if (q.hasOwnProperty("inferencing") && q.inferencing) {
+        $('#inference').prop('checked', true);
+    }
 }
 
 function _formatPlainLiteral (node, varName) {
