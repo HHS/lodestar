@@ -85,3 +85,13 @@ span.pagmes {
 
 }
 
+#error-div {
+  border: 2px solid red;
+  background-color: #FDD;
+  border-radius: 10px;
+}
+#error-div .alert {
+  color: #600;
+  font-style: italic;
+  font-size: 110%;
+}
