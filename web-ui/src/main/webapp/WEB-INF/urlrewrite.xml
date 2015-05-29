@@ -58,8 +58,19 @@
   </rule>
 
   <rule>
+    <condition name="Accept" type="header">text/html</condition>
+    <from casesensitive="true">^/\d{4,4}/([DQMC]\d{4,})$</from>
+    <to type="redirect" qsappend="false">$1.html</to>
+  </rule>
+
+  <rule>
     <from casesensitive="true">^/[DQMC].*\.html$</from>
-    <to>/explore.html</to>
+    <to>/explore.jsp</to>
+  </rule>
+
+  <rule>
+    <from casesensitive="true">^/\d{4,4}/[DQMC].*\.html$</from>
+    <to>/explore.jsp?resource_prefix=..%2F</to>
   </rule>
 
   <rule>
@@ -129,7 +140,7 @@
   <rule>
     <condition name="Accept" type="header">text/html</condition>
     <from casesensitive="true">/describe$</from>
-    <to>/explore.html</to>
+    <to>/explore.jsp</to>
   </rule>
 
 
