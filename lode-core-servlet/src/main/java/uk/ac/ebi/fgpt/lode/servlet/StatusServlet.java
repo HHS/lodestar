@@ -18,9 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.BufferedReader;
 import java.io.PrintWriter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -90,24 +87,8 @@ public class StatusServlet extends HttpServlet {
         if (null == updatesPath) {
             return false;
         }
-        Boolean updating = false;
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new FileReader(updatesPath));
-            String line = br.readLine();
-            if (line.equalsIgnoreCase("yes") || line.equalsIgnoreCase("true")) {
-                updating = true;
-            }
-        } catch (FileNotFoundException e) {
-            // this is OK - IGNORE
-        } catch (IOException e) {
-            log.error("Reading "+updatesPath, e);
-        } finally {
-            if (null != br) {
-                try { br.close(); } catch (IOException e) { }
-            }
-        }
-        return updating;
+        File updatesFile = new File(updatesPath);
+        return updatesFile.exists();
     }
     
     @Override
@@ -168,7 +149,10 @@ public class StatusServlet extends HttpServlet {
             resp.setContentType("application/json; charset=UTF-8");
             out = resp.getWriter();
             mapper = new ObjectMapper();
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
+            mapper.enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS);
             mapper.writeValue(out, status);
+            out.println();
         }
         finally {
             if (null != out) {
