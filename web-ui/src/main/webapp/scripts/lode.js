@@ -308,10 +308,10 @@ function _buildSparqlPage(element) {
 
 
     section1.append(
-        $("<p style='float: right;'></p>").append(
-            $("<label for='render'>Output: </label>"))
-            .append(
-            $("<select name='render' id='render'></select>")
+        $("<p style='float: right;'></p>")
+          .append( $("<label for='render'>Output: </label>") )
+          .append(
+              $("<select name='render' id='render'></select>")
                 .append('<option value="HTML">HTML</option>')
                 .append('<option value="XML">XML</option>')
                 .append('<option value="JSON">JSON</option>')
@@ -323,15 +323,24 @@ function _buildSparqlPage(element) {
         )
     );
 
+    var control_p = $("<p></p>");
+    section1.append(control_p);
+
     if (lodestarRdfsInference) {
-        section1.append(
-            $("<p></p>").append(
-                $("<label for='inference'>RDFS inference? </label>"))
-                .append(
-                $("<input type='checkbox' id='inference' name='inference' value='true'/>")
-            )
-        );
+        control_p
+          .append( $("<label for='inference'>RDFS inference? </label>") )
+          .append( $("<input type='checkbox' id='inference' name='inference' value='true'/>") )
+          .append("&#160;&#160;&#160;");
     }
+
+    control_p
+      .append( $("<label for='year'>Year</label>") )
+      .append(
+          $("<select name='year' id='year'></select>")
+              .append("<option value='current'>Current</option>")
+              .append("<option value='2015'>2015</option>")
+              .on("change", _fixQueryYear)
+      );
 
     section1.append(
         $("<p></p>").append(
@@ -869,9 +878,22 @@ function setExampleQueries() {
 
 }
 
+function _fixQueryYear() {
+    var year_val = $('#year').val();
+    var graph = 'http://id.nlm.nih.gov/mesh' + (year_val != 'current' ? '/' + year_val : '');
+    var prefix = 'mesh' + (year_val != 'current' ? year_val : '');
+
+    sparqlQueryTextArea.setValue(
+        sparqlQueryTextArea.getValue()
+            .replace(new RegExp("FROM\\s<http://id.nlm.nih.gov/mesh(/\\d+)?.*?>"), "FROM <" + graph + ">")
+            .replace(new RegExp("mesh(\\d+)?:(?!\\s)", "g"), prefix + ":")
+    );
+}
+
 function _setTextAreQuery(anchor) {
     var q = exampleQueries[anchor.id];
     sparqlQueryTextArea.setValue(_getPrefixes() + "\n" + q.query);
+    _fixQueryYear();
     // Turn inferencing on if needed, but don't turn it off if it's not
     if (q.hasOwnProperty("inferencing") && q.inferencing) {
         $('#inference').prop('checked', true);

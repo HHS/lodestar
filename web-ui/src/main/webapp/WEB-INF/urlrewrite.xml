@@ -48,7 +48,7 @@
   </rule>
 
   <!--
-    FIXME: I can't figure out how to do this with 303 instread of 302.  It might be
+    FIXME: I can't figure out how to do this with 303 instead of 302.  It might be
     better to do in the servlet.
   -->
   <rule>
@@ -63,11 +63,13 @@
     <to type="redirect" qsappend="false">$1.html</to>
   </rule>
 
+  <!-- mesh/D065609.html -->
   <rule>
     <from casesensitive="true">^/[DQMC].*\.html$</from>
     <to>/explore.jsp</to>
   </rule>
 
+  <!-- mesh/2015/D065609.html -->
   <rule>
     <from casesensitive="true">^/\d{4,4}/[DQMC].*\.html$</from>
     <to>/explore.jsp?resource_prefix=..%2F</to>
@@ -79,8 +81,9 @@
     <to>/servlet/explore?id=$1</to>
   </rule>
 
+  <!-- mesh/D015242.rdf, mesh/2015/D015242.n3, etc. -->
   <rule>
-    <from casesensitive="true">^/([DQMC]\d{4,})\.(.*)$</from>
+    <from casesensitive="true">^/((\d{4,4}\/)?[DQMC]\d{4,})\.(.*)$</from>
     <to>/servlet/explore?id=$1&amp;format=$2</to>
   </rule>
 
