@@ -76,7 +76,9 @@
     <script>
       $(function() {
         $(".header").load("<%= resourcePrefix %>header.html");
-        $(".navi").load("<%= resourcePrefix %>nav.html");
+        $(".navi").load('<%= resourcePrefix %>nav.jsp?resource_prefix=<%= 
+          java.net.URLEncoder.encode(resourcePrefix, "UTF-8")
+        %>');
         $(".footer").load("<%= resourcePrefix %>footer.html");
       });
     </script>
