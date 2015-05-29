@@ -94,8 +94,7 @@ function _parseOptions(options) {
         'namespaces' : {
             rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
             rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-            owl: 'http://www.w3.org/2002/07/owl#',
-            mesh: 'http://id.nlm.nih.gov/mesh/'
+            owl: 'http://www.w3.org/2002/07/owl#'
         },
         'example_queries' : [],
         'default_resource_image_url': 'images/rdf_flyer.gif',
@@ -911,13 +910,22 @@ function _formatUnbound (node, varName) {
 }
 
 function _toQName (uri) {
-    for (prefix in loadstarNamespaces) {
+    // Find the *longest* match
+    var longest_match = '';
+    var prefix_match;
+    for (var prefix in loadstarNamespaces) {
         var nsURI = loadstarNamespaces[prefix];
-        if (uri.indexOf(nsURI) == 0) {
-            return prefix + ':' + uri.substring(nsURI.length);
+        if (uri.indexOf(nsURI) == 0 && nsURI.length > longest_match.length) {
+            longest_match = nsURI;
+            prefix_match = prefix;
         }
     }
-    return null;
+    if (typeof(prefix_match) !== 'undefined') {
+        return prefix_match + ':' + uri.substring(longest_match.length);
+    }
+    else {
+        return null;
+    }
 }
 
 function _toQNameOrURI (uri) {
