@@ -33,6 +33,7 @@ var lodestarDefaultUriBase;
 var tableid = "loadstar-results-table";
 
 var lodestarNextUrl;
+var loadstarPrevLink;   // true if 'prev' should be a hyperlink
 var loadstarPrevUrl;
 
 var sparqlQueryTextArea;
@@ -88,7 +89,7 @@ function _parseOptions(options) {
         'results_per_page' : 50,
         'inference' : true,
         'logging' : false,
-        'default_query' : "SELECT DISTINCT ?class\nFROM <http://id.nlm.nih.gov/mesh2014>\nWHERE { [] a ?class . }\nORDER BY ?class\n",
+        'default_query' : "SELECT DISTINCT ?class\nFROM <http://id.nlm.nih.gov/mesh>\nWHERE { [] a ?class . }\nORDER BY ?class\n",
         'void_query' : "SELECT DISTINCT ?s ?p ?o \nwhere {?s a <http://rdfs.org/ns/void#Dataset>\n OPTIONAL {?s ?p ?o} }",
         'namespaces' : {
             rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
@@ -338,6 +339,7 @@ function _buildSparqlPage(element) {
                 .append("<option value='25' selected='selected'>25</option>")
                 .append("<option value'50'>50</option>")
                 .append("<option value'100'>100</option>")
+                .append("<option value'1000'>1000</option>")
         )
     );
 
@@ -540,18 +542,19 @@ function querySparql () {
 }
 
 function setNextPrevUrl (queryString, limit, offset, rdfs) {
+    var _offset = parseInt(offset);
+    var results_per_page = parseInt(lodestarResultsPerPage);
 
-    lodestarNextUrl = "query=" + encodeURIComponent(queryString) + "&limit=" + limit + 
-                      "&inference=" + rdfs + "&offset=" + (parseInt(offset) + parseInt(lodestarResultsPerPage));
-    if (offset >= lodestarResultsPerPage) {
-        loadstarPrevUrl = "query=" + encodeURIComponent(queryString) + "&limit=" + limit + 
-                          "&inference=" + rdfs + "&offset=" + (parseInt(offset) - parseInt(lodestarResultsPerPage));
-    }
-    else {
-        loadstarPrevUrl = "query=" + encodeURIComponent(queryString) + "&limit=" + limit + "&inference=" + rdfs + "&offset=0";
+    var qs_base = "query=" + encodeURIComponent(queryString) + "&limit=" + limit + 
+                  "&inference=" + rdfs;
+
+    lodestarNextUrl = qs_base + "&offset=" + (_offset + results_per_page);
+    loadstarPrevLink = _offset > 0;
+    if (loadstarPrevLink) {
+        var prev_offset = _offset >= results_per_page ? _offset - results_per_page : 0;
+        loadstarPrevUrl = qs_base + "&offset=" + prev_offset;
     }
 }
-
 
 function renderGraphQuery (graph, tableid) {
 
@@ -623,12 +626,16 @@ function renderGraphQuery (graph, tableid) {
 }
 
 function displayPagination()  {
-
-
-    var prevA = $('<a></a>');
-    prevA.attr('href',"?" + loadstarPrevUrl);
-    prevA.attr('class',"pag prev");
-    prevA.text("Previous")
+    var prevA;
+    if (loadstarPrevLink) {
+        prevA = $('<a></a>');
+        prevA.attr('href',"?" + loadstarPrevUrl);
+        prevA.attr('class',"pag prev");
+        prevA.text("Previous")
+    }
+    else {
+        prevA = $('<span>Previous</span>');
+    }
 
     var nextA = $('<a></a>');
     nextA.attr('href',"?" + lodestarNextUrl);
