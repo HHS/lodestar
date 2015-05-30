@@ -778,7 +778,7 @@ function _formatURI (node, varName) {
 
     if (node.value.match(/^http:\/\/id.nlm.nih.gov\//)) {
         if (node.value.match(/\/mesh\/vocab\#/)) {
-            href = lodestarDescribeUrl + "?uri=" + node.value;
+            href = lodestarDescribeUrl + "?uri=" + encodeURIComponent(node.value);
         }
         else {
             href = node.value.replace(/http:\/\/id.nlm.nih.gov/, "");            
@@ -1180,7 +1180,7 @@ function renderShortDescription (element) {
                 loading.empty();
                 var div = element;
 
-                var about = $("<h3 class='side'>" + "About:" + "</h3>");
+                var about = $("<h3 class='side'>" + "About: " + "</h3>");
                 var span2 = $("<span style='font-size:larger'></span>");
                 span2.append(_hrefBuilder(data.uri, data.displayLabel, false));
                 div.append(about);
