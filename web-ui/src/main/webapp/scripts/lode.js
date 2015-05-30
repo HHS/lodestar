@@ -28,6 +28,7 @@ var lodestarDefaultQuery;
 var lodestarVoidQuery;
 var lodestarRdfsInference;
 var lodestarDefaultResourceImg;
+var lodestarDescribeUrl;
 
 var lodestarNamespaces = {};
 var lodestarDefaultUriBase;
@@ -104,8 +105,10 @@ function _parseOptions(options) {
     }, options);
 
     lodestarResourcePrefix = _options.resource_prefix;
-    lodestarQueryService = _options.resource_prefix + _options.servlet_base + "/" + _options.query_servlet_name;
-    lodestarExploreService = _options.resource_prefix + _options.servlet_base + "/" + _options.explore_servlet_name;
+    lodestarQueryService = _options.resource_prefix + _options.servlet_base + "/" + 
+        _options.query_servlet_name;
+    lodestarExploreService = _options.resource_prefix + _options.servlet_base + "/" + 
+        _options.explore_servlet_name;
     lodestarResultsPerPage = _options.results_per_page;
     lodestarIslogging = _options.logging;
     lodestarRdfsInference = _options.inference;
@@ -114,6 +117,7 @@ function _parseOptions(options) {
     lodestarNamespaces = _options.namespaces;
     lodestarDefaultResourceImg =  _options.resource_prefix + _options.default_resource_image_url;
     lodestarDefaultUriBase = lodestarNamespaces[_options.default_id_prefix];
+    lodestarDescribeUrl = _options.resource_prefix + "describe";
 
     if (lodestarIslogging) {
         $('#lode-log').show();
@@ -603,7 +607,7 @@ function renderGraphQuery (graph, tableid) {
                         shortForm = resource;
                     }
 
-                    var internalHref = "./describe?uri=" +encodeURIComponent(resource);
+                    var internalHref = "./describe?uri=" + encodeURIComponent(resource);
 
                     var linkSpan  = $('<span/>');
                     var img = $('<img />');
@@ -773,7 +777,12 @@ function _formatURI (node, varName) {
     a.attr('class', className);
 
     if (node.value.match(/^http:\/\/id.nlm.nih.gov\//)) {
-        href = node.value.replace(/http:\/\/id.nlm.nih.gov/, "");
+        if (node.value.match(/\/mesh\/vocab\#/)) {
+            href = lodestarDescribeUrl + "?uri=" + node.value;
+        }
+        else {
+            href = node.value.replace(/http:\/\/id.nlm.nih.gov/, "");            
+        }
         a.attr('href', href);
         a.text(text);
     }
@@ -1483,7 +1492,8 @@ function renderXML(uri) {
         var queryString = match_query ? match_query[1] : '';
         if (queryString.match(/uri=/)) {
             var param = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
-            location.href = lodestarQueryService + "?query=" + encodeURIComponent("describe<" + param + ">") + "&format=RDF/XML";
+            location.href = lodestarQueryService + "?query=" + 
+                encodeURIComponent("describe<" + param + ">") + "&format=RDF/XML";
         }
     }
 }
@@ -1499,7 +1509,8 @@ function renderN3(uri) {
         var queryString = match_query ? match_query[1] : '';
         if (queryString.match(/uri=/)) {
             var param = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
-            location.href = lodestarQueryService + "?query=" + encodeURIComponent("describe<" + param + ">") + "&format=N3";
+            location.href = lodestarQueryService + "?query=" + 
+                encodeURIComponent("describe<" + param + ">") + "&format=N3";
         }
     }
 }
@@ -1515,7 +1526,8 @@ function renderJson(uri) {
         var queryString = match_query ? match_query[1] : '';
         if (queryString.match(/uri=/)) {
             var param = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
-            location.href = lodestarQueryService + "?query=" + encodeURIComponent("describe<" + param + ">") + "&format=JSON-LD";
+            location.href = lodestarQueryService + "?query=" + 
+                encodeURIComponent("describe<" + param + ">") + "&format=JSON-LD";
         }
     }
 }
