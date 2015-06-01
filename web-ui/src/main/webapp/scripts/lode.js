@@ -28,6 +28,7 @@ var lodestarDefaultQuery;
 var lodestarVoidQuery;
 var lodestarRdfsInference;
 var lodestarDefaultResourceImg;
+var lodestarDescribeUrl;
 
 var lodestarNamespaces = {};
 var lodestarDefaultUriBase;
@@ -104,8 +105,10 @@ function _parseOptions(options) {
     }, options);
 
     lodestarResourcePrefix = _options.resource_prefix;
-    lodestarQueryService = _options.resource_prefix + _options.servlet_base + "/" + _options.query_servlet_name;
-    lodestarExploreService = _options.resource_prefix + _options.servlet_base + "/" + _options.explore_servlet_name;
+    lodestarQueryService = _options.resource_prefix + _options.servlet_base + "/" + 
+        _options.query_servlet_name;
+    lodestarExploreService = _options.resource_prefix + _options.servlet_base + "/" + 
+        _options.explore_servlet_name;
     lodestarResultsPerPage = _options.results_per_page;
     lodestarIslogging = _options.logging;
     lodestarRdfsInference = _options.inference;
@@ -114,6 +117,7 @@ function _parseOptions(options) {
     lodestarNamespaces = _options.namespaces;
     lodestarDefaultResourceImg =  _options.resource_prefix + _options.default_resource_image_url;
     lodestarDefaultUriBase = lodestarNamespaces[_options.default_id_prefix];
+    lodestarDescribeUrl = _options.resource_prefix + "describe";
 
     if (lodestarIslogging) {
         $('#lode-log').show();
@@ -603,7 +607,7 @@ function renderGraphQuery (graph, tableid) {
                         shortForm = resource;
                     }
 
-                    var internalHref = "./describe?uri=" +encodeURIComponent(resource);
+                    var internalHref = "./describe?uri=" + encodeURIComponent(resource);
 
                     var linkSpan  = $('<span/>');
                     var img = $('<img />');
@@ -661,7 +665,6 @@ function displayPagination()  {
     $('#pagination').append(pagtext);
     $('#pagination').append(nextA);
     $('#pagination').show();
-
 }
 
 function renderSparqlResultJsonAsTable (json, tableid) {
@@ -678,62 +681,62 @@ function renderSparqlResultJsonAsTable (json, tableid) {
     else {
         try {
 
-      if (_json.results) {
-    if (_json.results.bindings) {
-        var _results = _json.results.bindings;
+            if (_json.results) {
+                if (_json.results.bindings) {
+                    var _results = _json.results.bindings;
+        
+                    if (_results.length ==0) {
+                        alert("No results for query")
+                    }
+                    else {
+                        var _variables = _json.head.vars;
+              
+                        var header = createTableHeader(_variables);
+              
+                        $("#" + tableid).append(header);
+              
+                        displayPagination();
+              
+                        for (var i = 0; i < _results.length; i++) {
+                            var row =$('<tr />');
+                            var binding = _results[i];
+                            for (var j = 0 ; j < _variables.length; j++) {
+                                var varName = _variables[j];
+                                var formattedNode = _formatNode(binding[varName], varName);
+                                var cell = $('<td />');
+                                cell.append (formattedNode);
+                                row.append(cell);
+                            }
+                            $("#" + tableid).append(row);
+                        }
+                    }
+                }
+                else {
+                    displayError("No result bindings");
+                }
+            }
+            else if (_json.boolean != undefined)  {
+                var header = createTableHeader(["boolean"]);
+                $("#" + tableid).append(header);
+                var row =$('<tr />');
+                var cell = $('<td />');
+                if (_json.boolean) {
+                    cell.append ("True");
+                }
+                else {
+                    cell.append ("False");
+                }
+                row.append(cell);
+                $("#" + tableid).append(row);
+            }
+            else {
+                alert("no results!")
+            }
 
-        if (_results.length ==0) {
-      alert("No results for query")
         }
-        else {
-      var _variables = _json.head.vars;
-
-      var header = createTableHeader(_variables);
-
-      $("#" + tableid).append(header);
-
-      displayPagination();
-
-      for (var i = 0; i < _results.length; i++) {
-          var row =$('<tr />');
-          var binding = _results[i];
-          for (var j = 0 ; j < _variables.length; j++) {
-        var varName = _variables[j];
-        var formattedNode = _formatNode(binding[varName], varName);
-        var cell = $('<td />');
-        cell.append (formattedNode);
-        row.append(cell);
-          }
-          $("#" + tableid).append(row);
-      }
+        catch (err) {
+            displayError("Problem rendering results: "+ err.message);
         }
-    }
-    else {
-        displayError("No result bindings");
-    }
-      }
-      else if (_json.boolean != undefined)  {
-    var header = createTableHeader(["boolean"]);
-    $("#" + tableid).append(header);
-    var row =$('<tr />');
-    var cell = $('<td />');
-    if (_json.boolean) {
-        cell.append ("True");
-    }
-    else {
-        cell.append ("False");
-    }
-    row.append(cell);
-    $("#" + tableid).append(row);
-      }
-      else {
-    alert("no results!")
-      }
-
-  }
-  catch (err) {
-      displayError("Problem rendering results: "+ err.message);
-  }
 
     }
 
@@ -774,7 +777,12 @@ function _formatURI (node, varName) {
     a.attr('class', className);
 
     if (node.value.match(/^http:\/\/id.nlm.nih.gov\//)) {
-        href = node.value.replace(/http:\/\/id.nlm.nih.gov/, "");
+        if (node.value.match(/\/mesh\/vocab\#/)) {
+            href = lodestarDescribeUrl + "?uri=" + encodeURIComponent(node.value);
+        }
+        else {
+            href = node.value.replace(/http:\/\/id.nlm.nih.gov/, "");            
+        }
         a.attr('href', href);
         a.text(text);
     }
@@ -801,24 +809,24 @@ function _formatURI (node, varName) {
 
 function _hrefBuilder(uri, label, internal) {
 
-    var internalHref = "./describe?uri=" +encodeURIComponent(uri);
+    var internalHref = "./describe?uri=" + encodeURIComponent(uri);
     var className = 'graph-link';
 
     var linkSpan  = $('<span/>');
 
     var a = $('<a />');
     if (internal) {
-        a.attr('href',internalHref);
-        a.attr('title',uri);
+        a.attr('href', internalHref);
+        a.attr('title', uri);
 
     }
     else {
-        a.attr('href',uri);
-        a.attr('title',uri);
+        a.attr('href', uri);
+        a.attr('title', uri);
         a.attr('target', 'blank');
 
     }
-    a.attr('class',className);
+    a.attr('class', className);
     a.text(label);
 
     linkSpan.append(a);
@@ -832,14 +840,13 @@ function _hrefBuilder(uri, label, internal) {
 
         var ea = $('<a />');
         ea.attr('href', uri);
-        ea.attr('title',uri);
+        ea.attr('title', uri);
         ea.attr('class', 'externallink');
         ea.attr('target', 'blank');
         ea.append(img);
         linkSpan.append(ea);
     }
     return linkSpan;
-
 }
 
 
@@ -870,12 +877,9 @@ function setExampleQueries() {
                 li.append(a);
                 li.append($('<p></p>').append(desc));
                 $('#queries_list').append(li);
-
             }
         }
-
     }
-
 }
 
 function _fixQueryYear() {
@@ -908,7 +912,7 @@ function _formatPlainLiteral (node, varName) {
     return document.createTextNode(node.value);
 }
 
-function _formatTypedLiteral (node, varName) {
+function _formatTypedLiteral(node, varName) {
     var text = '"' + node.value + '"';
     if (node.datatype) {
         text += '^^' + this._toQNameOrURI(node.datatype);
@@ -922,11 +926,11 @@ function _formatTypedLiteral (node, varName) {
     return document.createTextNode(node.value);
 }
 
-function _formatBlankNode (node, varName) {
+function _formatBlankNode(node, varName) {
     return document.createTextNode('_:' + node.value);
 }
 
-function _formatUnbound (node, varName) {
+function _formatUnbound(node, varName) {
     var span = document.createElement('span');
     span.className = 'unbound';
     span.title = 'Unbound'
@@ -934,7 +938,7 @@ function _formatUnbound (node, varName) {
     return span;
 }
 
-function _toQName (uri) {
+function _toQName(uri) {
     // Find the *longest* match
     var longest_match = '';
     var prefix_match;
@@ -953,7 +957,7 @@ function _toQName (uri) {
     }
 }
 
-function _toQNameOrURI (uri) {
+function _toQNameOrURI(uri) {
     var qName = this._toQName(uri);
     return (qName == null) ? '<' + uri + '>' : qName;
 }
@@ -1122,9 +1126,11 @@ function getIdentifier(href) {
         if (uriMatch) {
             return uriMatch[1];
         }
-    } else if (formMatch) {
+    } 
+    else if (formMatch) {
         return lodestarDefaultUriBase + formMatch[1];
-    } else {
+    } 
+    else {
         return null;
     }
 }
@@ -1174,7 +1180,7 @@ function renderShortDescription (element) {
                 loading.empty();
                 var div = element;
 
-                var about = $("<h3 class='side'>" + "About:" + "</h3>");
+                var about = $("<h3 class='side'>" + "About: " + "</h3>");
                 var span2 = $("<span style='font-size:larger'></span>");
                 span2.append(_hrefBuilder(data.uri, data.displayLabel, false));
                 div.append(about);
@@ -1480,12 +1486,14 @@ function renderXML(uri) {
     var idString = match_id ? match_id[1] : '';
     if ( idString ) {
         location.href = lodestarExploreService + "?id=" + idString + "&format=rdf";
-    } else {
+    } 
+    else {
         var match_query = document.location.href.match(/\?(.*)/);
-		var queryString = match_query ? match_query[1] : '';
-		if (queryString.match(/uri=/)) {
+        var queryString = match_query ? match_query[1] : '';
+        if (queryString.match(/uri=/)) {
             var param = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
-            location.href = lodestarQueryService + "?query=" + encodeURIComponent("describe<" + param + ">") + "&format=RDF/XML";
+            location.href = lodestarQueryService + "?query=" + 
+                encodeURIComponent("describe<" + param + ">") + "&format=RDF/XML";
         }
     }
 }
@@ -1495,12 +1503,14 @@ function renderN3(uri) {
     var idString = match_id ? match_id[1] : '';
     if ( idString ) {
         location.href = lodestarExploreService + "?id=" + idString + "&format=n3";
-    } else {
+    } 
+    else {
         var match_query = document.location.href.match(/\?(.*)/);
-		var queryString = match_query ? match_query[1] : '';
-		if (queryString.match(/uri=/)) {
+        var queryString = match_query ? match_query[1] : '';
+        if (queryString.match(/uri=/)) {
             var param = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
-            location.href = lodestarQueryService + "?query=" + encodeURIComponent("describe<" + param + ">") + "&format=N3";
+            location.href = lodestarQueryService + "?query=" + 
+                encodeURIComponent("describe<" + param + ">") + "&format=N3";
         }
     }
 }
@@ -1510,12 +1520,14 @@ function renderJson(uri) {
     var idString = match_id ? match_id[1] : '';
     if ( idString ) {
         location.href = lodestarExploreService + "?id=" + idString + "&format=json";
-    } else {
+    } 
+    else {
         var match_query = document.location.href.match(/\?(.*)/);
-		var queryString = match_query ? match_query[1] : '';
-		if (queryString.match(/uri=/)) {
+        var queryString = match_query ? match_query[1] : '';
+        if (queryString.match(/uri=/)) {
             var param = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
-            location.href = lodestarQueryService + "?query=" + encodeURIComponent("describe<" + param + ">") + "&format=JSON-LD";
+            location.href = lodestarQueryService + "?query=" + 
+                encodeURIComponent("describe<" + param + ">") + "&format=JSON-LD";
         }
     }
 }
