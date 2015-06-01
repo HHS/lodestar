@@ -146,6 +146,9 @@ public class StatusServlet extends HttpServlet {
                 }
             }
 
+            // save overall status
+            status.put("allok", ok);
+
             resp.setContentType("application/json; charset=UTF-8");
             out = resp.getWriter();
             mapper = new ObjectMapper();
