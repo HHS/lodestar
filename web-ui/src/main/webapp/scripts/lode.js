@@ -19,22 +19,24 @@
 /**
  * global variables
  */
-var loadestarQueryService;
-var loadstarExploreService;
+var lodestarResourcePrefix;
+var lodestarQueryService;
+var lodestarExploreService;
 var lodestarResultsPerPage;
 var lodestarIslogging;
 var lodestarDefaultQuery;
 var lodestarVoidQuery;
 var lodestarRdfsInference;
 var lodestarDefaultResourceImg;
+var lodestarDescribeUrl;
 
-var loadstarNamespaces = {};
+var lodestarNamespaces = {};
 var lodestarDefaultUriBase;
-var tableid = "loadstar-results-table";
+var tableid = "lodestar-results-table";
 
 var lodestarNextUrl;
-var loadstarPrevLink;   // true if 'prev' should be a hyperlink
-var loadstarPrevUrl;
+var lodestarPrevLink;   // true if 'prev' should be a hyperlink
+var lodestarPrevUrl;
 
 var sparqlQueryTextArea;
 
@@ -83,6 +85,7 @@ var sparqlQueryTextArea;
 function _parseOptions(options) {
 
     var _options = $.extend({
+        'resource_prefix': '',
         'servlet_base': 'servlet',
         'query_servlet_name': 'query',
         'explore_servlet_name': 'explore',
@@ -94,24 +97,27 @@ function _parseOptions(options) {
         'namespaces' : {
             rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
             rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-            owl: 'http://www.w3.org/2002/07/owl#',
-            mesh: 'http://id.nlm.nih.gov/mesh/'
+            owl: 'http://www.w3.org/2002/07/owl#'
         },
         'example_queries' : [],
         'default_resource_image_url': 'images/rdf_flyer.gif',
         'default_id_prefix': 'mesh'
     }, options);
 
-    loadestarQueryService = _options.servlet_base + "/" + _options.query_servlet_name;
-    loadstarExploreService = _options.servlet_base + "/" + _options.explore_servlet_name;
+    lodestarResourcePrefix = _options.resource_prefix;
+    lodestarQueryService = _options.resource_prefix + _options.servlet_base + "/" + 
+        _options.query_servlet_name;
+    lodestarExploreService = _options.resource_prefix + _options.servlet_base + "/" + 
+        _options.explore_servlet_name;
     lodestarResultsPerPage = _options.results_per_page;
     lodestarIslogging = _options.logging;
     lodestarRdfsInference = _options.inference;
     lodestarDefaultQuery = _options.default_query;
     lodestarVoidQuery = _options.void_query;
-    loadstarNamespaces = _options.namespaces;
-    lodestarDefaultResourceImg =  _options.default_resource_image_url;
-    lodestarDefaultUriBase = loadstarNamespaces[_options.default_id_prefix];
+    lodestarNamespaces = _options.namespaces;
+    lodestarDefaultResourceImg =  _options.resource_prefix + _options.default_resource_image_url;
+    lodestarDefaultUriBase = lodestarNamespaces[_options.default_id_prefix];
+    lodestarDescribeUrl = _options.resource_prefix + "describe";
 
     if (lodestarIslogging) {
         $('#lode-log').show();
@@ -139,7 +145,7 @@ function _buildVoid(element) {
 
     $.ajax ( {
         type: 'GET',
-        url: loadestarQueryService + "?query=" + encodeURIComponent(voidSparql),
+        url: lodestarQueryService + "?query=" + encodeURIComponent(voidSparql),
         headers: {
             Accept: "application/sparql-results+json"
         },
@@ -248,7 +254,7 @@ function _buildExplorerPage(element) {
     $("#" + id).append('<hr/>')
     var downloadsSpan  = $("<span style='padding-left: 5px;'/>");
     var xmlimg = $('<img />');
-    xmlimg.attr('src', 'images/file_RDF_XML_small.gif');
+    xmlimg.attr('src', lodestarResourcePrefix + 'images/file_RDF_XML_small.gif');
     xmlimg.attr('alt', 'RDF/XML');
     xmlimg.attr('title', 'Show RDF/XML for this resource');
     xmlimg.attr('style','cursor:pointer')
@@ -257,7 +263,7 @@ function _buildExplorerPage(element) {
     });
 
     var n3img = $('<img />');
-    n3img.attr('src', 'images/file_RDF_N3_small.gif');
+    n3img.attr('src', lodestarResourcePrefix + 'images/file_RDF_N3_small.gif');
     n3img.attr('alt', 'RDF/N3');
     n3img.attr('title', 'Show RDF/N3 for this resource');
     n3img.attr('style','cursor:pointer')
@@ -266,7 +272,7 @@ function _buildExplorerPage(element) {
     });
 
     var jsonimg = $('<img />');
-    jsonimg.attr('src', 'images/file_RDF_JSONLD_small.jpg');
+    jsonimg.attr('src', lodestarResourcePrefix + 'images/file_RDF_JSONLD_small.jpg');
     jsonimg.attr('alt', 'RDF/JSON');
     jsonimg.attr('title', 'Show RDF/JSON for this resource');
     jsonimg.attr('style','cursor:pointer')
@@ -306,10 +312,10 @@ function _buildSparqlPage(element) {
 
 
     section1.append(
-        $("<p style='float: right;'></p>").append(
-            $("<label for='render'>Output: </label>"))
-            .append(
-            $("<select name='render' id='render'></select>")
+        $("<p style='float: right;'></p>")
+          .append( $("<label for='render'>Output: </label>") )
+          .append(
+              $("<select name='render' id='render'></select>")
                 .append('<option value="HTML">HTML</option>')
                 .append('<option value="XML">XML</option>')
                 .append('<option value="JSON">JSON</option>')
@@ -321,15 +327,24 @@ function _buildSparqlPage(element) {
         )
     );
 
+    var control_p = $("<p></p>");
+    section1.append(control_p);
+
     if (lodestarRdfsInference) {
-        section1.append(
-            $("<p></p>").append(
-                $("<label for='inference'>RDFS inference? </label>"))
-                .append(
-                $("<input type='checkbox' id='inference' name='inference' value='true'/>")
-            )
-        );
+        control_p
+          .append( $("<label for='inference'>RDFS inference? </label>") )
+          .append( $("<input type='checkbox' id='inference' name='inference' value='true'/>") )
+          .append("&#160;&#160;&#160;");
     }
+
+    control_p
+      .append( $("<label for='year'>Year</label>") )
+      .append(
+          $("<select name='year' id='year'></select>")
+              .append("<option value='current'>Current</option>")
+              .append("<option value='2015'>2015</option>")
+              .on("change", _fixQueryYear)
+      );
 
     section1.append(
         $("<p></p>").append(
@@ -357,7 +372,7 @@ function _buildSparqlPage(element) {
     );
 
     section1.append("<div id='query-executing-spinner'>" +
-        "Executing query...&nbsp;<img src='images/loadingAnimation.gif'>" +
+        "Executing query...&nbsp;<img src='" + lodestarResourcePrefix + "images/loadingAnimation.gif'>" +
         "</div>");
 
     section2.append(
@@ -370,12 +385,12 @@ function _buildSparqlPage(element) {
 
     element.append(sparqlForm);
 
-    var resultsSection = $("<section id='loadstar-results-section' styname='results'></section>");
+    var resultsSection = $("<section id='lodestar-results-section' styname='results'></section>");
 
     resultsSection.append ("<div id='pagination' class='pagination-banner'></div>");
 
     resultsSection.append ("<div style='padding: 5px; width:99%;overflow: scroll;'>" +
-        "<table id='loadstar-results-table' class='table table-bordered table-hover'></tabel>" +
+        "<table id='lodestar-results-table' class='table table-bordered table-hover'></tabel>" +
         "</div>");
 
     console.info("calling element.append(resultsSection);");
@@ -476,13 +491,13 @@ function querySparql () {
                 };
             }
             else if (rendering.match(/RDF/)) {
-                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=RDF/XML";
+                location.href = lodestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=RDF/XML";
             }
             else if (rendering.match(/JSON-LD/)) {
-                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=JSON-LD";
+                location.href = lodestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=JSON-LD";
             }
             else if (rendering.match(/N3/)) {
-                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=N3";
+                location.href = lodestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=N3";
             }
             else  {
                 displayError("You can only render graph queries in either HTML, RDF/XML, RDF/JSON or RDF/N3 format")
@@ -502,19 +517,19 @@ function querySparql () {
                 };
             }
             else if (rendering.match(/^XML/)) {
-                location.href = loadestarQueryService + "?query=" + 
+                location.href = lodestarQueryService + "?query=" + 
                   encodeURIComponent(querytext) + "&format=XML&limit=" + limit + "&offset=" + offset + "&inference=" + rdfs;
             }
             else if (rendering.match(/JSON$/)) {
-                location.href = loadestarQueryService + "?query=" + 
+                location.href = lodestarQueryService + "?query=" + 
                   encodeURIComponent(querytext) + "&format=JSON&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs;
             }
             else if (rendering.match(/CSV/)) {
-                location.href = loadestarQueryService + "?query=" + 
+                location.href = lodestarQueryService + "?query=" + 
                   encodeURIComponent(querytext) + "&format=CSV&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs;
             }
             else if (rendering.match(/TSV/)) {
-                location.href = loadestarQueryService + "?query=" + 
+                location.href = lodestarQueryService + "?query=" + 
                   encodeURIComponent(querytext) + "&format=TSV&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs;
             }
             else  {
@@ -529,7 +544,7 @@ function querySparql () {
     setNextPrevUrl(querytext, limit, offset, rdfs);
     $.ajax ( {
         type: 'GET',
-        url: loadestarQueryService + "?" + queryString,
+        url: lodestarQueryService + "?" + queryString,
         headers: {
             Accept: requestHeader
         },
@@ -549,10 +564,10 @@ function setNextPrevUrl (queryString, limit, offset, rdfs) {
                   "&inference=" + rdfs;
 
     lodestarNextUrl = qs_base + "&offset=" + (_offset + results_per_page);
-    loadstarPrevLink = _offset > 0;
-    if (loadstarPrevLink) {
+    lodestarPrevLink = _offset > 0;
+    if (lodestarPrevLink) {
         var prev_offset = _offset >= results_per_page ? _offset - results_per_page : 0;
-        loadstarPrevUrl = qs_base + "&offset=" + prev_offset;
+        lodestarPrevUrl = qs_base + "&offset=" + prev_offset;
     }
 }
 
@@ -592,11 +607,11 @@ function renderGraphQuery (graph, tableid) {
                         shortForm = resource;
                     }
 
-                    var internalHref = "./describe?uri=" +encodeURIComponent(resource);
+                    var internalHref = "./describe?uri=" + encodeURIComponent(resource);
 
                     var linkSpan  = $('<span/>');
                     var img = $('<img />');
-                    img.attr('src', 'images/external_link.png');
+                    img.attr('src', lodestarResourcePrefix + 'images/external_link.png');
                     img.attr('alt', '^');
                     img.attr('title', 'Resolve URI on the web');
 
@@ -627,9 +642,9 @@ function renderGraphQuery (graph, tableid) {
 
 function displayPagination()  {
     var prevA;
-    if (loadstarPrevLink) {
+    if (lodestarPrevLink) {
         prevA = $('<a></a>');
-        prevA.attr('href',"?" + loadstarPrevUrl);
+        prevA.attr('href',"?" + lodestarPrevUrl);
         prevA.attr('class',"pag prev");
         prevA.text("Previous")
     }
@@ -650,7 +665,6 @@ function displayPagination()  {
     $('#pagination').append(pagtext);
     $('#pagination').append(nextA);
     $('#pagination').show();
-
 }
 
 function renderSparqlResultJsonAsTable (json, tableid) {
@@ -667,62 +681,62 @@ function renderSparqlResultJsonAsTable (json, tableid) {
     else {
         try {
 
-      if (_json.results) {
-    if (_json.results.bindings) {
-        var _results = _json.results.bindings;
+            if (_json.results) {
+                if (_json.results.bindings) {
+                    var _results = _json.results.bindings;
+        
+                    if (_results.length ==0) {
+                        alert("No results for query")
+                    }
+                    else {
+                        var _variables = _json.head.vars;
+              
+                        var header = createTableHeader(_variables);
+              
+                        $("#" + tableid).append(header);
+              
+                        displayPagination();
+              
+                        for (var i = 0; i < _results.length; i++) {
+                            var row =$('<tr />');
+                            var binding = _results[i];
+                            for (var j = 0 ; j < _variables.length; j++) {
+                                var varName = _variables[j];
+                                var formattedNode = _formatNode(binding[varName], varName);
+                                var cell = $('<td />');
+                                cell.append (formattedNode);
+                                row.append(cell);
+                            }
+                            $("#" + tableid).append(row);
+                        }
+                    }
+                }
+                else {
+                    displayError("No result bindings");
+                }
+            }
+            else if (_json.boolean != undefined)  {
+                var header = createTableHeader(["boolean"]);
+                $("#" + tableid).append(header);
+                var row =$('<tr />');
+                var cell = $('<td />');
+                if (_json.boolean) {
+                    cell.append ("True");
+                }
+                else {
+                    cell.append ("False");
+                }
+                row.append(cell);
+                $("#" + tableid).append(row);
+            }
+            else {
+                alert("no results!")
+            }
 
-        if (_results.length ==0) {
-      alert("No results for query")
         }
-        else {
-      var _variables = _json.head.vars;
-
-      var header = createTableHeader(_variables);
-
-      $("#" + tableid).append(header);
-
-      displayPagination();
-
-      for (var i = 0; i < _results.length; i++) {
-          var row =$('<tr />');
-          var binding = _results[i];
-          for (var j = 0 ; j < _variables.length; j++) {
-        var varName = _variables[j];
-        var formattedNode = _formatNode(binding[varName], varName);
-        var cell = $('<td />');
-        cell.append (formattedNode);
-        row.append(cell);
-          }
-          $("#" + tableid).append(row);
-      }
+        catch (err) {
+            displayError("Problem rendering results: "+ err.message);
         }
-    }
-    else {
-        displayError("No result bindings");
-    }
-      }
-      else if (_json.boolean != undefined)  {
-    var header = createTableHeader(["boolean"]);
-    $("#" + tableid).append(header);
-    var row =$('<tr />');
-    var cell = $('<td />');
-    if (_json.boolean) {
-        cell.append ("True");
-    }
-    else {
-        cell.append ("False");
-    }
-    row.append(cell);
-    $("#" + tableid).append(row);
-      }
-      else {
-    alert("no results!")
-      }
-
-  }
-  catch (err) {
-      displayError("Problem rendering results: "+ err.message);
-  }
 
     }
 
@@ -763,14 +777,19 @@ function _formatURI (node, varName) {
     a.attr('class', className);
 
     if (node.value.match(/^http:\/\/id.nlm.nih.gov\//)) {
-        href = node.value.replace(/http:\/\/id.nlm.nih.gov/, "");
+        if (node.value.match(/\/mesh\/vocab\#/)) {
+            href = lodestarDescribeUrl + "?uri=" + encodeURIComponent(node.value);
+        }
+        else {
+            href = node.value.replace(/http:\/\/id.nlm.nih.gov/, "");            
+        }
         a.attr('href', href);
         a.text(text);
     }
 
     else if (node.value.match(/^(https?|ftp|mailto|irc|gopher|news):/)) {
         var img = $('<img />');
-        img.attr('src', 'images/external_link.png');
+        img.attr('src', lodestarResourcePrefix + 'images/external_link.png');
         img.attr('alt', '^');
         img.attr('title', 'Resolve URI on the web');
 
@@ -790,24 +809,24 @@ function _formatURI (node, varName) {
 
 function _hrefBuilder(uri, label, internal) {
 
-    var internalHref = "./describe?uri=" +encodeURIComponent(uri);
+    var internalHref = "./describe?uri=" + encodeURIComponent(uri);
     var className = 'graph-link';
 
     var linkSpan  = $('<span/>');
 
     var a = $('<a />');
     if (internal) {
-        a.attr('href',internalHref);
-        a.attr('title',uri);
+        a.attr('href', internalHref);
+        a.attr('title', uri);
 
     }
     else {
-        a.attr('href',uri);
-        a.attr('title',uri);
+        a.attr('href', uri);
+        a.attr('title', uri);
         a.attr('target', 'blank');
 
     }
-    a.attr('class',className);
+    a.attr('class', className);
     a.text(label);
 
     linkSpan.append(a);
@@ -815,20 +834,19 @@ function _hrefBuilder(uri, label, internal) {
     if (!internal) {
         linkSpan.append('&nbsp;');
         var img = $('<img />');
-        img.attr('src', 'images/external_link.png');
+        img.attr('src', lodestarResourcePrefix + 'images/external_link.png');
         img.attr('alt', '^');
         img.attr('title', 'Resolve URI on the web');
 
         var ea = $('<a />');
         ea.attr('href', uri);
-        ea.attr('title',uri);
+        ea.attr('title', uri);
         ea.attr('class', 'externallink');
         ea.attr('target', 'blank');
         ea.append(img);
         linkSpan.append(ea);
     }
     return linkSpan;
-
 }
 
 
@@ -859,17 +877,31 @@ function setExampleQueries() {
                 li.append(a);
                 li.append($('<p></p>').append(desc));
                 $('#queries_list').append(li);
-
             }
         }
-
     }
+}
 
+function _fixQueryYear() {
+    var year_val = $('#year').val();
+    var graph = 'http://id.nlm.nih.gov/mesh' + (year_val != 'current' ? '/' + year_val : '');
+    var prefix = 'mesh' + (year_val != 'current' ? year_val : '');
+
+    sparqlQueryTextArea.setValue(
+        sparqlQueryTextArea.getValue()
+            .replace(new RegExp("FROM\\s<http://id.nlm.nih.gov/mesh(/\\d+)?.*?>"), "FROM <" + graph + ">")
+            .replace(new RegExp("mesh(\\d+)?:(?!\\s)", "g"), prefix + ":")
+    );
 }
 
 function _setTextAreQuery(anchor) {
-    sparqlQueryTextArea.setValue(_getPrefixes() + "\n" + exampleQueries[anchor.id].query);
-//    $('#textarea').val (_getPrefixes() + "\n\n" + exampleQueries[anchor.id].query);
+    var q = exampleQueries[anchor.id];
+    sparqlQueryTextArea.setValue(_getPrefixes() + "\n" + q.query);
+    _fixQueryYear();
+    // Turn inferencing on if needed, but don't turn it off if it's not
+    if (q.hasOwnProperty("inferencing") && q.inferencing) {
+        $('#inference').prop('checked', true);
+    }
 }
 
 function _formatPlainLiteral (node, varName) {
@@ -880,7 +912,7 @@ function _formatPlainLiteral (node, varName) {
     return document.createTextNode(node.value);
 }
 
-function _formatTypedLiteral (node, varName) {
+function _formatTypedLiteral(node, varName) {
     var text = '"' + node.value + '"';
     if (node.datatype) {
         text += '^^' + this._toQNameOrURI(node.datatype);
@@ -894,11 +926,11 @@ function _formatTypedLiteral (node, varName) {
     return document.createTextNode(node.value);
 }
 
-function _formatBlankNode (node, varName) {
+function _formatBlankNode(node, varName) {
     return document.createTextNode('_:' + node.value);
 }
 
-function _formatUnbound (node, varName) {
+function _formatUnbound(node, varName) {
     var span = document.createElement('span');
     span.className = 'unbound';
     span.title = 'Unbound'
@@ -906,17 +938,26 @@ function _formatUnbound (node, varName) {
     return span;
 }
 
-function _toQName (uri) {
-    for (prefix in loadstarNamespaces) {
-        var nsURI = loadstarNamespaces[prefix];
-        if (uri.indexOf(nsURI) == 0) {
-            return prefix + ':' + uri.substring(nsURI.length);
+function _toQName(uri) {
+    // Find the *longest* match
+    var longest_match = '';
+    var prefix_match;
+    for (var prefix in lodestarNamespaces) {
+        var nsURI = lodestarNamespaces[prefix];
+        if (uri.indexOf(nsURI) == 0 && nsURI.length > longest_match.length) {
+            longest_match = nsURI;
+            prefix_match = prefix;
         }
     }
-    return null;
+    if (typeof(prefix_match) !== 'undefined') {
+        return prefix_match + ':' + uri.substring(longest_match.length);
+    }
+    else {
+        return null;
+    }
 }
 
-function _toQNameOrURI (uri) {
+function _toQNameOrURI(uri) {
     var qName = this._toQName(uri);
     return (qName == null) ? '<' + uri + '>' : qName;
 }
@@ -956,14 +997,14 @@ function renderResourceTypes(element) {
         //var query = _getPrefixes() + uri;
 
         var loadingimg = $('<img />');
-        loadingimg.attr('src', 'images/ajax-loader.gif');
+        loadingimg.attr('src', lodestarResourcePrefix + 'images/ajax-loader.gif');
         loadingimg.attr('alt', '.');
         var loading = $('<p>Fetching resource type data...</p>').append(loadingimg);
         element.append(loading);
 
         $.ajax ( {
             type: 'GET',
-            url: loadstarExploreService + "/resourceTypes?uri=" + identifier,
+            url: lodestarExploreService + "/resourceTypes?uri=" + identifier,
             success: function (data){
 
                 loading.empty();
@@ -1024,14 +1065,14 @@ function renderAllResourceTypes(element, exclude) {
     if (queryString.match(/uri=/)) {
 
         var loadingimg = $('<img />');
-        loadingimg.attr('src', 'images/ajax-loader.gif');
+        loadingimg.attr('src', lodestarResourcePrefix + 'images/ajax-loader.gif');
         loadingimg.attr('alt', '.');
         var loading = $('<p>Fetching more resource type data...</p>').append(loadingimg);
         element.append(loading);
 
         $.ajax ( {
             type: 'GET',
-            url: loadstarExploreService + "/resourceAllTypes?" + queryString,
+            url: lodestarExploreService + "/resourceAllTypes?" + queryString,
             success: function (data){
 
                 var div = element;
@@ -1085,9 +1126,11 @@ function getIdentifier(href) {
         if (uriMatch) {
             return uriMatch[1];
         }
-    } else if (formMatch) {
+    } 
+    else if (formMatch) {
         return lodestarDefaultUriBase + formMatch[1];
-    } else {
+    } 
+    else {
         return null;
     }
 }
@@ -1098,7 +1141,7 @@ function renderDepiction (element) {
     if (identifier) {
         $.ajax ( {
             type: 'GET',
-            url: loadstarExploreService + "/resourceDepictions?uri=" + identifier,
+            url: lodestarExploreService + "/resourceDepictions?uri=" + identifier,
             success: function (data){
 
                 var imgurl = lodestarDefaultResourceImg;
@@ -1125,19 +1168,19 @@ function renderShortDescription (element) {
         //uri = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
 
         var loadingimg = $('<img />');
-        loadingimg.attr('src', 'images/ajax-loader.gif');
+        loadingimg.attr('src', lodestarResourcePrefix + 'images/ajax-loader.gif');
         loadingimg.attr('alt', '.');
         var loading = $('<p>Fetching data...</p>').append(loadingimg);
         element.append(loading);
 
         $.ajax ( {
             type: 'GET',
-            url: loadstarExploreService + "/resourceShortDescription?uri=" + identifier,
+            url: lodestarExploreService + "/resourceShortDescription?uri=" + identifier,
             success: function (data){
                 loading.empty();
                 var div = element;
 
-                var about = $("<h3 class='side'>" + "About:" + "</h3>");
+                var about = $("<h3 class='side'>" + "About: " + "</h3>");
                 var span2 = $("<span style='font-size:larger'></span>");
                 span2.append(_hrefBuilder(data.uri, data.displayLabel, false));
                 div.append(about);
@@ -1187,7 +1230,7 @@ function renderTopRelatedObjects(p) {
 
         $.ajax ( {
             type: 'GET',
-            url: loadstarExploreService + "/resourceTopObjects?uri=" + identifier,
+            url: lodestarExploreService + "/resourceTopObjects?uri=" + identifier,
             success: function (data){
 
 //                var p = $("<p></p>");
@@ -1234,14 +1277,14 @@ function renderRelatedToObjects(element) {
         //uri = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
 
         var loadingimg = $('<img />');
-        loadingimg.attr('src', 'images/ajax-loader.gif');
+        loadingimg.attr('src', lodestarResourcePrefix + 'images/ajax-loader.gif');
         loadingimg.attr('alt', '.');
         var loading = $('<p>Fetching related to data...</p>').append(loadingimg);
         element.append(loading);
 
         $.ajax ( {
             type: 'GET',
-            url: loadstarExploreService + "/relatedToObjects?uri=" + identifier,
+            url: lodestarExploreService + "/relatedToObjects?uri=" + identifier,
             success: function (data){
 
                 loading.empty();
@@ -1340,14 +1383,14 @@ function renderRelatedFromSubjects(element) {
         //uri = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
 
         var loadingimg = $('<img />');
-        loadingimg.attr('src', 'images/ajax-loader.gif');
+        loadingimg.attr('src', lodestarResourcePrefix + 'images/ajax-loader.gif');
         loadingimg.attr('alt', '.');
         var loading = $('<p>Fetching related from data...</p>').append(loadingimg);
         element.append(loading);
 
         $.ajax ( {
             type: 'GET',
-            url: loadstarExploreService + "/relatedFromSubjects?uri=" + identifier,
+            url: lodestarExploreService + "/relatedFromSubjects?uri=" + identifier,
             success: function (data){
 
                 loading.empty();
@@ -1442,13 +1485,15 @@ function renderXML(uri) {
     var match_id = document.location.href.match(/\/([DQTMC][0-9]+)/);
     var idString = match_id ? match_id[1] : '';
     if ( idString ) {
-        location.href = loadstarExploreService + "?id=" + idString + "&format=rdf";
-    } else {
+        location.href = lodestarExploreService + "?id=" + idString + "&format=rdf";
+    } 
+    else {
         var match_query = document.location.href.match(/\?(.*)/);
-		var queryString = match_query ? match_query[1] : '';
-		if (queryString.match(/uri=/)) {
+        var queryString = match_query ? match_query[1] : '';
+        if (queryString.match(/uri=/)) {
             var param = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
-            location.href = loadestarQueryService + "?query=" + encodeURIComponent("describe<" + param + ">") + "&format=RDF/XML";
+            location.href = lodestarQueryService + "?query=" + 
+                encodeURIComponent("describe<" + param + ">") + "&format=RDF/XML";
         }
     }
 }
@@ -1457,13 +1502,15 @@ function renderN3(uri) {
     var match_id = document.location.href.match(/\/([DQTMC][0-9]+)/);
     var idString = match_id ? match_id[1] : '';
     if ( idString ) {
-        location.href = loadstarExploreService + "?id=" + idString + "&format=n3";
-    } else {
+        location.href = lodestarExploreService + "?id=" + idString + "&format=n3";
+    } 
+    else {
         var match_query = document.location.href.match(/\?(.*)/);
-		var queryString = match_query ? match_query[1] : '';
-		if (queryString.match(/uri=/)) {
+        var queryString = match_query ? match_query[1] : '';
+        if (queryString.match(/uri=/)) {
             var param = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
-            location.href = loadestarQueryService + "?query=" + encodeURIComponent("describe<" + param + ">") + "&format=N3";
+            location.href = lodestarQueryService + "?query=" + 
+                encodeURIComponent("describe<" + param + ">") + "&format=N3";
         }
     }
 }
@@ -1472,13 +1519,15 @@ function renderJson(uri) {
     var match_id = document.location.href.match(/\/([DQTMC][0-9]+)/);
     var idString = match_id ? match_id[1] : '';
     if ( idString ) {
-        location.href = loadstarExploreService + "?id=" + idString + "&format=json";
-    } else {
+        location.href = lodestarExploreService + "?id=" + idString + "&format=json";
+    } 
+    else {
         var match_query = document.location.href.match(/\?(.*)/);
-		var queryString = match_query ? match_query[1] : '';
-		if (queryString.match(/uri=/)) {
+        var queryString = match_query ? match_query[1] : '';
+        if (queryString.match(/uri=/)) {
             var param = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
-            location.href = loadestarQueryService + "?query=" + encodeURIComponent("describe<" + param + ">") + "&format=JSON-LD";
+            location.href = lodestarQueryService + "?query=" + 
+                encodeURIComponent("describe<" + param + ">") + "&format=JSON-LD";
         }
     }
 }
@@ -1487,15 +1536,15 @@ function renderJson(uri) {
 
 function _getPrefixes () {
     var prefixes = '';
-    for (prefix in this.loadstarNamespaces) {
-        var uri = this.loadstarNamespaces[prefix];
+    for (prefix in this.lodestarNamespaces) {
+        var uri = this.lodestarNamespaces[prefix];
         prefixes = prefixes + 'PREFIX ' + prefix + ': <' + uri + '>\n';
     }
     return prefixes;
 }
 
 function setNamespaces (namespaces) {
-    this.loadstarNamespaces = namespaces;
+    this.lodestarNamespaces = namespaces;
 }
 
 function _betterUnescape (s) {
@@ -1520,7 +1569,7 @@ function clearErrors() {
 
 function displaySparqlEndpoint() {
 
-    $("#sparql-endpoint-url").text(loadestarQueryService);
+    $("#sparql-endpoint-url").text(lodestarQueryService);
 }
 
 function reloadPage() {

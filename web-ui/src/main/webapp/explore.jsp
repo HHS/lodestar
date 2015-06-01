@@ -25,18 +25,38 @@
     <link data-require="bootstrap@*" data-semver="3.2.0" rel="stylesheet" 
         href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.css" />
 
+    <%
+      String rp = request.getParameter("resource_prefix");
+      String resourcePrefix = rp == null ? "" : rp;
+    %>
+    <!-- 
+      resourcePrefix = <%= resourcePrefix %>
+    -->
 
-    <link rel="stylesheet" href="css/lode-style.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="<%= resourcePrefix %>css/lode-style.css" type="text/css" media="screen">
 
-    <script type="text/javascript" src="codemirror/codemirror.js"></script>
-    <script type="text/javascript" src="codemirror/sparql.js"></script>
-    <script type="text/javascript" src="scripts/namespaces.js"></script>
-    <script type="text/javascript" src="scripts/queries.js"></script>
-    <script type="text/javascript" src="scripts/lode.js"></script>
+    <script type="text/javascript" src="<%= resourcePrefix %>codemirror/codemirror.js"></script>
+    <script type="text/javascript" src="<%= resourcePrefix %>codemirror/sparql.js"></script>
+    <script type="text/javascript" src="<%= resourcePrefix %>scripts/namespaces.js"></script>
+    <script type="text/javascript" src="<%= resourcePrefix %>scripts/queries.js"></script>
+    <script type="text/javascript" src="<%= resourcePrefix %>scripts/lode.js"></script>
+
+    <link data-require="font-awesome@*" data-semver="4.2.0" rel="stylesheet" 
+        href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.css" />
+    <link href="<%= resourcePrefix %>css/style.css" rel="stylesheet" />
+
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+
   </head>
 
 
-  <body onload="$('#data-explorer-content').explore({namespaces : lodeNamespacePrefixes});">
+  <body onload="$('#data-explorer-content').explore({
+      resource_prefix : '<%= resourcePrefix %>',
+      namespaces : lodeNamespacePrefixes
+    });">
     <div class="header"></div>
     <div class="container-fluid">
       <div id="meshTabContent" class="tab-content">
@@ -55,9 +75,11 @@
 
     <script>
       $(function() {
-        $(".header").load("header.html");
-        $(".navi").load("nav.html");
-        $(".footer").load("footer.html");
+        $(".header").load("<%= resourcePrefix %>header.html");
+        $(".navi").load('<%= resourcePrefix %>nav.jsp?resource_prefix=<%= 
+          java.net.URLEncoder.encode(resourcePrefix, "UTF-8")
+        %>');
+        $(".footer").load("<%= resourcePrefix %>footer.html");
       });
     </script>
   </body>
