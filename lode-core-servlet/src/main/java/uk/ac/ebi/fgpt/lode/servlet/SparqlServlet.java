@@ -59,7 +59,6 @@ public class SparqlServlet {
 
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
         log.trace("querying for sparql xml");
-        response.setContentType("application/sparql-results+xml");
         query(query, "XML", offset, limit, inference, response);
     }
 
@@ -73,7 +72,6 @@ public class SparqlServlet {
 
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
         log.trace("querying for sparql json");
-        response.setContentType("application/sparql-results+json");
         query(query, "JSON", offset, limit, inference, response);
     }
 
@@ -87,7 +85,6 @@ public class SparqlServlet {
 
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
         log.trace("querying for sparql csv");
-        response.setContentType("text/csv");
         query(query, "CSV", offset, limit, inference, response);
     }
 
@@ -101,7 +98,6 @@ public class SparqlServlet {
 
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
         log.trace("querying for sparql tsv");
-        response.setContentType("text/tab-separated-values");
         query(query, "TSV", offset, limit, inference, response);
     }
 
@@ -111,7 +107,6 @@ public class SparqlServlet {
             @RequestParam(value = "query", required = false) String query,
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
         log.trace("querying for graph rdf+xml");
-        response.setContentType("application/rdf+xml");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
             sparqlService.getServiceDescription(out, "RDF/XML");
@@ -133,7 +128,6 @@ public class SparqlServlet {
             @RequestParam(value = "query", required = false) String query,
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
         log.trace("querying for graph rdf+n3");
-        response.setContentType("application/rdf+n3");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
             sparqlService.getServiceDescription(out, "N3");
@@ -155,7 +149,6 @@ public class SparqlServlet {
             @RequestParam(value = "query", required = false) String query,
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
         log.trace("querying for graph rdf+json");
-        response.setContentType("application/rdf+json");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
             sparqlService.getServiceDescription(out, "JSON-LD");
@@ -199,7 +192,6 @@ public class SparqlServlet {
             @RequestParam(value = "query", required = false) String query,
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
         log.trace("querying for graph turtle");
-        response.setContentType("application/x-turtle");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
             sparqlService.getServiceDescription(out, "x-turtle");
@@ -250,6 +242,7 @@ public class SparqlServlet {
         ServletOutputStream out = response.getOutputStream();
 
         if (query == null) {
+            // TODO: based on above code, why not "application/rdf+xml" ?
             response.setContentType("text/plain");
             getSparqlService().getServiceDescription(out, "N3");
             out.close();
@@ -262,12 +255,10 @@ public class SparqlServlet {
         if (outputFormat == null) {
             QueryType qType = getSparqlService().getQueryType(query);
             if (qType.equals(QueryType.BOOLEANQUERY) || qType.equals(QueryType.TUPLEQUERY)) {
-                response.setContentType("application/sparql-results+xml");
                 log.debug("no format, tuple query: setting format to XML");
                 outputFormat = TupleQueryFormats.XML.toString();
             }
             else if (qType.equals(QueryType.CONSTRUCTQUERY) || qType.equals(QueryType.DESCRIBEQUERY)) {
-                response.setContentType("application/rdf+xml");
                 outputFormat = GraphQueryFormats.RDFXML.toString();
             }
             else {
@@ -282,15 +273,16 @@ public class SparqlServlet {
         }
 
         if (validFormat(outputFormat)) {
-                getSparqlService().query(
-                        query,
-                        outputFormat.toUpperCase(),
-                        offset,
-                        limit,
-                        inference,
-                        out
-                );
-                out.close();
+            response.setContentType( getMimeType(outputFormat) );
+            getSparqlService().query(
+                query,
+                outputFormat.toUpperCase(),
+                offset,
+                limit,
+                inference,
+                out
+            );
+            out.close();
         }
         else {
             response.setStatus(406);
@@ -317,6 +309,23 @@ public class SparqlServlet {
         }
         return false ;
 
+    }
+
+    private String getMimeType(String format) {
+
+        for (GraphQueryFormats gf : GraphQueryFormats.values()) {
+            if (format.toUpperCase().equals(gf.toString())) {
+                return gf.toMimeType();
+            }
+        }
+
+        for (TupleQueryFormats tf : TupleQueryFormats.values()) {
+            if (format.toUpperCase().equals(tf.toString())) {
+                return tf.toMimeType();
+            }
+        }
+
+        return "text/plain" ;
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
