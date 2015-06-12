@@ -13,7 +13,6 @@ public class DAPScriptTag extends SimpleTagSupport {
         String environment = System.getenv("MESHRDF_ENV");
         if (null != environment && environment.equals("production")) {
             JspWriter out = getJspContext().getOut();
-            out.print("<!-- DAP Universal Analytics -->\n");
             out.print("<script language=\"javascript\" id=\"_fed_an_ua_tag\" src=\"//www.nlm.nih.gov/core/dap/Universal-Federated-Analytics.js?agency=HHS&subagency=NIH&enhlink=true\"></script>\n");
         }
     }

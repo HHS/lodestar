@@ -38,7 +38,7 @@
   <rule>
     <condition name="Accept" type="header">text/html</condition>
     <from casesensitive="true">^/sparql$</from>
-    <to last='true'>/query.html</to>
+    <to last='true'>/query.jsp</to>
   </rule>
 
   <rule>
