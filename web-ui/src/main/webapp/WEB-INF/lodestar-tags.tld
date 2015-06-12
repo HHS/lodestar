@@ -9,7 +9,7 @@
     <short-name>lodestar</short-name>
     <tag>
         <name>dapscript</name>
-        <tag-class>uk.ac.ebi.fgpt.lode.tags.DAPScriptTag</tag-class>
+        <tag-class>gov.nih.nlm.lode.servlet.DAPScriptTag</tag-class>
         <body-content>empty</body-content>
     </tag>
 </taglib>
