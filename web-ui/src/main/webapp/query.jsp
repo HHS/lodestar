@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<%@ taglib uri="/WEB-INF/lodestar-tags.tld" prefix="lodestar" %>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -35,6 +36,7 @@
     <script type="text/javascript" src="scripts/queries.js"></script>
     <script type="text/javascript" src="scripts/lode.js"></script>
     <link rel='stylesheet' href='css/style.css' />
+    <lodestar:dapscript></lodestar:dapscript>
   </head>
 
   <body onload="$('#sparql-content').sparql({namespaces : lodeNamespacePrefixes, inference: true});">

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<%@ taglib uri="/WEB-INF/lodestar-tags.tld" prefix="lodestar" %>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -37,6 +38,7 @@
         shorten:false});
     </script>
     <link rel='stylesheet' href='css/style.css' />
+    <lodestar:dapscript></lodestar:dapscript>
   </head>
 
   <body>

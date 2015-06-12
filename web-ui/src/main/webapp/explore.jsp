@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<%@ taglib uri="/WEB-INF/lodestar-tags.tld" prefix="lodestar" %>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -48,10 +49,8 @@
     <!--[if lt IE 9]>
       <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <lodestar:dapscript></lodestar:dapscript>
   </head>
-
-  </head>
-
 
   <body onload="$('#data-explorer-content').explore({
       resource_prefix : '<%= resourcePrefix %>',
