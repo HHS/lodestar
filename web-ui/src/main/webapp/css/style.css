@@ -3,6 +3,24 @@ body {
   background: #20558a;
 }
 
+/* Accessibility labels */
+.skipnav {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.query-label {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 /* Header */
 .logo-container {
   width:700px;

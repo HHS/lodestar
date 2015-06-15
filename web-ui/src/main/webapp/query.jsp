@@ -40,6 +40,7 @@
   </head>
 
   <body onload="$('#sparql-content').sparql({namespaces : lodeNamespacePrefixes, inference: true});">
+    <div class="skipnav"><a href="#skip" class="skipnav">Skip Navigation</a></div>
     <div class="header">
       <%@ include file="/internal/header.html" %>
     </div>
@@ -49,6 +50,8 @@
           <div class="navi">
             <%@ include file="/internal/nav.jspf" %>
           </div>
+
+          <a name="skip"> </a>
           <h1>Medical Subject Headings (MeSH) RDF Linked Data (beta)</h1>
 
 	      <div class="grid_24" id="sparql-content">

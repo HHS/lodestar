@@ -43,6 +43,7 @@
   </head>
 
   <body>
+    <div class="skipnav"><a href="#skip" class="skipnav">Skip Navigation</a></div>
     <div class="header">
       <%@ include file="internal/header.html" %>
     </div>
@@ -52,7 +53,8 @@
           <div class="navi">
             <%@ include file="internal/nav.jspf" %>
           </div>
-        
+
+          <a name="skip"> </a>
           <h1>Medical Subject Headings (MeSH) RDF Linked Data (beta)</h1>
           
           <p>The National Library of Medicine (NLM) is now offering a beta version of the Medical Subject Headings (MeSH&#174;) data in RDF (Resource Description Framework). RDF is a well-known standard for representing structured data on the Web. Systems that use RDF are often called Linked Data because of RDF emphasis on well-described links between resources.</p>
