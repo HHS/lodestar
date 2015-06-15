@@ -68,7 +68,7 @@
       <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
       <init-param>
         <param-name>logLevel</param-name>
-        <param-value>DEBUG</param-value>
+        <param-value>INFO</param-value>
       </init-param>
     </filter>
 
@@ -116,5 +116,9 @@
     </filter-mapping>
     -->
 
+    <!-- NOTE: setting a default error page requires servlet 3.0, therefore Tomcat 7+ -->
+    <error-page>
+        <location>/error.jsp</location>
+    </error-page>
 
 </web-app>

@@ -14,11 +14,17 @@ package gov.nih.nlm.lode.servlet;
 
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import java.io.IOException;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Daniel A. Davis
@@ -28,6 +34,20 @@ import java.io.IOException;
  * Validate request parameters such as uri, resource_prefix, etc.
  */
 public class ValidationFilter extends OncePerRequestFilter {
+
+    private Logger log = LoggerFactory.getLogger(getClass());
+    private static Pattern _uri_pattern = null; 
+
+    private synchronized Pattern getPatternForUri() {
+        if (null == _uri_pattern ) {
+            try {
+                _uri_pattern = Pattern.compile("^http://id.nlm.nih.gov/mesh/(\\d{4,4}/)?[DQMC\\d]+$");
+            } catch (PatternSyntaxException e) {
+                log.error("regex syntax", e);
+            }
+        }
+        return _uri_pattern;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -39,6 +59,15 @@ public class ValidationFilter extends OncePerRequestFilter {
                     response.sendError(422, "resource_prefix is not in expected format");
                     return;
                 }
+            }
+        }
+
+        String uri = request.getParameter("uri");
+        if (uri != null) {
+            Pattern p = getPatternForUri();
+            if (!p.matcher(uri).matches()) {
+                response.sendError(422, "uri is not in expected format");
+                return;
             }
         }
         filterChain.doFilter(request, response);
