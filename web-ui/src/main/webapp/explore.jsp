@@ -25,14 +25,13 @@
         href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
     <link data-require="bootstrap@*" data-semver="3.2.0" rel="stylesheet" 
         href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.css" />
+    <script data-require="bootstrap" data-semver="3.2.0" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.js"></script>
 
     <%
       String rp = request.getParameter("resource_prefix");
       String resourcePrefix = rp == null ? "" : rp;
     %>
-    <!-- 
-      resourcePrefix = <%= resourcePrefix %>
-    -->
+    <!-- resourcePrefix = ${resourcePrefix} -->
 
     <link rel="stylesheet" href="<%= resourcePrefix %>css/lode-style.css" type="text/css" media="screen">
 
@@ -56,30 +55,26 @@
       resource_prefix : '<%= resourcePrefix %>',
       namespaces : lodeNamespacePrefixes
     });">
-    <div class="header"></div>
+    <div class="header">
+      <%@ include file="internal/header.html" %>
+    </div>
     <div class="container-fluid">
       <div id="meshTabContent" class="tab-content">
         <div class="tab-pane fade in active" id="home">
-          <div class="navi"></div>
+          <div class="navi">
+            <%@ include file="internal/nav.jspf" %>
+          </div>
           <h1>Medical Subject Headings (MeSH) RDF Linked Data (beta)</h1>
 
           <div class="grid_24" id="data-explorer-content">
           </div>
 
           <div class="footer">
+            <%@ include file="internal/footer.html" %>
           </div>
         </div>
       </div>
     </div>
-
-    <script>
-      $(function() {
-        $(".header").load("<%= resourcePrefix %>header.html");
-        $(".navi").load('<%= resourcePrefix %>nav.jsp?resource_prefix=<%= 
-          java.net.URLEncoder.encode(resourcePrefix, "UTF-8")
-        %>');
-        $(".footer").load("<%= resourcePrefix %>footer.html");
-      });
-    </script>
   </body>
+
 </html>

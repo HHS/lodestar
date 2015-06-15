@@ -26,7 +26,8 @@
     <link data-require="bootstrap-css" data-semver="3.2.0" rel="stylesheet" 
           href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
     <link data-require="bootstrap@*" data-semver="3.2.0" rel="stylesheet" 
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.css" />
+          href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.css" />
+    <script data-require="bootstrap" data-semver="3.2.0" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.js"></script>
 
     <link rel="stylesheet" type="text/css" href="css/lode-style.css" />
     <script type="text/javascript">var switchTo5x=true;</script>
@@ -45,12 +46,14 @@
 
   <body>
     <div class="header">
-      <%@ include file="header.html" %>
+      <%@ include file="internal/header.html" %>
     </div>
     <div class="container-fluid">
       <div id="meshTabContent" class="tab-content">
         <div class="tab-pane fade in active" id="home">
-          <div class="navi"></div>
+          <div class="navi">
+            <%@ include file="internal/nav.jspf" %>
+          </div>
         
           <h1>Medical Subject Headings (MeSH) RDF Linked Data (beta)</h1>
 
@@ -66,17 +69,11 @@
           </div>
 
           <div class="footer">
-            <%@ include file="footer.html" %>
+            <%@ include file="internal/footer.html" %>
           </div>
         </div>
       </div>
     </div>
-
-    <script>
-      $(function() {
-        $(".navi").load("nav.jsp");
-      });
-    </script>
   </body>
 
 </html>

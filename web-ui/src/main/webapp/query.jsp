@@ -25,7 +25,7 @@
         href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
     <link data-require="bootstrap@*" data-semver="3.2.0" rel="stylesheet" 
         href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.css" />
-
+    <script data-require="bootstrap" data-semver="3.2.0" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.js"></script>
 
 
     <link rel="stylesheet" type="text/css" href="css/lode-style.css" />
@@ -40,29 +40,26 @@
   </head>
 
   <body onload="$('#sparql-content').sparql({namespaces : lodeNamespacePrefixes, inference: true});">
-    <div class="header"></div>
+    <div class="header">
+      <%@ include file="/internal/header.html" %>
+    </div>
     <div class="container-fluid">
       <div id="meshTabContent" class="tab-content">
         <div class="tab-pane fade in active" id="home">
-          <div class="navi"></div>
+          <div class="navi">
+            <%@ include file="/internal/nav.jspf" %>
+          </div>
           <h1>Medical Subject Headings (MeSH) RDF Linked Data (beta)</h1>
 
-	  <div class="grid_24" id="sparql-content">
-	  </div>
+	      <div class="grid_24" id="sparql-content">
+	      </div>
 
           <div class="footer">
+            <%@ include file="/internal/footer.html" %>
           </div>
         </div>
       </div>
     </div>
-
-    <script>
-      $(function() {
-        $(".header").load("header.html");
-        $(".navi").load("nav.jsp");
-        $(".footer").load("footer.html");
-      });
-    </script>
   </body>
 
 </html>

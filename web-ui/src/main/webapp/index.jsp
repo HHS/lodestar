@@ -26,6 +26,7 @@
           href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
     <link data-require="bootstrap@*" data-semver="3.2.0" rel="stylesheet" 
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.css" />
+    <script data-require="bootstrap" data-semver="3.2.0" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.js"></script>
 
     <script type="text/javascript">var switchTo5x=true;</script>
     <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
@@ -42,11 +43,15 @@
   </head>
 
   <body>
-    <div class="header"></div>
+    <div class="header">
+      <%@ include file="internal/header.html" %>
+    </div>
     <div class="container-fluid">
       <div id="meshTabContent" class="tab-content">
         <div class="tab-pane fade in active" id="home">
-          <div class="navi"></div>
+          <div class="navi">
+            <%@ include file="internal/nav.jspf" %>
+          </div>
         
           <h1>Medical Subject Headings (MeSH) RDF Linked Data (beta)</h1>
           
@@ -84,18 +89,12 @@
           <span class='st_twitter_large' st_url="http://id.nlm.nih.gov/mesh/" st_title="MeSH Linked Data (beta) #NLMLD @nlm_news" st_via="" displayText='Tweet'></span>
           <span class='st_facebook_large' st_url="http://id.nlm.nih.gov/mesh/" st_summary="MeSH Linked Data" displayText='Facebook'></span>
 
-          <div class="footer"></div>
+          <div class="footer">
+            <%@ include file="internal/footer.html" %>
+          </div>
         </div>
       </div>
     </div>
-
-    <script>
-      $(function() {
-        $(".header").load("header.html");
-        $(".footer").load("footer.html");
-        $(".navi").load("nav.jsp");
-      });
-    </script>
   </body>
 
 </html>
