@@ -116,6 +116,16 @@
     </filter-mapping>
     -->
 
+    <!-- Prevent serving of internal content -->
+    <security-constraint>
+        <display-name>excluded</display-name>
+        <web-resource-collection>
+            <web-resource-name>No Access</web-resource-name>
+            <url-pattern>/internal/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint />
+    </security-constraint>
+
     <!-- NOTE: setting a default error page requires servlet 3.0, therefore Tomcat 7+ -->
     <error-page>
         <location>/error.jsp</location>

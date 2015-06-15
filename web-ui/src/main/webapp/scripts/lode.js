@@ -304,11 +304,10 @@ function _buildSparqlPage(element) {
     fieldSet.append(section1);
     fieldSet.append(section2);
 
+    var myAreaLabel = $("<label class='query-label' for='textarea'>SPARQL Query Text</label>");
     var myTextArea = $("<textarea  name='query' id='textarea' rows='20' style='width:100%'></textarea>");
 
-    section1.append(
-        $("<p></p>").append(
-            myTextArea));
+    section1.append($("<p></p>").append(myAreaLabel, myTextArea));
 
 
     section1.append(
