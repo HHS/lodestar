@@ -29,7 +29,6 @@
           href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.css" />
     <script data-require="bootstrap" data-semver="3.2.0" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="css/lode-style.css" />
     <script type="text/javascript">var switchTo5x=true;</script>
     <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
     <script type="text/javascript">
