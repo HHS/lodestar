@@ -1134,6 +1134,31 @@ function getIdentifier(href) {
     }
 }
 
+/**
+ * This returns a relative identifier based on the url of this page and the uri.   
+ * It goes farther than getIdentifier() in that it should stay within the current system.
+ */
+function getRelativeIdentifier(href) {
+    // $2 - the first path segment
+    // $3 - the rest of the path excluding any extension
+    var relpath = href.match(/\/\/([^\/]+)\/([^\/]+)\/([^\.]+)/);
+    var hasQueryString = href.match(/\?(.*)/);
+    if (hasQueryString) {
+        var queryString = hasQueryString[1];
+        var uriMatch = queryString.match(/uri=([^&]+)/);
+        if (uriMatch) {
+            var canonical = uriMatch[1].replace(/%3A/g, ':').replace(/%2F/g, '/');
+            return canonical.replace(/^https?:\/\/[^\/]+\/[^\/]+/, '/'+relpath[2]);
+        }
+    } 
+    else if (relpath) {
+        return '/'+relpath[2]+'/'+relpath[3];
+    } 
+    else {
+        return null;
+    }
+}
+
 function renderDepiction (element) {
     var identifier = getIdentifier(document.location.href);
 
