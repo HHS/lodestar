@@ -25,7 +25,7 @@
     <link data-require="bootstrap-css" data-semver="3.2.0" rel="stylesheet" 
           href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
     <link data-require="bootstrap@*" data-semver="3.2.0" rel="stylesheet" 
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.css" />
+          href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.css" />
     <script data-require="bootstrap" data-semver="3.2.0" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.js"></script>
 
     <script type="text/javascript">var switchTo5x=true;</script>
