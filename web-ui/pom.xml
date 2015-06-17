@@ -75,6 +75,9 @@
                 <version>2.18.1</version>
                 <configuration>
                     <skipTests>${skipTests}</skipTests>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>testng.xml</suiteXmlFile>
+                    </suiteXmlFiles>
                 </configuration>
             </plugin>
         </plugins>
