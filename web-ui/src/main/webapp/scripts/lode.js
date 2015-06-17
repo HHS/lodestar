@@ -253,38 +253,36 @@ function _buildExplorerPage(element) {
 
     $("#" + id).append('<hr/>')
     var downloadsSpan  = $("<span style='padding-left: 5px;'/>");
+
+    var relid = getRelativeIdentifier(document.location.href);
+    var xmllink = $('<a href="'+relid+'.rdf" />');
     var xmlimg = $('<img />');
     xmlimg.attr('src', lodestarResourcePrefix + 'images/file_RDF_XML_small.gif');
     xmlimg.attr('alt', 'RDF/XML');
     xmlimg.attr('title', 'Show RDF/XML for this resource');
-    xmlimg.attr('style','cursor:pointer')
-    xmlimg.click(function () {
-        renderXML();
-    });
+    xmllink.append(xmlimg);
 
+    var n3link = $('<a href="'+relid+'.n3" />');
     var n3img = $('<img />');
     n3img.attr('src', lodestarResourcePrefix + 'images/file_RDF_N3_small.gif');
     n3img.attr('alt', 'RDF/N3');
     n3img.attr('title', 'Show RDF/N3 for this resource');
     n3img.attr('style','cursor:pointer')
-    n3img.click(function () {
-        renderN3();
-    });
+    n3link.append(n3img);
 
+    var jsonlink = $('<a href="'+relid+'.json-ld" />');
     var jsonimg = $('<img />');
     jsonimg.attr('src', lodestarResourcePrefix + 'images/file_RDF_JSONLD_small.jpg');
     jsonimg.attr('alt', 'RDF/JSON');
     jsonimg.attr('title', 'Show RDF/JSON for this resource');
     jsonimg.attr('style','cursor:pointer')
-    jsonimg.click(function () {
-        renderJson();
-    });
+    jsonlink.append(jsonimg);
 
-    downloadsSpan.append(xmlimg);
+    downloadsSpan.append(xmllink);
     downloadsSpan.append("&nbsp;&nbsp;");
-    downloadsSpan.append(n3img);
+    downloadsSpan.append(n3link);
     downloadsSpan.append("&nbsp;&nbsp;");
-    downloadsSpan.append(jsonimg);
+    downloadsSpan.append(jsonlink);
     $("#" + id).append(downloadsSpan);
 }
 
