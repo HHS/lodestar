@@ -7,3 +7,4 @@ target/
 out
 *~
 cscope.*
+web-ui/lode-tests.log
