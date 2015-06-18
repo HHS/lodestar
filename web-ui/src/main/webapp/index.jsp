@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<%@ taglib uri="/WEB-INF/lodestar-tags.tld" prefix="lodestar" %>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -6,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="" />
     <meta name="author" content="" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE" />
 
     <!--[if lt IE 9]>
       <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -23,7 +25,8 @@
     <link data-require="bootstrap-css" data-semver="3.2.0" rel="stylesheet" 
           href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
     <link data-require="bootstrap@*" data-semver="3.2.0" rel="stylesheet" 
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.css" />
+          href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.css" />
+    <script data-require="bootstrap" data-semver="3.2.0" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.js"></script>
 
     <script type="text/javascript">var switchTo5x=true;</script>
     <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
@@ -35,23 +38,30 @@
         hashAddressBar: false, 
         shorten:false});
     </script>
+    <link rel='stylesheet' href='css/style.css' />
+    <lodestar:dapscript></lodestar:dapscript>
   </head>
 
   <body>
-    <div class="header"></div>
+    <div class="skipnav"><a href="#skip" class="skipnav">Skip Navigation</a></div>
+    <div class="header">
+      <%@ include file="internal/header.html" %>
+    </div>
     <div class="container-fluid">
       <div id="meshTabContent" class="tab-content">
         <div class="tab-pane fade in active" id="home">
-          <div class="navi"></div>
-        
+          <div class="navi">
+            <%@ include file="internal/nav.jspf" %>
+          </div>
+
+          <a name="skip"> </a>
           <h1>Medical Subject Headings (MeSH) RDF Linked Data (beta)</h1>
           
           <p>The National Library of Medicine (NLM) is now offering a beta version of the Medical Subject Headings (MeSH&#174;) data in RDF (Resource Description Framework). RDF is a well-known standard for representing structured data on the Web. Systems that use RDF are often called Linked Data because of RDF emphasis on well-described links between resources.</p>
             
           <p>During this beta release, NLM is seeking stakeholder input and feedback as part of a broader effort to evaluate the creation of an NLM Linked Data Service. NLM hopes that users will help us refine MeSH RDF.</p>
             
-          <p>Once beta testing is finished, NLM will release the authoritative, consistent, and permanent MeSH RDF data, which can be incorporated into systems, products, and the broader Web of Linked Data. NLM will continue to develop tools and services that 
-            provide MeSH data based on feedback from the beta period.</p>
+          <p>Once beta testing is finished, NLM will release the authoritative, consistent, and permanent MeSH RDF data, which can be incorporated into systems, products, and the broader Web of Linked Data. NLM will continue to develop tools and services that provide MeSH data based on feedback from the beta period.</p>
             
           <h3>Why MeSH as Linked Data?</h3>
             
@@ -61,13 +71,13 @@
                     
           <h3>Access MeSH RDF</h3>
             
-          <p>Please note that this is a beta snapshot release of the 2014 MeSH as it existed on October 31, 2014. It includes Descriptors (main headings), Qualifiers (subheadings), Descriptor/Qualifier pairs, and Supplementary Concept Records (SCRs for controlled terms that are not main headings). Data are in English.</p>
+          <p>On June 18, 2015, NLM produced a second MeSH RDF beta release. This release included an update from 2014 MeSH to 2015 MeSH, schema changes, updates to class and predicate definitions, and bug fixes. See the <a href="">release notes</a> for more details. It includes Descriptors (main headings), Qualifiers (subheadings), Descriptor/Qualifier pairs, and Supplementary Concept Records (SCRs for controlled terms that are not main headings). The data will update nightly.</p>
                     
           <ul>
-            <li>Read about <a href="http://hhs.github.io/meshrdf/" target="_blank">MeSH RDF</a>.</li>
-            <li>Search MeSH RDF directly using the <a href="./sparql" target="_blank">SPARQL endpoint</a> interface.&nbsp;&nbsp;&nbsp;*Note - older versions of Internet Explorer may not be supported.</li>
+            <li>Read about <a href="http://hhs.github.io/meshrdf/" target="_blank">MeSH RDF and our versioning and acceptable use policies</a>.</li>
+            <li>Search MeSH RDF directly using the <a href="./sparql" target="_blank">SPARQL endpoint</a> interface.&nbsp;&nbsp;&nbsp;*Note - some versions of Internet Explorer may not be supported.</li>
             <li>Review <a href="http://hhs.github.io/meshrdf/sample-queries.html" target="_blank">sample queries</a> to get you started.</li>
-            <li><a href="ftp://ftp.nlm.nih.gov/online/mesh/2014/" target="_blank">Download</a> the MeSH RDF data.</li>
+            <li><a href="ftp://ftp.nlm.nih.gov/online/mesh/" target="_blank">Download</a> the MeSH RDF data.</li>
           </ul>
                 
           <h3>Feedback</h3>
@@ -81,18 +91,12 @@
           <span class='st_twitter_large' st_url="http://id.nlm.nih.gov/mesh/" st_title="MeSH Linked Data (beta) #NLMLD @nlm_news" st_via="" displayText='Tweet'></span>
           <span class='st_facebook_large' st_url="http://id.nlm.nih.gov/mesh/" st_summary="MeSH Linked Data" displayText='Facebook'></span>
 
-          <div class="footer"></div>
+          <div class="footer">
+            <%@ include file="internal/footer.html" %>
+          </div>
         </div>
       </div>
     </div>
-
-    <script>
-      $(function() {
-        $(".header").load("header.html");
-        $(".footer").load("footer.html");
-        $(".navi").load("nav.html");
-      });
-    </script>
   </body>
 
 </html>

@@ -46,11 +46,21 @@
     <filter>
         <filter-name>cors</filter-name>
         <filter-class>uk.ac.ebi.fgpt.lode.servlet.CorsFilter</filter-class>
-      </filter>
-      <filter-mapping>
+    </filter>
+    <filter-mapping>
         <filter-name>cors</filter-name>
         <url-pattern>/*</url-pattern>
-      </filter-mapping>
+    </filter-mapping>
+
+    <!-- Do validation -->
+    <filter>
+        <filter-name>validation</filter-name>
+        <filter-class>gov.nih.nlm.lode.servlet.ValidationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>validation</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+    </filter-mapping>
 
     <!-- Tuckey URL rewrite filters -->
     <filter>
@@ -58,7 +68,7 @@
       <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
       <init-param>
         <param-name>logLevel</param-name>
-        <param-value>DEBUG</param-value>
+        <param-value>INFO</param-value>
       </init-param>
     </filter>
 
@@ -99,10 +109,26 @@
     </filter>
 
     <!-- FILTER MAPPINGS -->
+    <!-- NLM change by <daniel.davis@nih.gov> - commented out so that we can see that the health check is being called
     <filter-mapping>
         <filter-name>HealthFilter</filter-name>
         <url-pattern>/status</url-pattern>
     </filter-mapping>
+    -->
 
+    <!-- Prevent serving of internal content -->
+    <security-constraint>
+        <display-name>excluded</display-name>
+        <web-resource-collection>
+            <web-resource-name>No Access</web-resource-name>
+            <url-pattern>/internal/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint />
+    </security-constraint>
+
+    <!-- NOTE: setting a default error page requires servlet 3.0, therefore Tomcat 7+ -->
+    <error-page>
+        <location>/error.jsp</location>
+    </error-page>
 
 </web-app>

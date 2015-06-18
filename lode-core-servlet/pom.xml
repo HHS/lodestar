@@ -26,19 +26,25 @@
             <scope>runtime</scope>
         </dependency>
 
-
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${org.springframework.version}</version>
         </dependency>
 
-
+        <!-- NOTE: Tomcat is providing JSP API 3.0; be careful -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- NOTE: Tomcat is providing JSP API 2.2; be careful -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.0</version>
             <scope>provided</scope>
         </dependency>
 

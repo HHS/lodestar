@@ -20,6 +20,11 @@ a.externallink {
     font-size: 0.9em;
 }
 
+#loadstar-results-table th,
+#loadstar-results-table td
+{
+    padding: 0.3em;
+}
 
 a.pag {
     color: #A67325;
@@ -68,6 +73,10 @@ span.pagmes {
     color: inherit;
 }
 
+#lodestar-sparql-form label {
+    margin-right: 1em;
+}
+
 .lodestar-grid12 {
     width: 49.0%;
     display: inline;
@@ -76,3 +85,13 @@ span.pagmes {
 
 }
 
+#error-div {
+  border: 2px solid red;
+  background-color: #FDD;
+  border-radius: 10px;
+}
+#error-div .alert {
+  color: #600;
+  font-style: italic;
+  font-size: 110%;
+}
