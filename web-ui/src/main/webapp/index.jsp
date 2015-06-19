@@ -71,7 +71,7 @@
                     
           <h3>Access MeSH RDF</h3>
             
-          <p>On June 18, 2015, NLM produced a second MeSH RDF beta release. This release included an update from 2014 MeSH to 2015 MeSH, schema changes, updates to class and predicate definitions, and bug fixes. See the <a href="http://hhs.github.io/meshrdf/">release notes</a> for more details. It includes Descriptors (main headings), Qualifiers (subheadings), Descriptor/Qualifier pairs, and Supplementary Concept Records (SCRs for controlled terms that are not main headings). The data will update nightly.</p>
+          <p>On June 18, 2015, NLM produced a second MeSH RDF beta release. This release included an update from 2014 MeSH to 2015 MeSH, schema changes, updates to class and predicate definitions, and bug fixes. See the <a href="http://hhs.github.io/meshrdf/release-notes.html">release notes</a> for more details. It includes Descriptors (main headings), Qualifiers (subheadings), Descriptor/Qualifier pairs, and Supplementary Concept Records (SCRs for controlled terms that are not main headings). The data will update nightly.</p>
                     
           <ul>
             <li>Read about <a href="http://hhs.github.io/meshrdf/" target="_blank">MeSH RDF and our versioning and acceptable use policies</a>.</li>
