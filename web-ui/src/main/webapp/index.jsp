@@ -1,5 +1,6 @@
-<!DOCTYPE html>
+<%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="/WEB-INF/lodestar-tags.tld" prefix="lodestar" %>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />

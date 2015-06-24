@@ -1,6 +1,6 @@
-<!DOCTYPE html>
-<%@ page isErrorPage="true" %>
+<%@ page pageEncoding="UTF-8" isErrorPage="true" %>
 <%@ taglib prefix="lodestar" uri="/WEB-INF/lodestar-tags.tld" %>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
