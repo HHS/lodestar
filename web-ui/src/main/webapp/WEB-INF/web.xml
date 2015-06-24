@@ -109,12 +109,10 @@
     </filter>
 
     <!-- FILTER MAPPINGS -->
-    <!-- NLM change by <daniel.davis@nih.gov> - commented out so that we can see that the health check is being called
     <filter-mapping>
         <filter-name>HealthFilter</filter-name>
         <url-pattern>/status</url-pattern>
     </filter-mapping>
-    -->
 
     <!-- Prevent serving of internal content -->
     <security-constraint>
