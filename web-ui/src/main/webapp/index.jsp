@@ -1,5 +1,6 @@
-<!DOCTYPE html>
+<%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="/WEB-INF/lodestar-tags.tld" prefix="lodestar" %>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -7,27 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE" />
-
-    <!--[if lt IE 9]>
-      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <script data-require="jquery" data-semver="2.1.1" 
-      src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-
-    <!--
-      Bootstrap CSS.  Question [from klortho]: do we need both of these, or is one a
-      minified version of the other?
-      Note these have to be loaded before codemirror, otherwise codemirror gets 
-      confused when placing the cursor.
-    -->
-
-    <link data-require="bootstrap-css" data-semver="3.2.0" rel="stylesheet" 
-          href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
-    <link data-require="bootstrap@*" data-semver="3.2.0" rel="stylesheet" 
-          href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.css" />
-    <script data-require="bootstrap" data-semver="3.2.0" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.js"></script>
-
+    <%@ include file="internal/head.jspf" %>
     <script type="text/javascript">var switchTo5x=true;</script>
     <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
     <script type="text/javascript">
@@ -38,7 +19,6 @@
         hashAddressBar: false, 
         shorten:false});
     </script>
-    <link rel='stylesheet' href='css/style.css' />
     <lodestar:dapscript></lodestar:dapscript>
   </head>
 
@@ -84,7 +64,7 @@
 
           <p>Join us on <a href="https://github.com/HHS/meshrdf/issues/" target="_blank">GitHub</a> for a collaborative discussion about MeSH RDF. Your use cases and comments, suggestions, and questions are welcome. Your participation will help us refine the MeSH RDF and develop future RDF releases.</p>
                 
-          <p>You may also direct questions and comments to the <a href="http://apps.nlm.nih.gov/mainweb/siebel/nlm/index.cfm/" target="_blank">NLM Customer Service form</a>; please use NLM Linked Data in the subject line.</p>
+          <p>You may also direct questions and comments to the <a href="http://apps.nlm.nih.gov/mainweb/siebel/nlm/index.cfm" target="_blank">NLM Customer Service form</a>; please use NLM Linked Data in the subject line.</p>
                 
           <p>Commentary via social media is another option; use the icons on our pages. Comment on Twitter using <a href="https://twitter.com/intent/tweet?text=MeSH%20Linked%20Data%20(beta)%20%23NLMLD%20%40nlm_news&source=sharethiscom&related=sharethis&url=http://id.nlm.nih.gov/mesh/#sthash.Yqn2yh5c.uxfs" target="_blank">#NLMLD and @nlm_news.</a></p>
                 

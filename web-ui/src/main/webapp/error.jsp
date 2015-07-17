@@ -1,6 +1,7 @@
-<!DOCTYPE html>
-<%@ page isErrorPage="true" %>
+<%@ page pageEncoding="UTF-8" isErrorPage="true" %>
+<%@ page import="javax.servlet.jsp.ErrorData" %>
 <%@ taglib prefix="lodestar" uri="/WEB-INF/lodestar-tags.tld" %>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -39,7 +40,11 @@
         hashAddressBar: false, 
         shorten:false});
     </script>
-    <link rel='stylesheet' href='css/style.css' />
+    <%@ include file="internal/prefix.jspf" %>
+    <style>
+        <%@ include file="css/style.css" %>
+        <%@ include file="css/lode-style.css" %>
+    </style>
     <lodestar:dapscript></lodestar:dapscript>
   </head>
 
@@ -62,7 +67,7 @@
             <div id="lodestar-main" class="ui-widget ui-corner-all">
               <div id="error-div" class="ui-state-error">
                 <p class="alert">
-                  <span>Error Code ${requestScope['javax.servlet.error.status_code']}:</span>
+                  <span><b>Error Code ${requestScope['javax.servlet.error.status_code']}:</b></span>
                   <span id="error-text">${requestScope['javax.servlet.error.message']}</span>
                 </p>
               </div>
