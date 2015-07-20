@@ -349,9 +349,9 @@ function _buildSparqlPage(element) {
             .append(
             $("<select name='limit' id='limit'></select>")
                 .append("<option value='25' selected='selected'>25</option>")
-                .append("<option value'50'>50</option>")
-                .append("<option value'100'>100</option>")
-                .append("<option value'1000'>1000</option>")
+                .append("<option value='50'>50</option>")
+                .append("<option value='100'>100</option>")
+                .append("<option value='1000'>1000</option>")
         )
     );
 
