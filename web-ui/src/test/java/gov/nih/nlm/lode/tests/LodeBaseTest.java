@@ -56,7 +56,7 @@ public class LodeBaseTest extends SeleniumTest {
     elementShouldBeEnabled(navi);
 
     WebElement query = navi.findElement(By.xpath("li[1]/a"));
-    elementTextShouldBe(query, "SPARQL query");
+    elementTextShouldBe(query, "SPARQL Query");
     assertThat(query.getAttribute("href"), endsWith("query"));
     assertThat(query.getAttribute("href"), startsWith(getLodeBaseUrl()));
 
