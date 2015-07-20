@@ -6,7 +6,7 @@ import org.openqa.selenium.By;
 
 import gov.nih.nlm.occs.selenium.SeleniumTest;
 
-public class TitlesAndNav extends LodeBaseTest {
+public class TitlesAndNavTest extends LodeBaseTest {
 
   @Test
   public void testHomePage() {

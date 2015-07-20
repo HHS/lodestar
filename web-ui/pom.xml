@@ -12,7 +12,7 @@
     <url>http://maven.apache.org</url>
 
     <properties>
-        <skipTests>true</skipTests>
+        <skipWebTests>true</skipWebTests>
     </properties>
 
     <dependencies>
@@ -29,7 +29,6 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.16</version>
-
             <scope>runtime</scope>
         </dependency>
 
@@ -74,10 +73,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.18.1</version>
                 <configuration>
-                    <skipTests>${skipTests}</skipTests>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>testng.xml</suiteXmlFile>
-                    </suiteXmlFiles>
+                    <reportsDirectory>test-output</reportsDirectory>
+                    <skipTests>${skipWebTests}</skipTests>
                 </configuration>
             </plugin>
         </plugins>

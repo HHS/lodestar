@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="NLM Lodestar MeSHR RDF Tests" parallel="none">
-  <test name="NLM Lodestar Selenium Tests">
-    <classes>
-      <class name="gov.nih.nlm.lode.tests.TitlesAndNav"/>
-    </classes>
-  </test> <!-- Test -->
-</suite> <!-- Suite -->
