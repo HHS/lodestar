@@ -1,5 +1,8 @@
 package gov.nih.nlm.lode.tests;
 
+import java.util.List;
+import java.util.ArrayList;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.By;
 import org.testng.annotations.Test;
 
@@ -41,5 +44,12 @@ public class TitlesAndNavTest extends LodeBaseTest {
     titleShouldBe("MeSH RDF Explorer (beta)");
     elementShouldContain(By.cssSelector("#home > h1"), "Linked Data (beta)");
     navigationShouldBeValid();
+  }
+
+  @Test(dependsOnMethods={"testHomePage"})
+  public void testFollowNavLinks() {
+    openHomePage();
+    WebElement navi = navigationShouldBeValid();
+    shouldBeValidLinks(navi.findElements(By.tagName("a")));
   }
 }
