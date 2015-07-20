@@ -19,15 +19,17 @@ public class TitlesAndNavTest extends LodeBaseTest {
     openHomePage();
     titleShouldBe("MeSH Linked Data (beta)");
     elementShouldContain(By.cssSelector("#home > h1"), "Linked Data (beta)");
-    navigationShouldBeValid();
+    WebElement navi = navigationShouldBeValid();
+    shouldBeValidLinks(navi.findElements(By.tagName("a")));
   }
 
   @Test
-  public void testSparqlPagce() {
-    openSparqlPage();
+  public void testQueryPagce() {
+    openQueryPage();
     titleShouldBe("MeSH SPARQL Explorer (beta)");
     elementShouldContain(By.cssSelector("#home > h1"), "Linked Data (beta)");
-    navigationShouldBeValid();
+    WebElement navi = navigationShouldBeValid();
+    shouldBeValidLinks(navi.findElements(By.tagName("a")));
   }
 
   @Test
@@ -35,7 +37,8 @@ public class TitlesAndNavTest extends LodeBaseTest {
     openExplorerPage(false);
     titleShouldBe("MeSH RDF Explorer (beta)");
     elementShouldContain(By.cssSelector("#home > h1"), "Linked Data (beta)");
-    navigationShouldBeValid();
+    WebElement navi = navigationShouldBeValid();
+    shouldBeValidLinks(navi.findElements(By.tagName("a")));
   }
 
   @Test
@@ -43,13 +46,8 @@ public class TitlesAndNavTest extends LodeBaseTest {
     openExplorerPage(true);
     titleShouldBe("MeSH RDF Explorer (beta)");
     elementShouldContain(By.cssSelector("#home > h1"), "Linked Data (beta)");
-    navigationShouldBeValid();
-  }
-
-  @Test(dependsOnMethods={"testHomePage"})
-  public void testFollowNavLinks() {
-    openHomePage();
     WebElement navi = navigationShouldBeValid();
     shouldBeValidLinks(navi.findElements(By.tagName("a")));
   }
+
 }

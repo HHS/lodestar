@@ -4,6 +4,7 @@ import java.util.List;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.net.HttpURLConnection;
+import java.net.URLConnection;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.NoSuchElementException;
@@ -85,25 +86,28 @@ public class LodeBaseTest extends SeleniumTest {
     try {
       context = new URL(currentBaseUrl);
     } catch (MalformedURLException e) {
-      Reporter.log("MalforcmedURLException: "+currentBaseUrl);
+      Reporter.log("MalforcmedURLException: "+currentBaseUrl, true);
       haveBadLinks = true;
     }
 
+    
     for (WebElement link : links) {     
       String tag = link.getTagName();
       String href = (tag.equalsIgnoreCase("script") || tag.equalsIgnoreCase("img") ? link.getAttribute("src") : link.getAttribute("href"));
 
       try {
         URL fullref = new URL(context, href);
-        HttpURLConnection con = (HttpURLConnection) fullref.openConnection();
-        con.setInstanceFollowRedirects(false);
-        con.setRequestMethod("HEAD");
-        if (con.getResponseCode() != HttpURLConnection.HTTP_OK) {
-          Reporter.log("URL "+href+" returned status code "+con.getResponseCode());
-          haveBadLinks = true;
-        }
+        URLConnection congeneric = fullref.openConnection();
+        if (congeneric instanceof HttpURLConnection) {
+          HttpURLConnection con = (HttpURLConnection) congeneric;
+          int code = con.getResponseCode();
+          if (code != 200 && code != 301 && code != 302) {
+            Reporter.log("URL "+href+" returned status code "+con.getResponseCode(), true);
+            haveBadLinks = true;
+          }
+        }       
       } catch (Exception e) {
-        Reporter.log("URL "+href+" exception: "+e.getMessage());
+        Reporter.log("URL "+href+" exception: "+e.getMessage(), true);
         haveBadLinks = true;
       }
     }
@@ -115,8 +119,8 @@ public class LodeBaseTest extends SeleniumTest {
     driver.get(getLodeBaseUrl());
   }
  
-  public void openSparqlPage() {
-    driver.get(getLodeBaseUrl() + "/sparql");
+  public void openQueryPage() {
+    driver.get(getLodeBaseUrl() + "/query");
   }
 
   public void openExplorerPage(Boolean useprefix) {

@@ -27,4 +27,11 @@ public class CssAndScriptTest extends LodeBaseTest {
     List<WebElement> links = driver.findElements(By.xpath("//head/link[@src]"));
     shouldBeValidLinks(links, "Found bad links in head link tags");
   }
+
+  @Test
+  public void testAllBodyLinks() {
+    openHomePage();
+    List<WebElement> links = driver.findElements(By.xpath("//a[@href!='#']"));
+    shouldBeValidLinks(links, "Found bad links in body anchors");
+  }
 }
