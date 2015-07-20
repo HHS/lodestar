@@ -1,8 +1,11 @@
 package gov.nih.nlm.lode.tests;
 
+import org.openqa.selenium.By;
 import org.testng.annotations.Test;
 
-import org.openqa.selenium.By;
+import static org.testng.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import gov.nih.nlm.occs.selenium.SeleniumTest;
 
