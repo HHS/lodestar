@@ -16,6 +16,21 @@ import gov.nih.nlm.occs.selenium.SeleniumTest;
 public class QueryTest extends LodeBaseTest {
 
     public static final String FOR_LODESTAR_RESULT_ROWS = "//table[@id='lodestar-results-table']/tbody/tr";
+    public static final String[] MESH_VOCAB_CLASSES = {
+        "meshv:AllowedDescriptorQualifierPair",
+        "meshv:CheckTag",
+        "meshv:Concept",
+        "meshv:DisallowedDescriptorQualifierPair",
+        "meshv:GeographicalDescriptor",
+        "meshv:PublicationType",
+        "meshv:Qualifier",
+        "meshv:SCR_Chemical",
+        "meshv:SCR_Disease",
+        "meshv:SCR_Protocol",
+        "meshv:Term",
+        "meshv:TopicalDescriptor",
+        "meshv:TreeNumber"
+    };
 
     public void clickSubmitQuery() {
         // submit the query form
@@ -43,6 +58,39 @@ public class QueryTest extends LodeBaseTest {
     }
 
     @Test
+    public void testDefaultOptions() {
+        openQueryPage();
+        clickSubmitQuery();
+
+        List<WebElement> rows = findElements(By.xpath(FOR_LODESTAR_RESULT_ROWS));
+        assertEquals(rows.size(), MESH_VOCAB_CLASSES.length);
+        for (int i = 0; i < rows.size(); i++) {
+            WebElement row = rows.get(i);
+            WebElement link = row.findElement(By.xpath("td[1]/span/a"));
+            String expectedEnding = MESH_VOCAB_CLASSES[i].replace("meshv:", "%2Fmesh%2Fvocab%23");
+
+            assertThat(link.getText(), is(equalTo(MESH_VOCAB_CLASSES[i])));
+            assertThat(link.getAttribute("href"), endsWith(expectedEnding));
+        }
+    }
+
+    public void testExample0() {
+        openQueryPage();
+        clickOnExampleQuery(0);
+        clickSubmitQuery();
+
+        List<WebElement> rows = findElements(By.xpath(FOR_LODESTAR_RESULT_ROWS));
+        assertEquals(rows.size(), MESH_VOCAB_CLASSES.length);
+        for (int i = 0; i < rows.size(); i++) {
+            WebElement row = rows.get(i);
+            WebElement link = row.findElement(By.xpath("td[1]/span/a"));
+            String expectedEnding = MESH_VOCAB_CLASSES[i].replace("meshv:", "%2Fmesh%2Fvocab%23");
+
+            assertThat(link.getText(), is(equalTo(MESH_VOCAB_CLASSES[i])));
+            assertThat(link.getAttribute("href"), endsWith(expectedEnding));
+        }
+    }
+
     public void testExample2() {
         openQueryPage();
 
@@ -83,7 +131,7 @@ public class QueryTest extends LodeBaseTest {
     }
 
     @Test
-    public void testExample32015() {
+    public void testExample3with2015() {
         openQueryPage();
 
         clickOnExampleQuery(3);
@@ -114,7 +162,7 @@ public class QueryTest extends LodeBaseTest {
         }
     }
 
-    @Test(dependsOnMethods={"testExample32015"})
+    @Test(dependsOnMethods={"testExample3with2015"})
     public void testPagination() {
         openQueryPage();
 
@@ -178,7 +226,7 @@ public class QueryTest extends LodeBaseTest {
         }
     }
 
-    @Test(dependsOnMethods={"testExample32015"})
+    @Test(dependsOnMethods={"testExample3with2015"})
     public void testLimitRows() {
         openQueryPage();
 
