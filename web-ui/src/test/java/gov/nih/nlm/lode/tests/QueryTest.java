@@ -33,6 +33,16 @@ public class QueryTest extends LodeBaseTest {
         "meshv:TreeNumber",
     };
 
+    public static final String[][] EX1_CHECKED_RESULTS = {
+        { "meshv:Concept", "/describe?uri=http%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2Fvocab%23Concept" },
+        { "meshv:abbreviation", "/describe?uri=http%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2Fvocab%23abbreviation" },
+        { "meshv:casn1_label", "/describe?uri=http%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2Fvocab%23casn1_label" },
+        { "meshv:considerAlso", "/describe?uri=http%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2Fvocab%23considerAlso" },
+        { "meshv:seeAlso", "/describe?uri=http%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2Fvocab%23seeAlso" },
+        { "meshv:useInstead", "/describe?uri=http%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2Fvocab%23useInstead" },
+        { "rdfs:label", "http://www.w3.org/2000/01/rdf-schema#label" },
+    };
+
     public static final String[][] EX2_CHECKED_RESULTS = {
         { "mesh:D000892", "/D000892", "Anti-Infective Agents, Urinary" },
         { "mesh:D000900", "/D000900", "Anti-Bacterial Agents" },
@@ -49,6 +59,14 @@ public class QueryTest extends LodeBaseTest {
     public static final String[][] EX3_PAGE2_CHECKED_RESULTS = {
         { "mesh2015:D008456", "/2015/D008456", "2-Methyl-4-chlorophenoxyacetic Acid" },
         { "mesh2015:D019840", "/2015/D019840", "2-Propanol" },
+    };
+
+    public static final String[][] EX4_CHECKED_RESULTS = {
+        { "mesh:D000151", "Acinetobacter Infections", "mesh:M0000230", "Acinetobacter Infections" },
+        { "mesh:D000193", "Actinomycetales Infections", "mesh:M0000289", "Actinomycetales Infections" },
+        { "mesh:D000258", "Adenovirus Infections, Human", "mesh:M0000406", "Pharyngo-Conjunctival Fever" },
+        { "mesh:D003699", "Hepatitis D", "mesh:M0005791", "Superinfection, Delta" },
+        { "mesh:D005490", "Focal Infection", "mesh:M0008656", "Focal Infection" },
     };
 
     public void clickSubmitQuery() {
@@ -109,6 +127,32 @@ public class QueryTest extends LodeBaseTest {
             assertThat(link.getText(), is(equalTo(MESH_VOCAB_CLASSES[i])));
             assertThat(link.getAttribute("href"), endsWith(expectedEnding));
         }
+    }
+
+    @Test(groups="query", dependsOnMethods={"testDefaults"})
+    public void testExample1() {
+        openQueryPage();
+        clickOnExampleQuery(1);
+        clickSubmitQuery();
+
+        int numMatched = 0;
+        List<WebElement> rows = findElements(By.xpath(FOR_LODESTAR_RESULT_ROWS));
+        assertEquals(rows.size(), 47);
+        for (WebElement row : rows) {
+            WebElement link = row.findElement(By.xpath("td[1]/span/a"));
+            String linktext = link.getText();
+
+            for (String[] expected : EX1_CHECKED_RESULTS) {
+                String expectedLinkText = expected[0];
+                String expectedLinkEnding = expected[1];
+
+                if (linktext.equals(expectedLinkText)) {
+                    assertThat(link.getAttribute("href"), endsWith(expectedLinkEnding));
+                    numMatched++;
+                }
+            }
+        }
+        assertEquals(numMatched, EX1_CHECKED_RESULTS.length);
     }
 
     @Test(groups="query", dependsOnMethods={"testDefaults"})
@@ -299,5 +343,43 @@ public class QueryTest extends LodeBaseTest {
 
         // NOTE: One of these checked results is passed row 25
         assertEquals(numMatched, EX3_PAGE1_CHECKED_RESULTS.length - 1);
+    }
+
+    @Test(groups="queries", dependsOnMethods={"testDefaults"}) 
+    public void testExample4() {
+        openQueryPage();
+        clickOnExampleQuery(4);
+        clickSubmitQuery();
+
+        int numMatched = 0;
+        List<WebElement> rows = findElements(By.xpath(FOR_LODESTAR_RESULT_ROWS));
+        assertEquals(rows.size(), 50);
+        for (WebElement row : rows) {
+            WebElement col1 = row.findElement(By.xpath("td[1]/span/a"));
+            WebElement col2 = row.findElement(By.xpath("td[2]"));
+            WebElement col3 = row.findElement(By.xpath("td[3]/span/a"));
+            WebElement col4 = row.findElement(By.xpath("td[4]"));
+            String col3text = col3.getText();
+
+            for (String[] expected : EX4_CHECKED_RESULTS) {
+                String expectedCol1 = expected[0];
+                String expectedCol1Link = expected[0].replace("mesh:", "/mesh/");
+                String expectedCol2 = expected[1];
+                String expectedCol3 = expected[2];
+                String expectedCol3Link = expected[2].replace("mesh:", "/mesh/");
+                String expectedCol4 = expected[3];
+
+                if (col3text.equals(expectedCol3)) {
+                    assertEquals(col1.getText(), expectedCol1);
+                    assertThat(col1.getAttribute("href"), endsWith(expectedCol1Link));
+                    assertEquals(col2.getText(), expectedCol2);
+                    assertEquals(col3.getText(), expectedCol3);
+                    assertThat(col3.getAttribute("href"), endsWith(expectedCol3Link));
+                    assertEquals(col4.getText(), expectedCol4);
+                    numMatched++;
+                }
+            }
+        }
+        assertEquals(numMatched, EX4_CHECKED_RESULTS.length);
     }
 }
