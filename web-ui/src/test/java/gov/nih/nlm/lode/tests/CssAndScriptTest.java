@@ -14,21 +14,21 @@ import gov.nih.nlm.occs.selenium.SeleniumTest;
 
 public class CssAndScriptTest extends LodeBaseTest {
 
-  @Test
+  @Test(groups = "basics2", dependsOnGroups={"basics"})
   public void testScriptTags() {
     openHomePage();
     List<WebElement> links = driver.findElements(By.xpath("//script[@src]"));
     shouldBeValidLinks(links, "Found bad links in script tags");
   }
 
-  @Test
+  @Test(groups = "basics2", dependsOnGroups={"basics"})
   public void testLinkTags() {
     openHomePage();
     List<WebElement> links = driver.findElements(By.xpath("//head/link[@src]"));
     shouldBeValidLinks(links, "Found bad links in head link tags");
   }
 
-  @Test
+  @Test(groups = "basics2", dependsOnGroups={"basics"})
   public void testAllBodyLinks() {
     openHomePage();
     List<WebElement> links = driver.findElements(By.xpath("//a[@href!='#']"));

@@ -16,6 +16,7 @@ import gov.nih.nlm.occs.selenium.SeleniumTest;
 public class QueryTest extends LodeBaseTest {
 
     public static final String FOR_LODESTAR_RESULT_ROWS = "//table[@id='lodestar-results-table']/tbody/tr";
+
     public static final String[] MESH_VOCAB_CLASSES = {
         "meshv:AllowedDescriptorQualifierPair",
         "meshv:CheckTag",
@@ -29,7 +30,25 @@ public class QueryTest extends LodeBaseTest {
         "meshv:SCR_Protocol",
         "meshv:Term",
         "meshv:TopicalDescriptor",
-        "meshv:TreeNumber"
+        "meshv:TreeNumber",
+    };
+
+    public static final String[][] EX2_CHECKED_RESULTS = {
+        { "mesh:D000892", "/D000892", "Anti-Infective Agents, Urinary" },
+        { "mesh:D000900", "/D000900", "Anti-Bacterial Agents" },
+        { "mesh:D059005", "/D059005", "Topoisomerase II Inhibitors" },
+        { "mesh:D065609", "/D065609", "Cytochrome P-450 CYP1A2 Inhibitors" },
+    };
+
+    public static final String[][] EX3_PAGE1_CHECKED_RESULTS = {
+        { "mesh2015:D019813", "/2015/D019813", "1,2-Dimethylhydrazine" },
+        { "mesh2015:D020001", "/2015/D020001", "1-Butanol" },
+        { "mesh2015:D015068", "/2015/D015068", "17-Ketosteroids" },
+    };
+
+    public static final String[][] EX3_PAGE2_CHECKED_RESULTS = {
+        { "mesh2015:D008456", "/2015/D008456", "2-Methyl-4-chlorophenoxyacetic Acid" },
+        { "mesh2015:D019840", "/2015/D019840", "2-Propanol" },
     };
 
     public void clickSubmitQuery() {
@@ -57,8 +76,8 @@ public class QueryTest extends LodeBaseTest {
         example.click();
     }
 
-    @Test
-    public void testDefaultOptions() {
+    @Test(groups="query", dependsOnGroups="basics2")
+    public void testDefaults() {
         openQueryPage();
         clickSubmitQuery();
 
@@ -74,6 +93,7 @@ public class QueryTest extends LodeBaseTest {
         }
     }
 
+    @Test(groups="query", dependsOnMethods={"testDefaults"})
     public void testExample0() {
         openQueryPage();
         clickOnExampleQuery(0);
@@ -91,6 +111,7 @@ public class QueryTest extends LodeBaseTest {
         }
     }
 
+    @Test(groups="query", dependsOnMethods={"testDefaults"})
     public void testExample2() {
         openQueryPage();
 
@@ -105,32 +126,33 @@ public class QueryTest extends LodeBaseTest {
         // submit the query form
         clickSubmitQuery();
 
-        // verify results without depending on order
+        // verify selected results without depending on order
+        int numMatched = 0;
         List<WebElement> rows = findElements(By.xpath(FOR_LODESTAR_RESULT_ROWS));
         assertEquals(rows.size(), 4);
         for (WebElement row : rows) {
-            WebElement pa = row.findElement(By.xpath("td[1]/span/a"));
-            String patext = pa.getText();
-            if (patext.equals("mesh:D000892")) {
-                assertThat(pa.getAttribute("href"), endsWith("/D000892"));
-                assertEquals(row.findElement(By.xpath("td[2]")).getText(), "Anti-Infective Agents, Urinary");
-            } else if (patext.equals("mesh:D000900")) {
-                assertThat(pa.getAttribute("href"), endsWith("/D000900"));
-                assertEquals(row.findElement(By.xpath("td[2]")).getText(), "Anti-Bacterial Agents");
-            } else if (patext.equals("mesh:D059005")) {
-                assertThat(pa.getAttribute("href"), endsWith("/D059005"));
-                assertEquals(row.findElement(By.xpath("td[2]")).getText(), "Topoisomerase II Inhibitors");
-            } else if (patext.equals("mesh:D065609")) {
-                assertThat(pa.getAttribute("href"), endsWith("/D065609"));
-                assertEquals(row.findElement(By.xpath("td[2]")).getText(), "Cytochrome P-450 CYP1A2 Inhibitors");
-            } else {
-                Reporter.log("Unexpected pharmalogical action on query 2", true);
-                fail("Unexpected pharmalogical aciton on query 2");
+            WebElement link = row.findElement(By.xpath("td[1]/span/a"));
+            String linktext = link.getText();
+
+            boolean amatch = false;
+            for (String expected[] : EX2_CHECKED_RESULTS) {
+                String expectedLinkText = expected[0];
+                String expectedLinkEnding = expected[1];
+                String expectedCol2Text = expected[2];
+
+                if (linktext.equals(expectedLinkText)) {
+                    assertThat(link.getAttribute("href"), endsWith(expectedLinkEnding));
+                    assertEquals(row.findElement(By.xpath("td[2]")).getText(), expectedCol2Text);
+                    numMatched++;
+                    amatch = true;
+                }
             }
+            assertTrue(amatch, "Unexpected pharmalogical action on example query 2");
         }
+        assertEquals(numMatched, EX2_CHECKED_RESULTS.length);
     }
 
-    @Test
+    @Test(groups="query", dependsOnMethods={"testDefaults"})
     public void testExample3with2015() {
         openQueryPage();
 
@@ -142,6 +164,7 @@ public class QueryTest extends LodeBaseTest {
         clickSubmitQuery();
 
         // verify results without depending on order
+        int numMatched = 0;
         List<WebElement> rows = findElements(By.xpath(FOR_LODESTAR_RESULT_ROWS));
         assertEquals(rows.size(), 50);
         for (WebElement row : rows) {
@@ -149,20 +172,22 @@ public class QueryTest extends LodeBaseTest {
             WebElement dlabel = row.findElement(By.xpath("td[2]"));
             String dtext = desc.getText();
 
-            if (dtext.equals("mesh2015:D019813")) {
-                assertThat(desc.getAttribute("href"), endsWith("/2015/D019813"));
-                assertThat(dlabel.getText(), equalTo("1,2-Dimethylhydrazine"));          
-            } else if (dtext.equals("mesh2015:D020001")) {
-                assertThat(desc.getAttribute("href"), endsWith("/2015/D020001"));
-                assertThat(dlabel.getText(), equalTo("1-Butanol"));       
-            } else if (dtext.equals("mesh2015:D015068")) {
-                assertThat(desc.getAttribute("href"), endsWith("/2015/D015068"));
-                assertThat(dlabel.getText(), equalTo("17-Ketosteroids"));
+            for (String expected[] : EX3_PAGE1_CHECKED_RESULTS) {
+                String expectedLinkText = expected[0];
+                String expectedLinkEnding = expected[1];
+                String expectedCol2Text = expected[2];
+
+                if (dtext.equals(expectedLinkText)) {
+                    assertThat(desc.getAttribute("href"), endsWith(expectedLinkEnding));
+                    assertEquals(dlabel.getText(), expectedCol2Text);
+                    numMatched++;
+                }
             }
         }
+        assertEquals(numMatched, EX3_PAGE1_CHECKED_RESULTS.length);
     }
 
-    @Test(dependsOnMethods={"testExample3with2015"})
+    @Test(groups="query", dependsOnMethods={"testExample3with2015"})
     public void testPagination() {
         openQueryPage();
 
@@ -182,27 +207,34 @@ public class QueryTest extends LodeBaseTest {
         assertEquals(pagemes.getText(), "50 results per page (offset 50)");
 
         // should again be 50 results (which we verify selectively)
+        int page2matched = 0;
         List<WebElement> page2rows = findElements(By.xpath(FOR_LODESTAR_RESULT_ROWS));
         assertEquals(page2rows.size(), 50);
         for (WebElement row : page2rows) {
             WebElement desc = row.findElement(By.xpath("td[1]/span/a"));
             WebElement dlabel = row.findElement(By.xpath("td[2]"));
             String dtext = desc.getText();
-            
-            if (dtext.equals("mesh2015:D008456")) {
-                assertThat(desc.getAttribute("href"), endsWith("/2015/D008456"));
-                assertThat(dlabel.getText(), equalTo("2-Methyl-4-chlorophenoxyacetic Acid"));
-            } else if (dtext.equals("mesh2015:D019840")) {
-                assertThat(desc.getAttribute("href"), endsWith("/2015/D019840"));
-                assertThat(dlabel.getText(), equalTo("2-Propanol"));
-            }
+
+            for (String expected[] : EX3_PAGE2_CHECKED_RESULTS) {
+                String expectedLinkText = expected[0];
+                String expectedLinkEnding = expected[1];
+                String expectedCol2Text = expected[2];
+
+                if (dtext.equals(expectedLinkText)) {
+                    assertThat(desc.getAttribute("href"), endsWith(expectedLinkEnding));
+                    assertEquals(dlabel.getText(), expectedCol2Text);
+                    page2matched++;
+                }
+            }           
         }
+        assertEquals(page2matched, EX3_PAGE2_CHECKED_RESULTS.length);
 
         // Go to previous page
         WebElement prevLink = findElement(By.xpath("//div[@id='pagination']/a[@class='pag prev']"));
         prevLink.click();
 
         // should be showing offset 0
+        int page1matched = 0;
         pagemes = findElement(By.xpath("//div[@id='pagination']/span[@class='pag pagmes']"));
         assertEquals(pagemes.getText(), "50 results per page (offset 0)");
 
@@ -213,20 +245,22 @@ public class QueryTest extends LodeBaseTest {
             WebElement dlabel = row.findElement(By.xpath("td[2]"));
             String dtext = desc.getText();
 
-            if (dtext.equals("mesh2015:D019813")) {
-                assertThat(desc.getAttribute("href"), endsWith("/2015/D019813"));
-                assertThat(dlabel.getText(), equalTo("1,2-Dimethylhydrazine"));          
-            } else if (dtext.equals("mesh2015:D020001")) {
-                assertThat(desc.getAttribute("href"), endsWith("/2015/D020001"));
-                assertThat(dlabel.getText(), equalTo("1-Butanol"));       
-            } else if (dtext.equals("mesh2015:D015068")) {
-                assertThat(desc.getAttribute("href"), endsWith("/2015/D015068"));
-                assertThat(dlabel.getText(), equalTo("17-Ketosteroids"));
+            for (String expected[] : EX3_PAGE1_CHECKED_RESULTS) {
+                String expectedLinkText = expected[0];
+                String expectedLinkEnding = expected[1];
+                String expectedCol2Text = expected[2];
+
+                if (dtext.equals(expectedLinkText)) {
+                    assertThat(desc.getAttribute("href"), endsWith(expectedLinkEnding));
+                    assertEquals(dlabel.getText(), expectedCol2Text);
+                    page1matched++;
+                }
             }
         }
+        assertEquals(page1matched, EX3_PAGE1_CHECKED_RESULTS.length);
     }
 
-    @Test(dependsOnMethods={"testExample3with2015"})
+    @Test(groups="queries", dependsOnMethods={"testExample3with2015"})
     public void testLimitRows() {
         openQueryPage();
 
@@ -242,6 +276,7 @@ public class QueryTest extends LodeBaseTest {
         assertEquals(pagemes.getText(), "25 results per page (offset 0)");
 
         // verify results without depending on order
+        int numMatched = 0;
         List<WebElement> rows = findElements(By.xpath(FOR_LODESTAR_RESULT_ROWS));
         assertEquals(rows.size(), 25);
         for (WebElement row : rows) {
@@ -249,16 +284,20 @@ public class QueryTest extends LodeBaseTest {
             WebElement dlabel = row.findElement(By.xpath("td[2]"));
             String dtext = desc.getText();
 
-            if (dtext.equals("mesh2015:D019813")) {
-                assertThat(desc.getAttribute("href"), endsWith("/2015/D019813"));
-                assertThat(dlabel.getText(), equalTo("1,2-Dimethylhydrazine"));          
-            } else if (dtext.equals("mesh2015:D020001")) {
-                assertThat(desc.getAttribute("href"), endsWith("/2015/D020001"));
-                assertThat(dlabel.getText(), equalTo("1-Butanol"));       
-            } else if (dtext.equals("mesh2015:D015068")) {
-                assertThat(desc.getAttribute("href"), endsWith("/2015/D015068"));
-                assertThat(dlabel.getText(), equalTo("17-Ketosteroids"));
+            for (String expected[] : EX3_PAGE1_CHECKED_RESULTS) {
+                String expectedLinkText = expected[0];
+                String expectedLinkEnding = expected[1];
+                String expectedCol2Text = expected[2];
+
+                if (dtext.equals(expectedLinkText)) {
+                    assertThat(desc.getAttribute("href"), endsWith(expectedLinkEnding));
+                    assertEquals(dlabel.getText(), expectedCol2Text);
+                    numMatched++;
+                }
             }
         }
+
+        // NOTE: One of these checked results is passed row 25
+        assertEquals(numMatched, EX3_PAGE1_CHECKED_RESULTS.length - 1);
     }
 }
