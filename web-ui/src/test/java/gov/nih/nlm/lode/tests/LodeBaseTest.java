@@ -76,7 +76,7 @@ public class LodeBaseTest extends SeleniumTest {
 
   public void shouldBeValidLinks(List<WebElement> links) {
     LinkChecker linkcheck = new LinkChecker(getCurrentBaseUrl());
-    linkcheck.addRequestHeader("Accept", "text/html");
+    linkcheck.addRequestHeader("Accept", "text/html, text/plain, text/turtle");
     for (WebElement link : links) {
       String tag = link.getTagName();
       String href = (tag.equalsIgnoreCase("script") || tag.equalsIgnoreCase("img") ? link.getAttribute("src") : link.getAttribute("href"));

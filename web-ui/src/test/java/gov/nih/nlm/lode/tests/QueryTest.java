@@ -17,6 +17,8 @@ public class QueryTest extends LodeBaseTest {
 
     public static final String FOR_LODESTAR_RESULT_ROWS = "//table[@id='lodestar-results-table']/tbody/tr";
 
+    public static final String FOR_LODESTAR_RESULT_LINKS = "#lodestar-results-table a";
+
     public static final String[] MESH_VOCAB_CLASSES = {
         "meshv:AllowedDescriptorQualifierPair",
         "meshv:CheckTag",
@@ -94,7 +96,7 @@ public class QueryTest extends LodeBaseTest {
         example.click();
     }
 
-    @Test(groups="query", dependsOnGroups="basics2")
+    @Test(groups="query", dependsOnGroups="basics")
     public void testDefaults() {
         openQueryPage();
         clickSubmitQuery();
@@ -109,6 +111,8 @@ public class QueryTest extends LodeBaseTest {
             assertThat(link.getText(), is(equalTo(MESH_VOCAB_CLASSES[i])));
             assertThat(link.getAttribute("href"), endsWith(expectedEnding));
         }
+
+        shouldBeValidLinks(driver.findElements(By.cssSelector(FOR_LODESTAR_RESULT_LINKS)));
     }
 
     @Test(groups="query", dependsOnMethods={"testDefaults"})
@@ -127,6 +131,8 @@ public class QueryTest extends LodeBaseTest {
             assertThat(link.getText(), is(equalTo(MESH_VOCAB_CLASSES[i])));
             assertThat(link.getAttribute("href"), endsWith(expectedEnding));
         }
+
+        shouldBeValidLinks(driver.findElements(By.cssSelector(FOR_LODESTAR_RESULT_LINKS)));
     }
 
     @Test(groups="query", dependsOnMethods={"testDefaults"})
@@ -153,6 +159,8 @@ public class QueryTest extends LodeBaseTest {
             }
         }
         assertEquals(numMatched, EX1_CHECKED_RESULTS.length);
+
+        shouldBeValidLinks(driver.findElements(By.cssSelector(FOR_LODESTAR_RESULT_LINKS)));
     }
 
     @Test(groups="query", dependsOnMethods={"testDefaults"})
@@ -194,6 +202,8 @@ public class QueryTest extends LodeBaseTest {
             assertTrue(amatch, "Unexpected pharmalogical action on example query 2");
         }
         assertEquals(numMatched, EX2_CHECKED_RESULTS.length);
+
+        shouldBeValidLinks(driver.findElements(By.cssSelector(FOR_LODESTAR_RESULT_LINKS)));
     }
 
     @Test(groups="query", dependsOnMethods={"testDefaults"})
@@ -229,6 +239,8 @@ public class QueryTest extends LodeBaseTest {
             }
         }
         assertEquals(numMatched, EX3_PAGE1_CHECKED_RESULTS.length);
+
+        shouldBeValidLinks(driver.findElements(By.cssSelector(FOR_LODESTAR_RESULT_LINKS)));
     }
 
     @Test(groups="query", dependsOnMethods={"testExample3with2015"})
@@ -381,5 +393,7 @@ public class QueryTest extends LodeBaseTest {
             }
         }
         assertEquals(numMatched, EX4_CHECKED_RESULTS.length);
+
+        shouldBeValidLinks(driver.findElements(By.cssSelector(FOR_LODESTAR_RESULT_LINKS)));
     }
 }
