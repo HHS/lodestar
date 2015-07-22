@@ -13,6 +13,7 @@
 
     <properties>
         <skipWebTests>true</skipWebTests>
+        <testGroups></testGroups>
     </properties>
 
     <dependencies>
@@ -63,15 +64,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!--
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>4.5</version>
-                <scope>test</scope>
-            </dependency>
-        -->
-
     </dependencies>
     <build>
         <finalName>lodestar</finalName>
@@ -83,6 +75,7 @@
                 <configuration>
                     <reportsDirectory>test-output</reportsDirectory>
                     <skipTests>${skipWebTests}</skipTests>
+                    <groups>${testGroups}</groups>
                 </configuration>
             </plugin>
         </plugins>

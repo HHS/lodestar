@@ -14,7 +14,7 @@ import gov.nih.nlm.occs.selenium.SeleniumTest;
 
 public class TitlesAndNavTest extends LodeBaseTest {
 
-  @Test(groups = "basics")
+  @Test(groups = "basics", dependsOnGroups="linkcheck")
   public void testHomePage() {
     openHomePage();
     titleShouldBe("MeSH Linked Data (beta)");
@@ -23,7 +23,7 @@ public class TitlesAndNavTest extends LodeBaseTest {
     shouldBeValidLinks(navi.findElements(By.tagName("a")));
   }
 
-  @Test(groups = "basics")
+  @Test(groups = "basics", dependsOnGroups="linkcheck")
   public void testQueryPagce() {
     openQueryPage();
     titleShouldBe("MeSH SPARQL Explorer (beta)");
@@ -32,7 +32,7 @@ public class TitlesAndNavTest extends LodeBaseTest {
     shouldBeValidLinks(navi.findElements(By.tagName("a")));
   }
 
-  @Test(groups = "basics")
+  @Test(groups = "basics", dependsOnGroups="linkcheck")
   public void testExplorerPage() {
     openExplorerPage(false);
     titleShouldBe("MeSH RDF Explorer (beta)");
@@ -41,7 +41,7 @@ public class TitlesAndNavTest extends LodeBaseTest {
     shouldBeValidLinks(navi.findElements(By.tagName("a")));
   }
 
-  @Test(groups = "basics")
+  @Test(groups = "basics", dependsOnGroups="linkcheck")
   public void testExplorerYearPage() {
     openExplorerPage(true);
     titleShouldBe("MeSH RDF Explorer (beta)");

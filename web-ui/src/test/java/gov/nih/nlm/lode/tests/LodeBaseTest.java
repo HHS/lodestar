@@ -86,7 +86,7 @@ public class LodeBaseTest extends SeleniumTest {
     try {
       context = new URL(currentBaseUrl);
     } catch (MalformedURLException e) {
-      Reporter.log("MalforcmedURLException: "+currentBaseUrl, true);
+      Reporter.log("MalforcmedURLException: "+currentBaseUrl+"<br>", true);
       haveBadLinks = true;
     }
 
@@ -102,12 +102,12 @@ public class LodeBaseTest extends SeleniumTest {
           HttpURLConnection con = (HttpURLConnection) congeneric;
           int code = con.getResponseCode();
           if (code != 200 && code != 301 && code != 302) {
-            Reporter.log("URL "+href+" returned status code "+con.getResponseCode(), true);
+            Reporter.log("URL "+href+" returned status code "+con.getResponseCode()+"<br>", true);
             haveBadLinks = true;
           }
         }       
       } catch (Exception e) {
-        Reporter.log("URL "+href+" exception: "+e.getMessage(), true);
+        Reporter.log("URL "+href+" exception: "+e.getMessage()+"<br>", true);
         haveBadLinks = true;
       }
     }
