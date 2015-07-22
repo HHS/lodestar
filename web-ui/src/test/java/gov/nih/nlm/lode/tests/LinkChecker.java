@@ -13,8 +13,9 @@ import java.io.IOException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.DefaultRedirectStrategy;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.Header;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -146,9 +147,10 @@ public class LinkChecker {
 
     public void shouldBeValid() {
         URI lastbadlink = null;
-        DefaultHttpClient client = new DefaultHttpClient();
-        if (followRedirects)
-            client.setRedirectStrategy(new DefaultRedirectStrategy());
+        HttpClientBuilder builder = HttpClients.custom();
+        if (!followRedirects)
+            builder.disableRedirectHandling();
+        CloseableHttpClient client = builder.build();
         for (URI link : links) {
             HttpGet request = new HttpGet(link);
             // set any request headers
@@ -187,6 +189,11 @@ public class LinkChecker {
         }
         if (null != lastbadlink) {
             fail(String.format("one or more bad links, last bad link %s", lastbadlink));
+        }
+        try {
+            client.close();
+        } catch (IOException e) {
+            // DO NOTHING
         }
     }
 }
