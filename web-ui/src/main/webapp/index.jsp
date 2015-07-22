@@ -8,27 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE" />
-
-    <!--[if lt IE 9]>
-      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <script data-require="jquery" data-semver="2.1.1" 
-      src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-
-    <!--
-      Bootstrap CSS.  Question [from klortho]: do we need both of these, or is one a
-      minified version of the other?
-      Note these have to be loaded before codemirror, otherwise codemirror gets 
-      confused when placing the cursor.
-    -->
-
-    <link data-require="bootstrap-css" data-semver="3.2.0" rel="stylesheet" 
-          href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
-    <link data-require="bootstrap@*" data-semver="3.2.0" rel="stylesheet" 
-          href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.css" />
-    <script data-require="bootstrap" data-semver="3.2.0" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.js"></script>
-
+    <%@ include file="internal/head.jspf" %>
     <script type="text/javascript">var switchTo5x=true;</script>
     <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
     <script type="text/javascript">
@@ -39,7 +19,6 @@
         hashAddressBar: false, 
         shorten:false});
     </script>
-    <link rel='stylesheet' href='css/style.css' />
     <lodestar:dapscript></lodestar:dapscript>
   </head>
 

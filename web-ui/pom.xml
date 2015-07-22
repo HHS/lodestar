@@ -10,8 +10,13 @@
     <packaging>war</packaging>
     <name>web-ui Maven Webapp</name>
     <url>http://maven.apache.org</url>
-    <dependencies>
 
+    <properties>
+        <skipWebTests>true</skipWebTests>
+        <testGroups></testGroups>
+    </properties>
+
+    <dependencies>
 
         <dependency>
             <groupId>org.springframework</groupId>
@@ -24,7 +29,6 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.16</version>
-
             <scope>runtime</scope>
         </dependency>
 
@@ -48,14 +52,33 @@
         </dependency>
 
         <dependency>
-        <groupId>org.tuckey</groupId>
-        <artifactId>urlrewritefilter</artifactId>
-        <version>4.0.3</version>
+            <groupId>org.tuckey</groupId>
+            <artifactId>urlrewritefilter</artifactId>
+            <version>4.0.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>gov.nih.nlm.occs</groupId>
+            <artifactId>nlm-test-framework</artifactId>
+            <version>2.0.0</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
     <build>
         <finalName>lodestar</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18.1</version>
+                <configuration>
+                    <reportsDirectory>test-output</reportsDirectory>
+                    <skipTests>${skipWebTests}</skipTests>
+                    <groups>${testGroups}</groups>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
     <profiles>
@@ -84,5 +107,12 @@
             </build>
         </profile>
     </profiles>
+
+    <repositories>
+        <repository>
+            <id>mlbbuild</id>
+            <url>http://mlbbuild.nlm.nih.gov:8081/nexus/content/repositories/nlm/</url>
+        </repository>
+    </repositories>
 
 </project>
