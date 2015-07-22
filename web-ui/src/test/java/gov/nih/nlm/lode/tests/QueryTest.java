@@ -316,7 +316,7 @@ public class QueryTest extends LodeBaseTest {
         assertEquals(page1matched, EX3_PAGE1_CHECKED_RESULTS.length);
     }
 
-    @Test(groups="queries", dependsOnMethods={"testExample3with2015"})
+    @Test(groups="query", dependsOnMethods={"testExample3with2015"})
     public void testLimitRows() {
         openQueryPage();
 
@@ -357,7 +357,7 @@ public class QueryTest extends LodeBaseTest {
         assertEquals(numMatched, EX3_PAGE1_CHECKED_RESULTS.length - 1);
     }
 
-    @Test(groups="queries", dependsOnMethods={"testDefaults"}) 
+    @Test(groups="query", dependsOnMethods={"testDefaults"}) 
     public void testExample4() {
         openQueryPage();
         clickOnExampleQuery(4);

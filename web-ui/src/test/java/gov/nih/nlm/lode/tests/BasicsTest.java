@@ -12,7 +12,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import gov.nih.nlm.occs.selenium.SeleniumTest;
 
-public class TitlesAndNavTest extends LodeBaseTest {
+public class BasicsTest extends LodeBaseTest {
 
   @Test(groups = "basics", dependsOnGroups="linkcheck")
   public void testHomePage() {
