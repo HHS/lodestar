@@ -75,44 +75,14 @@ public class LodeBaseTest extends SeleniumTest {
   }
 
   public void shouldBeValidLinks(List<WebElement> links) {
-    shouldBeValidLinks(links, "Found some bad links");
-  }
-
-  public void shouldBeValidLinks(List<WebElement> links, String message) {
-    String currentBaseUrl = getCurrentBaseUrl();
-    Boolean haveBadLinks = false;
-
-    URL context = null;
-    try {
-      context = new URL(currentBaseUrl);
-    } catch (MalformedURLException e) {
-      Reporter.log("MalforcmedURLException: "+currentBaseUrl+"<br>", true);
-      haveBadLinks = true;
-    }
-
-    
-    for (WebElement link : links) {     
+    LinkChecker linkcheck = new LinkChecker(getCurrentBaseUrl());
+    linkcheck.addRequestHeader("Accept", "text/html");
+    for (WebElement link : links) {
       String tag = link.getTagName();
       String href = (tag.equalsIgnoreCase("script") || tag.equalsIgnoreCase("img") ? link.getAttribute("src") : link.getAttribute("href"));
-
-      try {
-        URL fullref = new URL(context, href);
-        URLConnection congeneric = fullref.openConnection();
-        if (congeneric instanceof HttpURLConnection) {
-          HttpURLConnection con = (HttpURLConnection) congeneric;
-          int code = con.getResponseCode();
-          if (code != 200 && code != 301 && code != 302) {
-            Reporter.log("URL "+href+" returned status code "+con.getResponseCode()+"<br>", true);
-            haveBadLinks = true;
-          }
-        }       
-      } catch (Exception e) {
-        Reporter.log("URL "+href+" exception: "+e.getMessage()+"<br>", true);
-        haveBadLinks = true;
-      }
+      linkcheck.add(href);
     }
-
-    assertFalse(haveBadLinks, message);
+    linkcheck.shouldBeValid();
   }
 
   public void openHomePage() {   

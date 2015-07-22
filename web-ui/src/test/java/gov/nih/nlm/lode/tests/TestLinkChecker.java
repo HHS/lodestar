@@ -64,6 +64,13 @@ public class TestLinkChecker {
     assertThat(message, endsWith(BADLINK));
   }
 
+  @Test(groups = "linkcheck")
+  public void testSkipsFtpLinks() {
+    LinkChecker links = new LinkChecker(NLM_NEWS_BASE_URI);
+    links.add("ftp://ftp.nlm.nih.gov/online/mesh");
+    links.shouldBeValid(); 
+  }
+
   @Test(groups = "linkcheck") 
   public void testSendUserAgent() {
     LinkChecker links = new LinkChecker();

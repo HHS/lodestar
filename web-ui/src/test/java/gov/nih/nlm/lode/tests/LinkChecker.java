@@ -107,13 +107,24 @@ public class LinkChecker {
         }
     }
 
+    public void add(URL url) {
+        String protocol = url.getProtocol();
+        if (protocol.equals("http") || protocol.equals("https")) {
+            try {
+                links.add(url.toURI());
+            } catch(URISyntaxException e) {
+                fail("url '"+url.toString()+"' is not valid");    
+            }
+        } else {
+            Reporter.log(String.format("<b>warning:</b> cannot check %s<br>", url.toString()));
+        }
+    }
+
     public void add(String urlspec) {
         try {
             URL url = (this.context != null ? new URL(this.context, urlspec) : new URL(urlspec));
-            links.add(url.toURI());
+            add(url);
         } catch (MalformedURLException e) {
-            fail("url specification '"+urlspec+"' is not valid");
-        } catch (URISyntaxException e) {
             fail("url specification '"+urlspec+"' is not valid");
         }
     }
@@ -127,10 +138,8 @@ public class LinkChecker {
         }
         try {
             URL fullurl = new URL(localContext, urlspec);
-            links.add(fullurl.toURI());
+            add(fullurl);
         } catch (MalformedURLException e) {
-            fail("url specification '"+urlspec+"' is not valid");
-        } catch (URISyntaxException e) {
             fail("url specification '"+urlspec+"' is not valid");
         }
     }
@@ -160,7 +169,7 @@ public class LinkChecker {
                 // must be a "successful" response code
                 int code = response.getStatusLine().getStatusCode();
                 if (code < 200 || code >= 300) {
-                    Reporter.log(String.format("%s: status code %d, not successful", link, code));
+                    Reporter.log(String.format("%s: status code %d, not successful<br>", link, code));
                     lastbadlink = link;
                 } else {
                     // should have correct values for expected response headers
