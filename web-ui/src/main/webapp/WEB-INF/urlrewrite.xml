@@ -147,6 +147,12 @@
       <to>/servlet/explore?id=$1&amp;format=$2</to>
   </rule>
 
+  <rule>
+      <name>vocab-to-ttl-file</name>
+      <from casesensitive="true">^/vocab(#.*)?$</from>
+      <to type="redirect">vocabulary.ttl</to>
+  </rule>
+
 <!--
     <rule>
       <name>commented-1</name>
