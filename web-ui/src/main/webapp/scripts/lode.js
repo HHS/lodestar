@@ -87,7 +87,7 @@ function _parseOptions(options) {
     var _options = $.extend({
         'resource_prefix': '',
         'servlet_base': 'servlet',
-        'query_servlet_name': 'query',
+        'query_servlet_name': 'sparql',
         'explore_servlet_name': 'explore',
         'results_per_page' : 50,
         'inference' : true,
@@ -105,8 +105,7 @@ function _parseOptions(options) {
     }, options);
 
     lodestarResourcePrefix = _options.resource_prefix;
-    lodestarQueryService = _options.resource_prefix + _options.servlet_base + "/" + 
-        _options.query_servlet_name;
+    lodestarQueryService = _options.resource_prefix + _options.query_servlet_name;
     lodestarExploreService = _options.resource_prefix + _options.servlet_base + "/" + 
         _options.explore_servlet_name;
     lodestarResultsPerPage = _options.results_per_page;
