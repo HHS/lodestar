@@ -8,7 +8,7 @@ import static org.testng.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class TestLinkChecker {
+public class LinkCheckerTest {
 
     public static final String NLM_NEWS_BASE_URI = "http://www.nlm.nih.gov/news/";
 
