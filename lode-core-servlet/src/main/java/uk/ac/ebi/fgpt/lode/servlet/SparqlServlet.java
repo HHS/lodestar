@@ -109,6 +109,7 @@ public class SparqlServlet {
         log.trace("querying for graph rdf+xml");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
+            // TODO set content-disposition header
             sparqlService.getServiceDescription(out, "RDF/XML");
         }
         else {
@@ -130,6 +131,7 @@ public class SparqlServlet {
         log.trace("querying for graph rdf+n3");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
+            // TODO set content-disposition header
             sparqlService.getServiceDescription(out, "N3");
         }
         else {
@@ -151,6 +153,7 @@ public class SparqlServlet {
         log.trace("querying for graph rdf+json");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
+            // TODO set content-disposition header
             sparqlService.getServiceDescription(out, "JSON-LD");
         }
         else {
@@ -173,6 +176,7 @@ public class SparqlServlet {
         response.setContentType("text/plain");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
+            // TODO set content-disposition header
             getSparqlService().getServiceDescription(out, "N-TRIPLES");
         }
         else {
@@ -194,7 +198,7 @@ public class SparqlServlet {
         log.trace("querying for graph turtle");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
-            sparqlService.getServiceDescription(out, "x-turtle");
+            sparqlService.getServiceDescription(out, "TURTLE");
         }
         else {
             getSparqlService().query(
@@ -242,9 +246,19 @@ public class SparqlServlet {
         ServletOutputStream out = response.getOutputStream();
 
         if (query == null) {
-            // TODO: based on above code, why not "application/rdf+xml" ?
-            response.setContentType("text/plain");
-            getSparqlService().getServiceDescription(out, "N3");
+            // Default to format N3 unless an acceptable format is given
+            if (format == null || !(format.equals("TURTLE") 
+                    || format.equals("N-TRIPLES") 
+                    || format.equals("JSON-LD") 
+                    || format.equals("N3") 
+                    || format.equals("RDF/XML"))) {
+                response.setContentType("text/plain");
+                getSparqlService().getServiceDescription(out, "N3");
+            } else {
+                // TODO set content-disposition header
+                response.setContentType( getMimeType(format) );
+                getSparqlService().getServiceDescription(out, format);
+            }
             out.close();
             return;
         }
