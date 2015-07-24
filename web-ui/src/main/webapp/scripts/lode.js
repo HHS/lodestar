@@ -806,7 +806,7 @@ function _formatURI (node, varName) {
 
 function _hrefBuilder(uri, label, internal) {
 
-    var internalHref = "./describe?uri=" + encodeURIComponent(uri);
+    var internalHref = lodestarDescribeUrl + "?uri=" + encodeURIComponent(uri);
     var className = 'graph-link';
 
     var linkSpan  = $('<span/>');
@@ -1218,7 +1218,7 @@ function renderShortDescription (element) {
 
                 }
                 if (data.datasetUri) {
-                    var propertyP = $("<a style='font-weight: bold;' title='http://rdfs.org/ns/void#inDataset' href='describe?uri=" + 
+                    var propertyP = $("<a style='font-weight: bold;' title='http://rdfs.org/ns/void#inDataset' href='"+loadstarDescribeUrl+"?uri=" + 
                         encodeURIComponent("http://rdfs.org/ns/void#inDataset") + "'>Dataset</a>");
                     p.append(propertyP);
                     p.append(" : ");
@@ -1322,7 +1322,7 @@ function renderRelatedToObjects(element) {
                         var propertyLabel = data[x].propertyLabel;
                         var propertyUri = data[x].propertyUri;
 
-                        var propertyP = $("<a style='font-weight: bold;' href='describe?uri=" + encodeURIComponent(propertyUri) + "'>"+  propertyLabel +"</a>");
+                        var propertyP = $("<a style='font-weight: bold;' href='"+lodestarDescribeUrl+"?uri=" + encodeURIComponent(propertyUri) + "'>"+  propertyLabel +"</a>");
 
                         div.append(propertyP);
 
@@ -1351,10 +1351,10 @@ function renderRelatedToObjects(element) {
                             }
                             else {
                                 if (maxReached) {
-                                    list.append("<li style='display:none'><a href='describe?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
+                                    list.append("<li style='display:none'><a href='"+lodestarDescribeUrl+"?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
                                 }
                                 else {
-                                    list.append("<li><a href='describe?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
+                                    list.append("<li><a href='"+lodestarDescribeUrl+"?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
                                 }
                             }
                         }
@@ -1374,7 +1374,7 @@ function renderRelatedToObjects(element) {
                                 typelist.append("\""+  typeLabel +"\"");
                             }
                             else {
-                                typelist.append("<a href='describe?uri=" + encodeURIComponent(typeUri) + "'>"+  typeLabel +"</a>");
+                                typelist.append("<a href='"+lodestarDescribeUrl+"?uri=" + encodeURIComponent(typeUri) + "'>"+  typeLabel +"</a>");
                             }
                             if (data[x].relatedObjectTypes.length > y+1) {
                                 typelist.append(", ")
@@ -1443,7 +1443,7 @@ function renderRelatedFromSubjects(element) {
                             var typeUri = data[x].relatedObjectTypes[y].uri;
                             var typeLabel = data[x].relatedObjectTypes[y].label;
                             var typeDesc = data[x].relatedObjectTypes[y].description;
-                            typelist.append("<a title='"+ typeUri + "' href='describe?uri=" + encodeURIComponent(typeUri) + "'>"+  typeLabel +"</a>");
+                            typelist.append("<a title='"+ typeUri + "' href='"+lodestarDescribeUrl+"?uri=" + encodeURIComponent(typeUri) + "'>"+  typeLabel +"</a>");
                             if (data[x].relatedObjectTypes.length > y+1) {
                                 typelist.append(", ")
                             }
@@ -1453,7 +1453,7 @@ function renderRelatedFromSubjects(element) {
                         }
 
                         div.append(typelist);
-                        var propertyP = $("<a style='font-weight: bold;' href='describe?uri=" + encodeURIComponent(propertyUri) + "'>"+  propertyLabel +"</a>");
+                        var propertyP = $("<a style='font-weight: bold;' href='"+lodestarDescribeUrl+"?uri=" + encodeURIComponent(propertyUri) + "'>"+  propertyLabel +"</a>");
                         div.append(propertyP)
 
                         var list = $('<ul></ul>');
@@ -1481,10 +1481,10 @@ function renderRelatedFromSubjects(element) {
                             }
                             else {
                                 if (maxReached) {
-                                    list.append("<li style='display:none'><a href='describe?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
+                                    list.append("<li style='display:none'><a href='"+lodestarDescribeUrl+"?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
                                 }
                                 else {
-                                    list.append("<li><a href='describe?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
+                                    list.append("<li><a href='"+lodestarDescribeUrl+"?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
                                 }
                             }
                         }
@@ -1514,8 +1514,8 @@ function renderXML(uri) {
         var queryString = match_query ? match_query[1] : '';
         if (queryString.match(/uri=/)) {
             var param = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
-            location.href = lodestarQueryService + "?query=" + 
-                encodeURIComponent("describe<" + param + ">") + "&format=RDF/XML";
+            location.href = lodestarQueryService + "?query=" + lodestarDescribeUrl + 
+                encodeURIComponent("<" + param + ">") + "&format=RDF/XML";
         }
     }
 }
@@ -1531,8 +1531,8 @@ function renderN3(uri) {
         var queryString = match_query ? match_query[1] : '';
         if (queryString.match(/uri=/)) {
             var param = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
-            location.href = lodestarQueryService + "?query=" + 
-                encodeURIComponent("describe<" + param + ">") + "&format=N3";
+            location.href = lodestarQueryService + "?query=" + lodestarDescribeUrl + 
+                encodeURIComponent("<" + param + ">") + "&format=N3";
         }
     }
 }
@@ -1548,8 +1548,8 @@ function renderJson(uri) {
         var queryString = match_query ? match_query[1] : '';
         if (queryString.match(/uri=/)) {
             var param = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
-            location.href = lodestarQueryService + "?query=" + 
-                encodeURIComponent("describe<" + param + ">") + "&format=JSON-LD";
+            location.href = lodestarQueryService + "?query=" + lodestarDescribeUrl +
+                encodeURIComponent("<" + param + ">") + "&format=JSON-LD";
         }
     }
 }
