@@ -14,7 +14,7 @@ import gov.nih.nlm.occs.selenium.SeleniumTest;
 
 public class BasicsTest extends LodeBaseTest {
 
-  @Test(groups = "basics", dependsOnGroups="linkcheck")
+  @Test(groups = "basics")
   public void testHomePage() {
     openHomePage();
     titleShouldBe("MeSH Linked Data (beta)");
@@ -23,7 +23,7 @@ public class BasicsTest extends LodeBaseTest {
     shouldBeValidLinks(navi.findElements(By.tagName("a")));
   }
 
-  @Test(groups = "basics", dependsOnGroups="linkcheck")
+  @Test(groups = "basics")
   public void testQueryPagce() {
     openQueryPage();
     titleShouldBe("MeSH SPARQL Explorer (beta)");
@@ -32,7 +32,7 @@ public class BasicsTest extends LodeBaseTest {
     shouldBeValidLinks(navi.findElements(By.tagName("a")));
   }
 
-  @Test(groups = "basics", dependsOnGroups="linkcheck")
+  @Test(groups = "basics")
   public void testExplorerPage() {
     openExplorerPage(false);
     titleShouldBe("MeSH RDF Explorer (beta)");
@@ -41,7 +41,7 @@ public class BasicsTest extends LodeBaseTest {
     shouldBeValidLinks(navi.findElements(By.tagName("a")));
   }
 
-  @Test(groups = "basics", dependsOnGroups="linkcheck")
+  @Test(groups = "basics")
   public void testExplorerYearPage() {
     openExplorerPage(true);
     titleShouldBe("MeSH RDF Explorer (beta)");
@@ -49,5 +49,22 @@ public class BasicsTest extends LodeBaseTest {
     WebElement navi = navigationShouldBeValid();
     shouldBeValidLinks(navi.findElements(By.tagName("a")));
   }
+
+  @Test(groups = "basics")
+  public void testVocabularyFile() {
+    LinkChecker vocablink = new LinkChecker();
+    vocablink.add(getLodeBaseUrl()+"/vocabulary.ttl");
+    vocablink.shouldMatchContentType("^text/turtle");
+    vocablink.shouldBeValid();
+  }
+
+  @Test(groups = "basics")
+  public void testVocabularyRedirect() {
+    LinkChecker vocablink = new LinkChecker();
+    vocablink.add(getLodeBaseUrl()+"/vocab#CheckTag");
+    vocablink.shouldMatchContentType("^text/turtle");
+    vocablink.shouldBeValid();
+  }
+
 
 }

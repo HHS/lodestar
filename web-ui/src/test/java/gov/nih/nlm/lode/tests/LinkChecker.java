@@ -55,6 +55,10 @@ public class LinkChecker {
         this(context, true);
     }
 
+    public LinkChecker(boolean followRedirects) {
+        this(null, followRedirects);
+    }
+
     public LinkChecker(String context, boolean followRedirects) {
         this.followRedirects = followRedirects;
         if (context == null) {

@@ -15,42 +15,42 @@ import gov.nih.nlm.occs.selenium.SeleniumTest;
 
 public class PagelinksTest extends LodeBaseTest {
 
-  @Test(groups = "pagelinks", dependsOnGroups={"basics"})
+  @Test(groups = "pagelinks")
   public void testHomeScriptTags() {
     openHomePage();
     List<WebElement> links = driver.findElements(By.xpath("//script[@src]"));
     shouldBeValidLinks(links);
   }
 
-  @Test(groups = "pagelinks", dependsOnGroups={"basics"})
+  @Test(groups = "pagelinks")
   public void testHomeLinkTags() {
     openHomePage();
     List<WebElement> links = driver.findElements(By.xpath("//head/link[@src]"));
     shouldBeValidLinks(links);
   }
 
-  @Test(groups = "pagelinks", dependsOnGroups={"basics"})
+  @Test(groups = "pagelinks")
   public void testHomeBodyLinks() {
     openHomePage();
     List<WebElement> links = driver.findElements(By.xpath("//a[@href!='#']"));
     shouldBeValidLinks(links);
   }
 
-  @Test(groups="pagelinks", dependsOnGroups={"basics"})
+  @Test(groups="pagelinks")
   public void testExplorerScriptTags() {
     openExplorerPage(false);
     List<WebElement> links = driver.findElements(By.xpath("//script[@src]"));
     shouldBeValidLinks(links);
   }
 
-  @Test(groups="pagelinks", dependsOnGroups={"basics"})
+  @Test(groups="pagelinks")
   public void testExplorerlinkTags() {
     openExplorerPage(false);
     List<WebElement> links = driver.findElements(By.xpath("//head/link[@src]"));
     shouldBeValidLinks(links);   
   }
 
-  @Test(groups="pagelinks", dependsOnGroups={"basics"})
+  @Test(groups="pagelinks")
   public void testExplorerLodestarLinks() {
     openExplorerPage(false);
 
@@ -62,7 +62,7 @@ public class PagelinksTest extends LodeBaseTest {
     shouldBeValidLinks(lodeExploreLinks);
   }
 
-  @Test(groups="pagelinks", dependsOnGroups={"basics"})
+  @Test(groups="pagelinks")
   public void testExplorer2015LodestarLinks() {
     openExplorerPage(true);
 
