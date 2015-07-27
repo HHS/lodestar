@@ -24,29 +24,8 @@
   </rule>
 -->
 
-
-  <!--
-    If the user entered a sparql query with the `format` parameter, and that is not "HTML",
-    then direct it to the query servlet.
-  -->
   <rule>
-    <name>sparql-to-servlet-1</name>
-    <condition type='query-string'>format=</condition>
-    <condition name="format" type="parameter" operator="notequal">HTML</condition>
-    <from casesensitive="true">^/sparql(.*)$</from>
-    <to>/servlet/query$1</to>
-  </rule>
-
-  <rule>
-    <name>sparql-to-jsp-1</name>
-    <condition name="Accept" type="header">(text/html|\*/\*)</condition>
-    <from casesensitive="true">^/sparql$</from>
-    <to last='true'>/query.jsp</to>
-  </rule>
-
-  <rule>
-    <name>sparql-to-servlet-2</name>
-    <condition name="Accept" type="header" operator="notequal">(text/html|\*/\*)</condition>
+    <name>sparql-to-servlet</name>
     <from casesensitive="true">^/sparql(.*)$</from>
     <to>/servlet/query$1</to>
   </rule>
@@ -145,12 +124,6 @@
       <name>describe-token-3</name>
       <from casesensitive="true">^/([ABCDEFGHIJKLMNVZ]\d{2}(?:\.\d+)*)\.(.*)$</from>
       <to>/servlet/explore?id=$1&amp;format=$2</to>
-  </rule>
-
-  <rule>
-      <name>vocab-to-ttl-file</name>
-      <from casesensitive="true">^/vocab(#.*)?$</from>
-      <to type="redirect">vocabulary.ttl</to>
   </rule>
 
 <!--

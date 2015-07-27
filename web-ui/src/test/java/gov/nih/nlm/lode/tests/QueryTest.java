@@ -96,7 +96,7 @@ public class QueryTest extends LodeBaseTest {
         example.click();
     }
 
-    @Test(groups="query", dependsOnGroups="basics")
+    @Test(groups="query")
     public void testDefaults() {
         openQueryPage();
         clickSubmitQuery();

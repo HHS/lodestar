@@ -10,7 +10,7 @@ public enum GraphQueryFormats {
     RDFXML ("RDF/XML", "application/rdf+xml"),
     N3 ("N3", "application/rdf+n3"),
     JSON ("JSON-LD", "application/rdf+json"),
-    TURTLE ("TURTLE", "application/x-turtle");
+    TURTLE ("TURTLE", "text/turtle");
 
     private final String format;
     private final String mimetype;
