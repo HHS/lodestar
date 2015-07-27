@@ -50,27 +50,6 @@ public class SparqlServlet {
         return log;
     }
 
-    public void getServiceDescription(ServletOutputStream out, String format) throws IOException {
-        // collect back-end service description into a string
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        sparqlService.getServiceDescription(baos, format);
-        byte[] bytes = baos.toByteArray();
-
-        // substitute the appropriate end-point
-        String endpoint = System.getenv("LODESTAR_ENDPOINT");
-        if (null != endpoint) {
-            // substitute service description and write
-            log.info("returning service description with custom endpoint "+endpoint);
-            String serviceDescription = new String(bytes);
-            serviceDescription = serviceDescription.replaceAll("http://localhost:8890/sparql", endpoint);
-            out.print(serviceDescription);
-        } else {
-            // write default service description
-            out.write(bytes);
-        }
-
-    }
-
     @RequestMapping (produces="application/sparql-results+xml")
     public @ResponseBody
     void getSparqlXml(
@@ -132,7 +111,7 @@ public class SparqlServlet {
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
             response.setContentType("application/rdf+xml");
-            getServiceDescription(out, "RDF/XML");
+            sparqlService.getServiceDescription(out, "RDF/XML");
         }
         else {
             getSparqlService().query(
@@ -154,7 +133,7 @@ public class SparqlServlet {
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
             response.setContentType("application/rdf+n3");
-            getServiceDescription(out, "N3");
+            sparqlService.getServiceDescription(out, "N3");
         }
         else {
             getSparqlService().query(
@@ -176,7 +155,7 @@ public class SparqlServlet {
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
             response.setContentType("application/rdf+json");
-            getServiceDescription(out, "JSON-LD");
+            sparqlService.getServiceDescription(out, "JSON-LD");
         }
         else {
             getSparqlService().query(
@@ -198,7 +177,7 @@ public class SparqlServlet {
         response.setContentType("text/plain");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
-            getServiceDescription(out, "N-TRIPLES");
+            sparqlService.getServiceDescription(out, "N-TRIPLES");
         }
         else {
             getSparqlService().query(
@@ -220,7 +199,7 @@ public class SparqlServlet {
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
             response.setContentType("text/turtle");
-            getServiceDescription(out, "TURTLE");
+            sparqlService.getServiceDescription(out, "TURTLE");
         }
         else {
             getSparqlService().query(
@@ -275,10 +254,10 @@ public class SparqlServlet {
                     || format.equals("N3") 
                     || format.equals("RDF/XML"))) {
                 response.setContentType("text/plain");
-                getServiceDescription(out, "N3");
+                sparqlService.getServiceDescription(out, "N3");
             } else {
                 response.setContentType( getMimeType(format) );
-                getServiceDescription(out, format);
+                sparqlService.getServiceDescription(out, format);
             }
             out.close();
             return;
