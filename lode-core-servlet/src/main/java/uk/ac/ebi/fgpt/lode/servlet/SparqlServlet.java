@@ -131,6 +131,7 @@ public class SparqlServlet {
         log.trace("querying for graph rdf+xml");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
+            response.setContentType("application/rdf+xml");
             getServiceDescription(out, "RDF/XML");
         }
         else {
@@ -152,6 +153,7 @@ public class SparqlServlet {
         log.trace("querying for graph rdf+n3");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
+            response.setContentType("application/rdf+n3");
             getServiceDescription(out, "N3");
         }
         else {
@@ -173,6 +175,7 @@ public class SparqlServlet {
         log.trace("querying for graph rdf+json");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
+            response.setContentType("application/rdf+json");
             getServiceDescription(out, "JSON-LD");
         }
         else {
@@ -208,7 +211,7 @@ public class SparqlServlet {
         }
     }
 
-    @RequestMapping (produces="application/x-turtle")
+    @RequestMapping (produces="text/turtle")
     public @ResponseBody
     void getGraphTurtle(
             @RequestParam(value = "query", required = false) String query,
@@ -216,6 +219,7 @@ public class SparqlServlet {
         log.trace("querying for graph turtle");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
+            response.setContentType("text/turtle");
             getServiceDescription(out, "TURTLE");
         }
         else {
