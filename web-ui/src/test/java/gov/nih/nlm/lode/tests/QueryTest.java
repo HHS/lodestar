@@ -172,7 +172,7 @@ public class QueryTest extends LodeBaseTest {
 
         // select options
         clickOptionWithinSelect("year", "current");
-        clickOptionWithinSelect("render", "HTML");
+        clickOptionWithinSelect("format", "HTML");
         clickOptionWithinSelect("limit", "50");
 
         // submit the query form
@@ -212,7 +212,7 @@ public class QueryTest extends LodeBaseTest {
 
         clickOnExampleQuery(3);
         clickOptionWithinSelect("year", "2015");
-        clickOptionWithinSelect("render", "HTML");
+        clickOptionWithinSelect("format", "HTML");
         clickOptionWithinSelect("limit", "50");
 
         clickSubmitQuery();
@@ -249,7 +249,7 @@ public class QueryTest extends LodeBaseTest {
 
         clickOnExampleQuery(3);
         clickOptionWithinSelect("year", "2015");
-        clickOptionWithinSelect("render", "HTML");
+        clickOptionWithinSelect("format", "HTML");
         clickOptionWithinSelect("limit", "50");
 
         clickSubmitQuery();
@@ -322,7 +322,7 @@ public class QueryTest extends LodeBaseTest {
 
         clickOnExampleQuery(3);
         clickOptionWithinSelect("year", "2015");
-        clickOptionWithinSelect("render", "HTML");
+        clickOptionWithinSelect("format", "HTML");
         clickOptionWithinSelect("limit", "25");
 
         clickSubmitQuery();
