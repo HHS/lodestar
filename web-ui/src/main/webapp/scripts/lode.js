@@ -309,9 +309,9 @@ function _buildSparqlPage(element) {
 
     section1.append(
         $("<p style='float: right;'></p>")
-          .append( $("<label for='render'>Output: </label>") )
+          .append( $("<label for='format'>Output: </label>") )
           .append(
-              $("<select name='render' id='render'></select>")
+              $("<select name='format' id='format'></select>")
                 .append('<option value="HTML">HTML</option>')
                 .append('<option value="XML">XML</option>')
                 .append('<option value="JSON">JSON</option>')
@@ -464,8 +464,8 @@ function querySparql () {
 
     // GET THE RENDERING
     var rendering = "HTML";
-    if (queryString.match(/render=/)) {
-        rendering = this._betterUnescape(queryString.match(/render=([^&]*)/)[1]);
+    if (queryString.match(/format=/)) {
+        rendering = this._betterUnescape(queryString.match(/format=([^&]*)/)[1]);
     }
 
     sparqlQueryTextArea.setValue(querytext);
