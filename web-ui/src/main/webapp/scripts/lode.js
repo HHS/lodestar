@@ -320,6 +320,7 @@ function _buildSparqlPage(element) {
                 .append('<option value="RDF/XML">RDF/XML</option>')
                 .append('<option value="N3">RDF/N3</option>')
                 .append('<option value="JSON-LD">JSON-LD</option>')
+                .append('<option value="TURTLE">TURTLE</option>')
         )
     );
 
@@ -495,8 +496,11 @@ function querySparql () {
             else if (rendering.match(/N3/)) {
                 location.href = lodestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=N3";
             }
+            else if (rendering.match(/TURTLE/)) {
+                location.href = lodestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=TURTLE";
+            }
             else  {
-                displayError("You can only render graph queries in either HTML, RDF/XML, RDF/JSON or RDF/N3 format")
+                displayError("You can only render graph queries in either HTML, RDF/XML, RDF/JSON, RDF/N3, or TURTLE format")
                 return;
             }
         }
