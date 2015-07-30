@@ -422,6 +422,7 @@ function querySparql () {
     var querytext = null;
     var limit = lodestarResultsPerPage;
     var offset = 0;
+    var year;
     var rdfs = "false";
 
     // if no query just return and wait for one
@@ -445,6 +446,11 @@ function querySparql () {
     if (queryString.match(/offset=/)) {
         offset = this._betterUnescape(queryString.match(/offset=([0-9]*)/)[1]);
         $('#offset').val(offset);
+    }
+
+    if (queryString.match(/year=/)) {
+        year = this._betterUnescape(queryString.match(/year=([^&]*)/)[1]);
+        $('#year').val(year);
     }
 
     if (lodestarRdfsInference) {
