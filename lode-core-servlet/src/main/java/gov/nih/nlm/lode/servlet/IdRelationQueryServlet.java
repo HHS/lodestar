@@ -48,16 +48,16 @@ public class IdRelationQueryServlet extends HttpServlet {
     
       resp.setContentType("text/plain");
       resp.setCharacterEncoding("utf-8");
-      PrintWriter out = null;
+      PrintWriter out = resp.getWriter();
       try {
         // verify arguments
         String id = req.getParameter("id");
-        if (id == null) {
+        if (id == null || id.isEmpty()) {
           id = "T504747";
         }
         
-        String relation = req.getParameter("relationship");
-        if (relation == null) {
+        String relation = req.getParameter("rel");
+        if (relation == null || relation.isEmpty()) {
           relation = "rdfs:label"; 
         }
         
@@ -72,26 +72,34 @@ public class IdRelationQueryServlet extends HttpServlet {
           
         Statement stmt = connection.createStatement();
           
-        String queryFormat  = "SPARQL " 
-            + " define input.inference \"http://id.nlm.nih.gov/mesh/vocab\""
+        String queryFormat  = "SPARQL" 
+            + " define input:inference \"http://id.nlm.nih.gov/mesh/vocab\""
             + " PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
             + " PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
             + " PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>"
             + " PREFIX owl: <http://www.w3.org/2002/07/owl#>"
             + " PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#>"
             + " PREFIX mesh: <http://id.nlm.nih.gov/mesh/>"
-            + " SELECT ?l "
+            + " SELECT ?l"
             + " FROM <http://id.nlm.nih.gov/mesh>"
             + " WHERE { mesh:%s %s ?l }";
         String query = String.format(queryFormat, id, relation);
         log.info(query);
         ResultSet rset = stmt.executeQuery(query);
         if (rset.next()) {
-          String label = rset.getString(1);
+          String label = rset.getNString(1);
           if (null != label) {
-            out.println(label);
+            String delim = "";
+            StringBuilder b = new StringBuilder(label.length()*2);
+            for (int i = 0; i < label.length(); i++) {
+              int c = label.codePointAt(i);
+              b.append(String.format("%s%X", delim, c));
+              delim = ", ";
+            }
+            out.println("\""+label+"\" codepoints ["+b.toString()+"]");
           }
         }
+        out.println();
         rset.close();
         stmt.close();
           
@@ -99,8 +107,6 @@ public class IdRelationQueryServlet extends HttpServlet {
         if (null != connection) {
           connection.close();
         }
-        
-        out.println();
       } 
       catch (SQLException e) {
         log.error("sparql query SQL error", e);

@@ -87,6 +87,17 @@
         <res-auth>Container</res-auth>
     </resource-ref>
 
+    <!-- Test servlet for character issue -->
+    <servlet>
+        <description>Debugs Label Encoding</description>
+        <servlet-name>IdRelationQueryServlet</servlet-name>
+        <servlet-class>gov.nih.nlm.lode.servlet.IdRelationQueryServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>IdRelationQueryServlet</servlet-name>
+        <url-pattern>/labels</url-pattern>
+    </servlet-mapping>
+
     <!-- health status monitoring -->
 
     <!-- Status check servlet -->
