@@ -21,7 +21,7 @@ import java.io.PrintWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class IdRelationQueryServlet extends HttpServlet {
+public class LabelsDiagnosticServlet extends HttpServlet {
   
   private Logger log = LoggerFactory.getLogger(getClass());
 
