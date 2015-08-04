@@ -88,7 +88,7 @@
     </resource-ref>
 
     <!-- Test servlet for character issue -->
-    <servlet>
+    <!-- <servlet>
         <description>Debugs Label Encoding</description>
         <servlet-name>LabelsDiagnosticServlet</servlet-name>
         <servlet-class>gov.nih.nlm.lode.servlet.LabelsDiagnosticServlet</servlet-class>
@@ -96,7 +96,7 @@
     <servlet-mapping>
         <servlet-name>LabelsDiagnosticServlet</servlet-name>
         <url-pattern>/labels</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping> -->
 
     <!-- health status monitoring -->
 
