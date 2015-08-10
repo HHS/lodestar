@@ -24,31 +24,16 @@
   </rule>
 -->
 
-
-  <!--
-    If the user entered a sparql query with the `format` parameter, and that is not "HTML",
-    then direct it to the query servlet.
-  -->
   <rule>
-    <name>sparql-to-servlet-1</name>
-    <condition type='query-string'>format=</condition>
-    <condition name="format" type="parameter" operator="notequal">HTML</condition>
+    <name>sparql-to-servlet</name>
     <from casesensitive="true">^/sparql(.*)$</from>
     <to>/servlet/query$1</to>
   </rule>
 
   <rule>
-    <name>sparql-to-jsp-1</name>
-    <condition name="Accept" type="header">(text/html|\*/\*)</condition>
-    <from casesensitive="true">^/sparql$</from>
+    <name>query-to-jsp</name>
+    <from casesensitive="true">^/query$</from>
     <to last='true'>/query.jsp</to>
-  </rule>
-
-  <rule>
-    <name>sparql-to-servlet-2</name>
-    <condition name="Accept" type="header" operator="notequal">(text/html|\*/\*)</condition>
-    <from casesensitive="true">^/sparql(.*)$</from>
-    <to>/servlet/query$1</to>
   </rule>
 
   <!--
@@ -58,63 +43,63 @@
   <rule>
     <name>token-redirect-html-1</name>
     <condition name="Accept" type="header">(text/html|\*/\*)</condition>
-    <from casesensitive="true">^/([DQMC]\d{4,}(Q\d{4,})?)$</from>
+    <from casesensitive="true">^/([DQMCT]\d{4,}(Q\d{4,})?)$</from>
     <to type="redirect" qsappend="false">$1.html</to>
   </rule>
 
   <rule>
     <name>token-redirect-html-2</name>
     <condition name="Accept" type="header">(text/html|\*/\*)</condition>
-    <from casesensitive="true">^/\d{4,4}/([DQMC]\d{4,}(Q\d{4,})?)$</from>
+    <from casesensitive="true">^/\d{4,4}/([DQMCT]\d{4,}(Q\d{4,})?)$</from>
     <to type="redirect" qsappend="false">$1.html</to>
   </rule>
 
   <!-- mesh/D065609.html -->
   <rule>
     <name>token-html-to-explore-jsp-1</name>
-    <from casesensitive="true">^/[DQMC].*\.html$</from>
+    <from casesensitive="true">^/[DQMCT].*\.html$</from>
     <to>/explore.jsp</to>
   </rule>
 
   <!-- mesh/2015/D065609.html -->
   <rule>
     <name>token-html-to-explore-jsp-2</name>
-    <from casesensitive="true">^/\d{4,4}/[DQMC]\d{4,}(Q\d{4,})?\.html$</from>
+    <from casesensitive="true">^/\d{4,4}/[DQMCT]\d{4,}(Q\d{4,})?\.html$</from>
     <to>/explore.jsp?resource_prefix=..%2F</to>
   </rule>
 
   <rule>
     <name>token-to-explore-servlet-1</name>
     <condition name="Accept" type="header" operator="notequal">(text/html|\*/\*)</condition>
-    <from casesensitive="true">^/([DQMC]\d{4,}(Q\d{4,})?)$</from>
+    <from casesensitive="true">^/([DQMCT]\d{4,}(Q\d{4,})?)$</from>
     <to>/servlet/explore?id=$1</to>
   </rule>
 
   <!-- mesh/D015242.rdf, etc. - we have to make sure $2 is the extension -->
   <rule>
     <name>token-to-explore-servlet-2</name>
-    <from casesensitive="true">^/([DQMC]\d{4,})\.(.*)$</from>
+    <from casesensitive="true">^/([DQMCT]\d{4,})\.(.*)$</from>
     <to>/servlet/explore?id=$1&amp;format=$2</to>
   </rule>
 
   <!-- mesh/2015/D015242.rdf, etc. - we have to make sure $2 is the extension -->
   <rule>
     <name>token-to-explore-servlet-3</name>
-    <from casesensitive="true">^/(\d{4,4}\/[DQMC]\d{4,})\.(.*)$</from>
+    <from casesensitive="true">^/(\d{4,4}\/[DQMCT]\d{4,})\.(.*)$</from>
     <to>/servlet/explore?id=$1&amp;format=$2</to>
   </rule>
 
   <!-- mesh/D015242Q000378.rdf, etc. - we have to make sure $2 is the extension -->
   <rule>
     <name>descqual-to-explore-servlet-1</name>
-    <from casesensitive="true">^/([DQMC]\d{4,}Q\d{4,})\.(.*)$</from>
+    <from casesensitive="true">^/([DQMCT]\d{4,}Q\d{4,})\.(.*)$</from>
     <to>/servlet/explore?id=$1&amp;format=$2</to>
   </rule>
 
   <!-- mesh/2015/D015242Q000378.rdf, etc. - we have to make sure $2 is the extension -->
   <rule>
     <name>descqual-to-explore-servlet-2</name>
-    <from casesensitive="true">^/(\d{4,4}\/[DQMC]\d{4,}Q\d{4,})\.(.*)$</from>
+    <from casesensitive="true">^/(\d{4,4}\/[DQMCT]\d{4,}Q\d{4,})\.(.*)$</from>
     <to>/servlet/explore?id=$1&amp;format=$2</to>
   </rule>
 
@@ -141,11 +126,10 @@
       <to>/servlet/explore?id=$1&amp;format=$2</to>
   </rule>
 
-
   <rule>
-    <name>vocab-to-ttl-file</name>
-    <from casesensitive="true">^/vocab.*$</from>
-    <to type="redirect">http://id.nlm.nih.gov/mesh/schema.owl</to> 
+      <name>vocab-to-ttl-file</name>
+      <from casesensitive="true">^/vocab(#.*)?$</from>
+      <to type="redirect">vocabulary.ttl</to>
   </rule>
 
 <!--

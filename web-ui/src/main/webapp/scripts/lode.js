@@ -87,7 +87,7 @@ function _parseOptions(options) {
     var _options = $.extend({
         'resource_prefix': '',
         'servlet_base': 'servlet',
-        'query_servlet_name': 'query',
+        'query_servlet_name': 'sparql',
         'explore_servlet_name': 'explore',
         'results_per_page' : 50,
         'inference' : true,
@@ -105,8 +105,7 @@ function _parseOptions(options) {
     }, options);
 
     lodestarResourcePrefix = _options.resource_prefix;
-    lodestarQueryService = _options.resource_prefix + _options.servlet_base + "/" + 
-        _options.query_servlet_name;
+    lodestarQueryService = _options.resource_prefix + _options.query_servlet_name;
     lodestarExploreService = _options.resource_prefix + _options.servlet_base + "/" + 
         _options.explore_servlet_name;
     lodestarResultsPerPage = _options.results_per_page;
@@ -310,9 +309,9 @@ function _buildSparqlPage(element) {
 
     section1.append(
         $("<p style='float: right;'></p>")
-          .append( $("<label for='render'>Output: </label>") )
+          .append( $("<label for='format'>Output: </label>") )
           .append(
-              $("<select name='render' id='render'></select>")
+              $("<select name='format' id='format'></select>")
                 .append('<option value="HTML">HTML</option>')
                 .append('<option value="XML">XML</option>')
                 .append('<option value="JSON">JSON</option>')
@@ -321,6 +320,7 @@ function _buildSparqlPage(element) {
                 .append('<option value="RDF/XML">RDF/XML</option>')
                 .append('<option value="N3">RDF/N3</option>')
                 .append('<option value="JSON-LD">JSON-LD</option>')
+                .append('<option value="TURTLE">TURTLE</option>')
         )
     );
 
@@ -349,9 +349,9 @@ function _buildSparqlPage(element) {
             .append(
             $("<select name='limit' id='limit'></select>")
                 .append("<option value='25' selected='selected'>25</option>")
-                .append("<option value'50'>50</option>")
-                .append("<option value'100'>100</option>")
-                .append("<option value'1000'>1000</option>")
+                .append("<option value='50'>50</option>")
+                .append("<option value='100'>100</option>")
+                .append("<option value='1000'>1000</option>")
         )
     );
 
@@ -422,6 +422,7 @@ function querySparql () {
     var querytext = null;
     var limit = lodestarResultsPerPage;
     var offset = 0;
+    var year;
     var rdfs = "false";
 
     // if no query just return and wait for one
@@ -447,6 +448,11 @@ function querySparql () {
         $('#offset').val(offset);
     }
 
+    if (queryString.match(/year=/)) {
+        year = this._betterUnescape(queryString.match(/year=([^&]*)/)[1]);
+        $('#year').val(year);
+    }
+
     if (lodestarRdfsInference) {
         if (queryString.match(/inference=/)) {
             var iv = this._betterUnescape(queryString.match(/inference=([^&]*)/)[1]);
@@ -465,8 +471,8 @@ function querySparql () {
 
     // GET THE RENDERING
     var rendering = "HTML";
-    if (queryString.match(/render=/)) {
-        rendering = this._betterUnescape(queryString.match(/render=([^&]*)/)[1]);
+    if (queryString.match(/format=/)) {
+        rendering = this._betterUnescape(queryString.match(/format=([^&]*)/)[1]);
     }
 
     sparqlQueryTextArea.setValue(querytext);
@@ -496,8 +502,11 @@ function querySparql () {
             else if (rendering.match(/N3/)) {
                 location.href = lodestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=N3";
             }
+            else if (rendering.match(/TURTLE/)) {
+                location.href = lodestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=TURTLE";
+            }
             else  {
-                displayError("You can only render graph queries in either HTML, RDF/XML, RDF/JSON or RDF/N3 format")
+                displayError("You can only render graph queries in either HTML, RDF/XML, RDF/JSON, RDF/N3, or TURTLE format")
                 return;
             }
         }
@@ -806,7 +815,7 @@ function _formatURI (node, varName) {
 
 function _hrefBuilder(uri, label, internal) {
 
-    var internalHref = "./describe?uri=" + encodeURIComponent(uri);
+    var internalHref = lodestarDescribeUrl + "?uri=" + encodeURIComponent(uri);
     var className = 'graph-link';
 
     var linkSpan  = $('<span/>');
@@ -1218,7 +1227,7 @@ function renderShortDescription (element) {
 
                 }
                 if (data.datasetUri) {
-                    var propertyP = $("<a style='font-weight: bold;' title='http://rdfs.org/ns/void#inDataset' href='describe?uri=" + 
+                    var propertyP = $("<a style='font-weight: bold;' title='http://rdfs.org/ns/void#inDataset' href='"+loadstarDescribeUrl+"?uri=" + 
                         encodeURIComponent("http://rdfs.org/ns/void#inDataset") + "'>Dataset</a>");
                     p.append(propertyP);
                     p.append(" : ");
@@ -1322,7 +1331,7 @@ function renderRelatedToObjects(element) {
                         var propertyLabel = data[x].propertyLabel;
                         var propertyUri = data[x].propertyUri;
 
-                        var propertyP = $("<a style='font-weight: bold;' href='describe?uri=" + encodeURIComponent(propertyUri) + "'>"+  propertyLabel +"</a>");
+                        var propertyP = $("<a style='font-weight: bold;' href='"+lodestarDescribeUrl+"?uri=" + encodeURIComponent(propertyUri) + "'>"+  propertyLabel +"</a>");
 
                         div.append(propertyP);
 
@@ -1351,10 +1360,10 @@ function renderRelatedToObjects(element) {
                             }
                             else {
                                 if (maxReached) {
-                                    list.append("<li style='display:none'><a href='describe?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
+                                    list.append("<li style='display:none'><a href='"+lodestarDescribeUrl+"?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
                                 }
                                 else {
-                                    list.append("<li><a href='describe?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
+                                    list.append("<li><a href='"+lodestarDescribeUrl+"?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
                                 }
                             }
                         }
@@ -1374,7 +1383,7 @@ function renderRelatedToObjects(element) {
                                 typelist.append("\""+  typeLabel +"\"");
                             }
                             else {
-                                typelist.append("<a href='describe?uri=" + encodeURIComponent(typeUri) + "'>"+  typeLabel +"</a>");
+                                typelist.append("<a href='"+lodestarDescribeUrl+"?uri=" + encodeURIComponent(typeUri) + "'>"+  typeLabel +"</a>");
                             }
                             if (data[x].relatedObjectTypes.length > y+1) {
                                 typelist.append(", ")
@@ -1443,7 +1452,7 @@ function renderRelatedFromSubjects(element) {
                             var typeUri = data[x].relatedObjectTypes[y].uri;
                             var typeLabel = data[x].relatedObjectTypes[y].label;
                             var typeDesc = data[x].relatedObjectTypes[y].description;
-                            typelist.append("<a title='"+ typeUri + "' href='describe?uri=" + encodeURIComponent(typeUri) + "'>"+  typeLabel +"</a>");
+                            typelist.append("<a title='"+ typeUri + "' href='"+lodestarDescribeUrl+"?uri=" + encodeURIComponent(typeUri) + "'>"+  typeLabel +"</a>");
                             if (data[x].relatedObjectTypes.length > y+1) {
                                 typelist.append(", ")
                             }
@@ -1453,7 +1462,7 @@ function renderRelatedFromSubjects(element) {
                         }
 
                         div.append(typelist);
-                        var propertyP = $("<a style='font-weight: bold;' href='describe?uri=" + encodeURIComponent(propertyUri) + "'>"+  propertyLabel +"</a>");
+                        var propertyP = $("<a style='font-weight: bold;' href='"+lodestarDescribeUrl+"?uri=" + encodeURIComponent(propertyUri) + "'>"+  propertyLabel +"</a>");
                         div.append(propertyP)
 
                         var list = $('<ul></ul>');
@@ -1481,10 +1490,10 @@ function renderRelatedFromSubjects(element) {
                             }
                             else {
                                 if (maxReached) {
-                                    list.append("<li style='display:none'><a href='describe?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
+                                    list.append("<li style='display:none'><a href='"+lodestarDescribeUrl+"?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
                                 }
                                 else {
-                                    list.append("<li><a href='describe?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
+                                    list.append("<li><a href='"+lodestarDescribeUrl+"?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
                                 }
                             }
                         }
@@ -1514,8 +1523,8 @@ function renderXML(uri) {
         var queryString = match_query ? match_query[1] : '';
         if (queryString.match(/uri=/)) {
             var param = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
-            location.href = lodestarQueryService + "?query=" + 
-                encodeURIComponent("describe<" + param + ">") + "&format=RDF/XML";
+            location.href = lodestarQueryService + "?query=" + lodestarDescribeUrl + 
+                encodeURIComponent("<" + param + ">") + "&format=RDF/XML";
         }
     }
 }
@@ -1531,8 +1540,8 @@ function renderN3(uri) {
         var queryString = match_query ? match_query[1] : '';
         if (queryString.match(/uri=/)) {
             var param = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
-            location.href = lodestarQueryService + "?query=" + 
-                encodeURIComponent("describe<" + param + ">") + "&format=N3";
+            location.href = lodestarQueryService + "?query=" + lodestarDescribeUrl + 
+                encodeURIComponent("<" + param + ">") + "&format=N3";
         }
     }
 }
@@ -1548,8 +1557,8 @@ function renderJson(uri) {
         var queryString = match_query ? match_query[1] : '';
         if (queryString.match(/uri=/)) {
             var param = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
-            location.href = lodestarQueryService + "?query=" + 
-                encodeURIComponent("describe<" + param + ">") + "&format=JSON-LD";
+            location.href = lodestarQueryService + "?query=" + lodestarDescribeUrl +
+                encodeURIComponent("<" + param + ">") + "&format=JSON-LD";
         }
     }
 }

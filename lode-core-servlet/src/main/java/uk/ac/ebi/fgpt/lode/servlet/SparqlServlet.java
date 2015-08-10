@@ -18,6 +18,7 @@ import uk.ac.ebi.fgpt.lode.utils.TupleQueryFormats;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -109,6 +110,7 @@ public class SparqlServlet {
         log.trace("querying for graph rdf+xml");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
+            response.setContentType("application/rdf+xml");
             sparqlService.getServiceDescription(out, "RDF/XML");
         }
         else {
@@ -130,6 +132,7 @@ public class SparqlServlet {
         log.trace("querying for graph rdf+n3");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
+            response.setContentType("application/rdf+n3");
             sparqlService.getServiceDescription(out, "N3");
         }
         else {
@@ -151,6 +154,7 @@ public class SparqlServlet {
         log.trace("querying for graph rdf+json");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
+            response.setContentType("application/rdf+json");
             sparqlService.getServiceDescription(out, "JSON-LD");
         }
         else {
@@ -173,7 +177,7 @@ public class SparqlServlet {
         response.setContentType("text/plain");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
-            getSparqlService().getServiceDescription(out, "N-TRIPLES");
+            sparqlService.getServiceDescription(out, "N-TRIPLES");
         }
         else {
             getSparqlService().query(
@@ -186,7 +190,7 @@ public class SparqlServlet {
         }
     }
 
-    @RequestMapping (produces="application/x-turtle")
+    @RequestMapping (produces="text/turtle")
     public @ResponseBody
     void getGraphTurtle(
             @RequestParam(value = "query", required = false) String query,
@@ -194,7 +198,8 @@ public class SparqlServlet {
         log.trace("querying for graph turtle");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
-            sparqlService.getServiceDescription(out, "x-turtle");
+            response.setContentType("text/turtle");
+            sparqlService.getServiceDescription(out, "TURTLE");
         }
         else {
             getSparqlService().query(
@@ -242,9 +247,18 @@ public class SparqlServlet {
         ServletOutputStream out = response.getOutputStream();
 
         if (query == null) {
-            // TODO: based on above code, why not "application/rdf+xml" ?
-            response.setContentType("text/plain");
-            getSparqlService().getServiceDescription(out, "N3");
+            // Default to format N3 unless an acceptable format is given
+            if (format == null || !(format.equals("TURTLE") 
+                    || format.equals("N-TRIPLES") 
+                    || format.equals("JSON-LD") 
+                    || format.equals("N3") 
+                    || format.equals("RDF/XML"))) {
+                response.setContentType("text/plain");
+                sparqlService.getServiceDescription(out, "N3");
+            } else {
+                response.setContentType( getMimeType(format) );
+                sparqlService.getServiceDescription(out, format);
+            }
             out.close();
             return;
         }
