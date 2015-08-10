@@ -36,7 +36,7 @@ public class QueryTest extends LodeBaseTest {
     };
 
     public static final String[][] EX1_CHECKED_RESULTS = {
-        { "meshv:Concept", "/describe?uri=http%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2Fvocab%23Concept" },
+        { "meshv:concept", "/describe?uri=http%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2Fvocab%23concept" },
         { "meshv:abbreviation", "/describe?uri=http%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2Fvocab%23abbreviation" },
         { "meshv:casn1_label", "/describe?uri=http%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2Fvocab%23casn1_label" },
         { "meshv:considerAlso", "/describe?uri=http%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2Fvocab%23considerAlso" },
@@ -143,7 +143,7 @@ public class QueryTest extends LodeBaseTest {
 
         int numMatched = 0;
         List<WebElement> rows = findElements(By.xpath(FOR_LODESTAR_RESULT_ROWS));
-        assertEquals(rows.size(), 47);
+        assertEquals(rows.size(), 46);
         for (WebElement row : rows) {
             WebElement link = row.findElement(By.xpath("td[1]/span/a"));
             String linktext = link.getText();
