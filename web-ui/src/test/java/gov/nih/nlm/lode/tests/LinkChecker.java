@@ -42,6 +42,8 @@ public class LinkChecker {
 
     private URL context;
     private boolean followRedirects;
+    private long delay;
+    private static long defaultDelay = -1;
 
     private List<URI> links = new ArrayList<URI>();
     private List<LinkChecker.RequestCallback> requestCallbacks = new ArrayList<LinkChecker.RequestCallback>();
@@ -70,6 +72,33 @@ public class LinkChecker {
                 fail("context '"+context+"' is not a valid URL");
             }
         }
+        this.delay = getDefaultDelay();
+    }
+
+    public static long getDefaultDelay() {
+        if (defaultDelay < 0) {
+            String delay = System.getenv("LINKCHECK_DELAY");
+            if (delay != null) {
+                try { 
+                    defaultDelay = Long.parseLong(delay);
+                } catch (NumberFormatException e) { 
+                    System.err.println("warning: LINKCHECK_DELAY should be a positive, long integer\n");
+                }
+                if (defaultDelay < 0) {
+                    System.err.println("warning: LINKCHECK_DELAY should be a positive, long integer\n");
+                    defaultDelay = 0;
+                }
+            }
+        }
+        return defaultDelay;
+    }
+
+    public void setDelay(long milliseconds) {
+        delay = milliseconds;
+    }
+
+    public long getDelay() {
+        return delay;
     }
 
     public void addRequestCallback(LinkChecker.RequestCallback callback) {
@@ -188,6 +217,17 @@ public class LinkChecker {
                     response.close();
                 } catch (IOException e) {
                     // DO NOTHING
+                }
+            }
+
+            // sleep for a minimal delay to avoid server throttle
+            long millis = delay;
+            while (millis > 0) {
+                long deadline = System.currentTimeMillis() + millis;
+                try {
+                    Thread.sleep(millis);
+                } catch (InterruptedException e) {
+                    millis = deadline - System.currentTimeMillis();
                 }
             }
         }
