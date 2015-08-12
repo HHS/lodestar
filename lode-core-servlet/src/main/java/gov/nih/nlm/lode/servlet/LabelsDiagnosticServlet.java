@@ -86,7 +86,7 @@ public class LabelsDiagnosticServlet extends HttpServlet {
         String query = String.format(queryFormat, id, relation);
         log.info(query);
         ResultSet rset = stmt.executeQuery(query);
-        if (rset.next()) {
+        while (rset.next()) {
           String label = rset.getNString(1);
           if (null != label) {
             String delim = "";
