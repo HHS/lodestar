@@ -782,12 +782,12 @@ function _formatURI (node, varName) {
     var a = $('<a />');
     a.attr('class', className);
 
-    if (node.value.match(/^http:\/\/id.nlm.nih.gov\//)) {
+    if (node.value.match(/^https?:\/\/id.nlm.nih.gov\//)) {
         if (node.value.match(/\/mesh\/vocab\#/)) {
             href = lodestarDescribeUrl + "?uri=" + encodeURIComponent(node.value);
         }
         else {
-            href = node.value.replace(/http:\/\/id.nlm.nih.gov/, "");            
+            href = node.value.replace(/https?:\/\/id.nlm.nih.gov/, "");            
         }
         a.attr('href', href);
         a.text(text);
@@ -1125,7 +1125,7 @@ function renderAllResourceTypes(element, exclude) {
  */
 function getIdentifier(href) {
     var match = href.match(/\?(.*)/);
-    var formMatch  = href.match(/http:\/\/[^\/]+\/[^\/]+\/([^\.]+)/);
+    var formMatch  = href.match(/https?:\/\/[^\/]+\/[^\/]+\/([^\.]+)/);
     if (match) {
         var queryString = match[1];
         var uriMatch = queryString.match(/uri=([^&]+)/)
