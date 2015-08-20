@@ -88,7 +88,7 @@ public class ExplorerServlet {
         if (id != null && id.length() > 0) {
             String query = "DESCRIBE <http://id.nlm.nih.gov/mesh/" + id + ">";
             log.info("querying for graph rdf+xml");
-            response.setContentType("application/rdf+xml");
+            response.setContentType("application/rdf+xml; charset=utf-8");
             ServletOutputStream out = response.getOutputStream();
             out.println();
             out.println();
@@ -96,7 +96,7 @@ public class ExplorerServlet {
             out.close();
         }
         else {
-	    handleBadUriException(new Exception("Malformed or empty ID request: " + id));
+            handleBadUriException(new Exception("Malformed or empty ID request: " + id));
         }
     }
 
@@ -108,7 +108,7 @@ public class ExplorerServlet {
         if (id != null && id.length() > 0) {
             String query = "DESCRIBE <http://id.nlm.nih.gov/mesh/" + id + ">";
             log.info("querying for graph rdf+n3");
-            response.setContentType("application/rdf+n3");
+            response.setContentType("application/rdf+n3; charset=utf-8");
             ServletOutputStream out = response.getOutputStream();
             out.println();
             out.println();
@@ -128,7 +128,7 @@ public class ExplorerServlet {
         if (id != null && id.length() > 0) {
             String query = "DESCRIBE <http://id.nlm.nih.gov/mesh/" + id + ">";
             log.info("querying for graph rdf+turtle");
-            response.setContentType("application/x-turtle");
+            response.setContentType("application/x-turtle; charset=utf-8");
             ServletOutputStream out = response.getOutputStream();
             out.println();
             out.println();
@@ -148,7 +148,7 @@ public class ExplorerServlet {
         if (id != null && id.length() > 0) {
             String query = "DESCRIBE <http://id.nlm.nih.gov/mesh/" + id + ">";
             log.info("querying for graph rdf+json");
-            response.setContentType("application/rdf+json");
+            response.setContentType("application/rdf+json; charset=utf-8");
             ServletOutputStream out = response.getOutputStream();
             out.println();
             out.println();
@@ -168,7 +168,7 @@ public class ExplorerServlet {
         if (id != null && id.length() > 0) {
             String query = "DESCRIBE <http://id.nlm.nih.gov/mesh/" + id + ">";
             log.info("querying for graph rdf+ntriples");
-            response.setContentType("text/plain");
+            response.setContentType("text/plain; charset=utf-8");
             ServletOutputStream out = response.getOutputStream();
             out.println();
             out.println();

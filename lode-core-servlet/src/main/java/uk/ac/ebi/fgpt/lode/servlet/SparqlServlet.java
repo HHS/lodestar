@@ -110,7 +110,7 @@ public class SparqlServlet {
         log.trace("querying for graph rdf+xml");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
-            response.setContentType("application/rdf+xml");
+            response.setContentType("application/rdf+xml; charset=utf-8");
             sparqlService.getServiceDescription(out, "RDF/XML");
         }
         else {
@@ -132,7 +132,7 @@ public class SparqlServlet {
         log.trace("querying for graph rdf+n3");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
-            response.setContentType("application/rdf+n3");
+            response.setContentType("application/rdf+n3; charset=utf-8");
             sparqlService.getServiceDescription(out, "N3");
         }
         else {
@@ -154,7 +154,7 @@ public class SparqlServlet {
         log.trace("querying for graph rdf+json");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
-            response.setContentType("application/rdf+json");
+            response.setContentType("application/rdf+json; charset=utf-8");
             sparqlService.getServiceDescription(out, "JSON-LD");
         }
         else {
@@ -174,7 +174,7 @@ public class SparqlServlet {
             @RequestParam(value = "query", required = false) String query,
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
         log.trace("querying for graph text/plain (rdf+ntriples)");
-        response.setContentType("text/plain");
+        response.setContentType("text/plain; charset=utf-8");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
             sparqlService.getServiceDescription(out, "N-TRIPLES");
@@ -198,7 +198,7 @@ public class SparqlServlet {
         log.trace("querying for graph turtle");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
-            response.setContentType("text/turtle");
+            response.setContentType("text/turtle; charset=utf-8");
             sparqlService.getServiceDescription(out, "TURTLE");
         }
         else {
@@ -253,10 +253,10 @@ public class SparqlServlet {
                     || format.equals("JSON-LD") 
                     || format.equals("N3") 
                     || format.equals("RDF/XML"))) {
-                response.setContentType("text/plain");
+                response.setContentType("text/plain; charset=utf-8");
                 sparqlService.getServiceDescription(out, "N3");
             } else {
-                response.setContentType( getMimeType(format) );
+                response.setContentType( getMimeType(format));
                 sparqlService.getServiceDescription(out, format);
             }
             out.close();
@@ -277,7 +277,7 @@ public class SparqlServlet {
             }
             else {
                 response.setStatus(406);
-                response.setContentType("text/plain");
+                response.setContentType("text/plain; charset=utf-8");
                 out.println("406 Not Acceptable: Can't handle this query type");
                 out.println("Supported queries are BOOLEAN, SELECT, CONSTRUCT, DESCRIBE, ASK and SERVICE");
                 out.close();
@@ -329,17 +329,17 @@ public class SparqlServlet {
 
         for (GraphQueryFormats gf : GraphQueryFormats.values()) {
             if (format.toUpperCase().equals(gf.toString())) {
-                return gf.toMimeType();
+                return gf.toMimeType()+"; charset=utf-8";
             }
         }
 
         for (TupleQueryFormats tf : TupleQueryFormats.values()) {
             if (format.toUpperCase().equals(tf.toString())) {
-                return tf.toMimeType();
+                return tf.toMimeType()+"; charset=utf-8";
             }
         }
 
-        return "text/plain" ;
+        return "text/plain; charset=utf-8" ;
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
