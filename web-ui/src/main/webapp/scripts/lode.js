@@ -313,14 +313,18 @@ function _buildSparqlPage(element) {
           .append(
               $("<select name='format' id='format'></select>")
                 .append('<option value="HTML">HTML</option>')
+                .append('<optgroup label="SELECT">')
                 .append('<option value="XML">XML</option>')
                 .append('<option value="JSON">JSON</option>')
                 .append('<option value="CSV">CSV</option>')
                 .append('<option value="TSV">TSV</option>')
+                .append('</optgroup>')
+                .append('<optgroup label="DESCRIBE or CONSTRUCT">')
                 .append('<option value="RDF/XML">RDF/XML</option>')
                 .append('<option value="N3">RDF/N3</option>')
                 .append('<option value="JSON-LD">JSON-LD</option>')
                 .append('<option value="TURTLE">TURTLE</option>')
+                .append('</optgroup>')
         )
     );
 
@@ -782,12 +786,12 @@ function _formatURI (node, varName) {
     var a = $('<a />');
     a.attr('class', className);
 
-    if (node.value.match(/^http:\/\/id.nlm.nih.gov\//)) {
+    if (node.value.match(/^https?:\/\/id.nlm.nih.gov\//)) {
         if (node.value.match(/\/mesh\/vocab\#/)) {
             href = lodestarDescribeUrl + "?uri=" + encodeURIComponent(node.value);
         }
         else {
-            href = node.value.replace(/http:\/\/id.nlm.nih.gov/, "");            
+            href = node.value.replace(/https?:\/\/id.nlm.nih.gov/, "");            
         }
         a.attr('href', href);
         a.text(text);
@@ -1125,7 +1129,7 @@ function renderAllResourceTypes(element, exclude) {
  */
 function getIdentifier(href) {
     var match = href.match(/\?(.*)/);
-    var formMatch  = href.match(/http:\/\/[^\/]+\/[^\/]+\/([^\.]+)/);
+    var formMatch  = href.match(/https?:\/\/[^\/]+\/[^\/]+\/([^\.]+)/);
     if (match) {
         var queryString = match[1];
         var uriMatch = queryString.match(/uri=([^&]+)/)

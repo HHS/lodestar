@@ -28,7 +28,7 @@ public class LodeBaseTest extends SeleniumTest {
 
   public String getLodeBaseUrl() {
     if (baseUrl == null || baseUrl.equals("")) {
-      return "http://iddev.nlm.nih.gov/mesh";
+      return "https://iddev.nlm.nih.gov/mesh";
     } else {
       return baseUrl;
     }
