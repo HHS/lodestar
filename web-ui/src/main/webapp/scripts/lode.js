@@ -313,14 +313,18 @@ function _buildSparqlPage(element) {
           .append(
               $("<select name='format' id='format'></select>")
                 .append('<option value="HTML">HTML</option>')
+                .append('<optgroup label="SELECT">')
                 .append('<option value="XML">XML</option>')
                 .append('<option value="JSON">JSON</option>')
                 .append('<option value="CSV">CSV</option>')
                 .append('<option value="TSV">TSV</option>')
+                .append('</optgroup>')
+                .append('<optgroup label="DESCRIBE or CONSTRUCT">')
                 .append('<option value="RDF/XML">RDF/XML</option>')
                 .append('<option value="N3">RDF/N3</option>')
                 .append('<option value="JSON-LD">JSON-LD</option>')
                 .append('<option value="TURTLE">TURTLE</option>')
+                .append('</optgroup>')
         )
     );
 
