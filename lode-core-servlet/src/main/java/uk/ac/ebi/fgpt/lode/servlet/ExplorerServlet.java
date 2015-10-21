@@ -220,12 +220,18 @@ public class ExplorerServlet {
     }
 
 
-    @RequestMapping(value = "/testing", method = RequestMethod.GET)
-    public ModelAndView renderHtmlView(
-            @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
+    @RequestMapping(value = "/jsp", method = RequestMethod.GET)
+    public ModelAndView renderJsp(
+            @RequestParam(value = "id", required = true ) String id,
+            @RequestParam(value = "resource_prefix", required = false) String resource_prefix) throws LodeException {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("testing");
-        mv.addObject("theuri", uri);
+        mv.setViewName("explore");
+        String uri = "http://id.nlm.nih.gov/mesh/"+id;
+        if (resource_prefix == null) {
+            resource_prefix = "";
+        }
+        mv.addObject("uri", uri);
+        mv.addObject("resource_prefix", resource_prefix);
         return mv;
     }
 
