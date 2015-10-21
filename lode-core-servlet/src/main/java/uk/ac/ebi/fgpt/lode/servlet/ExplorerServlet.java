@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.bind.annotation.*;
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.model.ShortResourceDescription;
@@ -219,6 +220,14 @@ public class ExplorerServlet {
     }
 
 
+    @RequestMapping(value = "/testing", method = RequestMethod.GET)
+    public ModelAndView renderHtmlView(
+            @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("testing");
+        mv.addObject("theuri", uri);
+        return mv;
+    }
 
 
     @RequestMapping(value = "/resourceTypes", method = RequestMethod.GET)
