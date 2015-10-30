@@ -45,7 +45,7 @@
             
           <h3>Why MeSH as Linked Data?</h3>
             
-          <p>The MeSH thesaurus is a controlled vocabulary produced by NLM since 1960. NLM uses MeSH in our products and systems for indexing, cataloging, and searching for biomedical and health-related information and documents. The hierarchical structure of the vocabulary permits use at various levels of specificity.  MeSH is also widely used by libraries and other organizations around the world.  Visit the <a href="http://www.nlm.nih.gov/mesh/">MeSH homepage</a> for additional information.</p>
+          <p>The MeSH thesaurus is a controlled vocabulary produced by NLM since 1960. NLM uses MeSH in our products and systems for indexing, cataloging, and searching for biomedical and health-related information and documents. The hierarchical structure of the vocabulary permits use at various levels of specificity. MeSH is also widely used by libraries and other organizations around the world. Visit the <a href="http://www.nlm.nih.gov/mesh/">MeSH homepage</a> for additional information.</p>
                     
           <p>Many national libraries have published authoritative terminologies as Linked Data. Other organizations have already demonstrated a need for MeSH RDF by producing their own versions of the data. NLM will provide the official beta MeSH RDF release.</p>
                     
