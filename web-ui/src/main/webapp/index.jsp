@@ -51,7 +51,7 @@
                     
           <h3>Access MeSH RDF</h3>
             
-          <p>MeSH RDF uses 2016 MeSH data. See the <a href="http://hhs.github.io/meshrdf/release-notes.html">release notes</a> for more details about the most recent release. The data will update nightly.</p>
+          <p>The latest release of MeSH RDF includes the 2016 MeSH data. See the <a href="http://hhs.github.io/meshrdf/release-notes.html">release notes</a> for more details. The data will update nightly.</p>
                     
           <ul>
             <li>Read about <a href="http://hhs.github.io/meshrdf/">MeSH RDF. Documentation includes data model diagrams, sample queries and policy statements.</li>
