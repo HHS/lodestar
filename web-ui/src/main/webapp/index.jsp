@@ -51,10 +51,10 @@
                     
           <h3>Access MeSH RDF</h3>
             
-          <p>MeSH RDF includes the latest MeSH data. See the <a href="http://hhs.github.io/meshrdf/release-notes.html">release notes</a> for more details. The data will update nightly.</p>
+          <p>MeSH RDF uses 2016 MeSH data. See the <a href="http://hhs.github.io/meshrdf/release-notes.html">release notes</a> for more details about the most recent release. The data will update nightly.</p>
                     
           <ul>
-            <li>Read about <a href="http://hhs.github.io/meshrdf/">MeSH RDF. Documentation includes data model diagrams, versioning and acceptable use policies, sample queries and more.</li>
+            <li>Read about <a href="http://hhs.github.io/meshrdf/">MeSH RDF. Documentation includes data model diagrams, sample queries and policy statements.</li>
             <li>Search MeSH RDF directly using the <a href="./query">SPARQL Query</a> interface.&nbsp;&nbsp;&nbsp;*Note - some versions of Internet Explorer may not be supported.</li>
             <li>Integrate MeSH RDF into your programs and services using the <a href="./sparql">SPARQL Endpoint</a>.</li>
             <li>Review <a href="http://hhs.github.io/meshrdf/sample-queries.html">sample queries</a> to get you started.</li>
