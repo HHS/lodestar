@@ -17,6 +17,7 @@ var lodeNamespacePrefixes = {
     owl: 'http://www.w3.org/2002/07/owl#',
     meshv: 'http://id.nlm.nih.gov/mesh/vocab#',
     mesh: 'http://id.nlm.nih.gov/mesh/',
-    mesh2015: 'http://id.nlm.nih.gov/mesh/2015/'
+    mesh2015: 'http://id.nlm.nih.gov/mesh/2015/',
+    mesh2016: 'http://id.nlm.nih.gov/mesh/2016/'
 };
 
