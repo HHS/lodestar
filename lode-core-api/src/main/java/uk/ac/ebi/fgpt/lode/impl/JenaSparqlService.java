@@ -15,6 +15,8 @@ package uk.ac.ebi.fgpt.lode.impl;
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +30,9 @@ import uk.ac.ebi.fgpt.lode.utils.QueryType;
 import uk.ac.ebi.fgpt.lode.utils.TupleQueryFormats;
 
 import java.io.OutputStream;
+import java.util.Map;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 /**
  * @author Simon Jupp
@@ -120,6 +125,31 @@ public class JenaSparqlService implements SparqlService {
 
     public void query(String query, String format, boolean inference, OutputStream output) throws LodeException {
         query(query, format, 0, getMaxQueryLimit(), inference, output);
+    }
+
+    public Map<String,Object> getModelMap(String subjectUri, Map<String,String> uriToKeyMap) throws LodeException {
+        String query = "DESCRIBE <"+subjectUri+">";
+        LinkedHashMap<String,Object> keyToValueMap = new LinkedHashMap<String,Object>();
+
+        Query q1 = QueryFactory.create(query, Syntax.syntaxARQ);
+
+        Model model = getModelForDescribeQuery(q1);
+        if (model != null) {
+            Statement statement;
+            StmtIterator iterator = model.listStatements();
+            while ((statement = iterator.nextStatement()) != null) {
+                String predicateUri = statement.getPredicate().getURI();
+                String keyName = null;
+                if (predicateUri != null && (keyName = uriToKeyMap.get(predicateUri)) != null) {
+                    // TODO: wading through getObject().getLiteral().getDatatypeURI() would be stronger
+                    //       this lacks strong typing.
+                    // TODO: A model could also include multiple labels, in this case we should probably
+                    //       turn the value into an ArrayList and add it.
+                    keyToValueMap.put(keyName, statement.getString());
+                }
+            }
+        }
+        return keyToValueMap;
     }
 
     public void getServiceDescription(OutputStream outputStream, String format) {
@@ -292,6 +322,36 @@ public class JenaSparqlService implements SparqlService {
             }
         }
 
+    }
+
+    private Model getModelForDescribeQuery(Query query) {
+        long startTime = System.currentTimeMillis();
+        log.info("preparing to execute describe query: " + startTime+ "\n" + query.serialize());
+
+        QueryExecution endpoint = null;
+        Graph g = getQueryExecutionService().getDefaultGraph();
+
+        try {
+            endpoint = getQueryExecutionService().getQueryExecution(g, query, false);
+            Model model = endpoint.execDescribe();
+
+            long endTime = System.currentTimeMillis();
+            long elapsedTime = endTime - startTime;
+            log.info("describe query" + startTime + " finished in :" + elapsedTime + " milliseconds");
+            return model;
+        }
+        catch (Exception e) {
+            log.error("Error retrieving results for " + query, e);
+        }
+        finally {
+            if (endpoint !=  null)  {
+                endpoint.close();
+                if (g!=null) {
+                    g.close();
+                }
+            }
+        }
+        return null;
     }
 
 

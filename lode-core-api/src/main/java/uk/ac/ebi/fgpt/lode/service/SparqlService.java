@@ -4,6 +4,7 @@ import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.utils.QueryType;
 
 import java.io.OutputStream;
+import java.util.Map;
 
 /**
  * @author Simon Jupp
@@ -50,6 +51,18 @@ public interface SparqlService {
      * @throws LodeException All exceptions are wrapped in a LodeException
      */
     void query(String query, String format, boolean inference, OutputStream output) throws LodeException;
+
+    /**
+     * Describes a URI and renders the properties found in statements for that model into a simple Map.
+     * Only properties whose URI appears in the uriToKeyMap can appear in the returned map.  If a property URI 
+     * does not appear in any statement within the underyling model, it will not appear in the map.
+     *
+     * @param subjectUri - The URI of the object to describe
+     * @param propertyNames - A map from property URI to key in the modelmap
+     * @return A Map from the key in the model map to the map to the value.   Property names for URIs that did not 
+     * @throws LodeException All exceptions are wrapped in a LodeException
+     */
+    Map<String,Object> getModelMap(String subjectUri, Map<String,String> uriToKeyMap) throws LodeException;
 
     /**
      * Returns a description of the SPARQL endpoint (http://www.w3.org/TR/sparql11-service-description/)

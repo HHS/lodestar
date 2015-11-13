@@ -25,6 +25,7 @@ import uk.ac.ebi.fgpt.lode.model.ExplorerViewConfiguration;
 import uk.ac.ebi.fgpt.lode.model.RelatedResourceDescription;
 import uk.ac.ebi.fgpt.lode.service.ExploreService;
 import uk.ac.ebi.fgpt.lode.service.SparqlService;
+import uk.ac.ebi.fgpt.lode.servlet.LodeNotFoundException;
 import uk.ac.ebi.fgpt.lode.view.DepictionBean;
 
 import javax.servlet.ServletOutputStream;
@@ -219,19 +220,41 @@ public class ExplorerServlet {
         }
     }
 
+    /* TODO: Should factor these out so that Spring can be used */
+    private static final String meshv_prefix = "http://id.nlm.nih.gov/mesh/vocab#";
+    private static final String rdfs_prefix = "http://www.w3.org/2000/01/rdf-schema#";
+    private static final String rdf_prefix = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+    private static final Map<String,String> uri2key;
+    static {
+        HashMap<String,String> m = new HashMap<String,String>();
+        m.put(meshv_prefix + "prefLabel", "label");
+        m.put(rdfs_prefix + "label", "label");
+        m.put(rdf_prefix + "type", "type");
+        m.put(meshv_prefix + "identifier", "id");
+        uri2key = Collections.unmodifiableMap(m);
+    }
+
 
     @RequestMapping(value = "/jsp", method = RequestMethod.GET)
     public ModelAndView renderJsp(
             @RequestParam(value = "id", required = true ) String id,
             @RequestParam(value = "resource_prefix", required = false) String resource_prefix) throws LodeException {
+
         ModelAndView mv = new ModelAndView();
         mv.setViewName("explore");
         String uri = "http://id.nlm.nih.gov/mesh/"+id;
+
+        /*Map<String,Object> model = getSparqlService().getModelMap(uri, uri2key);
+        if (model.get("type") == null) {
+            throw new LodeNotFoundException(uri + " was not found on this server");
+        }
+        */
         if (resource_prefix == null) {
             resource_prefix = "";
         }
         mv.addObject("uri", uri);
         mv.addObject("resource_prefix", resource_prefix);
+        //mv.addAllObjects(model);
         return mv;
     }
 
