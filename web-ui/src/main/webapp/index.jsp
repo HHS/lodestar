@@ -54,7 +54,7 @@
           <p>The latest release of MeSH RDF includes the 2016 MeSH data. See the <a href="https://hhs.github.io/meshrdf/release-notes.html">release notes</a> for more details. The data will update nightly.</p>
                     
           <ul>
-            <li>Read about <a href="http://hhs.github.io/meshrdf/">MeSH RDF. Documentation includes data model diagrams, sample queries and policy statements.</li>
+            <li>Read about <a href="http://hhs.github.io/meshrdf/">MeSH RDF</a>. Documentation includes data model diagrams, sample queries and policy statements.</li>
             <li>Search MeSH RDF directly using the <a href="./query">SPARQL Query</a> interface.&nbsp;&nbsp;&nbsp;*Note - some versions of Internet Explorer may not be supported.</li>
             <li>Integrate MeSH RDF into your programs and services using the <a href="./sparql">SPARQL Endpoint</a>.</li>
             <li>Review <a href="https://hhs.github.io/meshrdf/sample-queries.html">sample queries</a> to get you started.</li>
