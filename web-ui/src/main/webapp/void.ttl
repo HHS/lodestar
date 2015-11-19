@@ -3,6 +3,7 @@
 @prefix freq: <http://purl.org/cld/freq/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix void: <http://rdfs.org/ns/void#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix : <http://id.nlm.nih.gov/mesh/void#> .
@@ -13,7 +14,9 @@
     dcterms:description "This is the VoID description for MeSH RDF datasets.";
     dcterms:creator "U.S. National Library of Medicine" ;
     dcterms:date "2014-11-01"^^xsd:date ;
-    foaf:primaryTopic <http://id.nlm.nih.gov/mesh/void#MeSHRDF> .
+    foaf:primaryTopic <http://id.nlm.nih.gov/mesh/void#MeSHRDF> ;
+    owl:versionInfo "0.9.3" .
+
 
 # Metadata description of the Dataset
 
@@ -54,15 +57,7 @@
     void:exampleResource <http://id.nlm.nih.gov/mesh/D000001> ;
 
 # FTP dump file
-    void:dataDump "ftp://ftp.nlm.nih.gov/online/mesh/2014/desc2014.nt" ;
-    void:dataDump "ftp://ftp.nlm.nih.gov/online/mesh/2014/qual2014.nt" ;
-    void:dataDump "ftp://ftp.nlm.nih.gov/online/mesh/2014/supp2014.nt" ;
+    void:dataDump "ftp://ftp.nlm.nih.gov/online/mesh/mesh.nt" ;
+    void:dataDump "ftp://ftp.nlm.nih.gov/online/mesh/2016/mesh2016.nt" ;
+    void:dataDump "ftp://ftp.nlm.nih.gov/online/mesh/2015/mesh2015.nt" .
 
-# triple count
-    void:triples "16644674"^^xsd:long ;
-
-# entity count
-    void:entities "1925662"^^xsd:long ;
-
-# distinct subject
-    void:distinctSubjects "1925662"^^xsd:long .

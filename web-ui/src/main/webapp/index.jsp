@@ -39,25 +39,25 @@
           
           <p>The National Library of Medicine (NLM) is now offering a beta version of the Medical Subject Headings (MeSH&#174;) data in RDF (Resource Description Framework). RDF is a well-known standard for representing structured data on the Web. Systems that use RDF are often called Linked Data because of RDF emphasis on well-described links between resources.</p>
             
-          <p>During this beta release, NLM is seeking stakeholder input and feedback as part of a broader effort to evaluate the creation of an NLM Linked Data Service. NLM hopes that users will help us refine MeSH RDF.</p>
+          <p>During this beta release, NLM is seeking stakeholder input and feedback as part of a broader effort to evaluate the creation of an NLM Linked Data Service. NLM hopes that users will help us refine MeSH RDF and contribute use cases for future linked data services.</p>
             
-          <p>Once beta testing is finished, NLM will release the authoritative, consistent, and permanent MeSH RDF data, which can be incorporated into systems, products, and the broader Web of Linked Data. NLM will continue to develop tools and services that provide MeSH data based on feedback from the beta period.</p>
+          <p>Once beta testing is finished, NLM will evaluate the results of the testing and the impact of the service for current stakeholders and potential future users.</p>
             
           <h3>Why MeSH as Linked Data?</h3>
             
-          <p>The MeSH thesaurus is a controlled vocabulary produced by NLM since 1960. NLM uses MeSH in our products and systems for indexing, cataloging, and searching for biomedical and health-related information and documents. The hierarchical structure of the vocabulary permits use at various levels of specificity.  MeSH is also widely used by libraries and other organizations around the world.  Visit the <a href="http://www.nlm.nih.gov/mesh/">MeSH homepage</a> for additional information.</p>
+          <p>The MeSH thesaurus is a controlled vocabulary produced by NLM since 1960. NLM uses MeSH in our products and systems for indexing, cataloging, and searching for biomedical and health-related information and documents. It includes Descriptors (main headings), Qualifiers (subheadings), Descriptor/Qualifier pairs, and Supplementary Concept Records (SCRs for controlled terms that are not main headings). The hierarchical structure of the vocabulary permits use at various levels of specificity. MeSH is also widely used by libraries and other organizations around the world. Visit the <a href="http://www.nlm.nih.gov/mesh/">MeSH homepage</a> for additional information.</p>
                     
-          <p>Many national libraries have published authoritative terminologies as Linked Data. Other organizations have already demonstrated a need for MeSH RDF by producing their own versions of the data. NLM will provide the official MeSH RDF release and ensure its maintenance and preservation.</p>
+          <p>Many national libraries have published authoritative terminologies as Linked Data. Other organizations have already demonstrated a need for MeSH RDF by producing their own versions of the data. NLM will provide the official beta MeSH RDF release.</p>
                     
           <h3>Access MeSH RDF</h3>
             
-          <p>On June 18, 2015, NLM produced a second MeSH RDF beta release. This release included an update from 2014 MeSH to 2015 MeSH, schema changes, updates to class and predicate definitions, and bug fixes. See the <a href="http://hhs.github.io/meshrdf/release-notes.html">release notes</a> for more details. It includes Descriptors (main headings), Qualifiers (subheadings), Descriptor/Qualifier pairs, and Supplementary Concept Records (SCRs for controlled terms that are not main headings). The data will update nightly.</p>
+          <p>The latest release of MeSH RDF includes the 2016 MeSH data. See the <a href="https://hhs.github.io/meshrdf/release-notes.html">release notes</a> for more details. The data will update nightly.</p>
                     
           <ul>
-            <li>Read about <a href="http://hhs.github.io/meshrdf/">MeSH RDF and our versioning and acceptable use policies</a>.</li>
+            <li>Read about <a href="http://hhs.github.io/meshrdf/">MeSH RDF. Documentation includes data model diagrams, sample queries and policy statements.</li>
             <li>Search MeSH RDF directly using the <a href="./query">SPARQL Query</a> interface.&nbsp;&nbsp;&nbsp;*Note - some versions of Internet Explorer may not be supported.</li>
             <li>Integrate MeSH RDF into your programs and services using the <a href="./sparql">SPARQL Endpoint</a>.</li>
-            <li>Review <a href="http://hhs.github.io/meshrdf/sample-queries.html">sample queries</a> to get you started.</li>
+            <li>Review <a href="https://hhs.github.io/meshrdf/sample-queries.html">sample queries</a> to get you started.</li>
             <li><a href="ftp://ftp.nlm.nih.gov/online/mesh/">Download</a> the MeSH RDF data.</li>
           </ul>
                 
