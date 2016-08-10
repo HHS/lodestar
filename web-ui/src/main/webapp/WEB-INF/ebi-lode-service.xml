@@ -25,10 +25,7 @@
         <constructor-arg ref="virtuosoDataSourceProvider"/>
     </bean>
 
-    <bean id="virtuosoDataSourceProvider" class="uk.ac.ebi.fgpt.lode.impl.VirtuosoDatasourceProvider">
-        <constructor-arg name="endpointUrl" value="${lode.sparqlendpoint.url}"/>
-        <constructor-arg name="port" value="${lode.sparqlendpoint.port}"/>
-    </bean>
+    <bean id="virtuosoDataSourceProvider" class="uk.ac.ebi.fgpt.lode.impl.VirtuosoDatasourceProvider"/>
 
 
     <!-- An alterate datasource provider that doesn't require JNDI -->
