@@ -19,5 +19,6 @@ var lodeNamespacePrefixes = {
     mesh: 'http://id.nlm.nih.gov/mesh/',
     mesh2015: 'http://id.nlm.nih.gov/mesh/2015/',
     mesh2016: 'http://id.nlm.nih.gov/mesh/2016/'
+    mesh2017: 'http://id.nlm.nih.gov/mesh/2017/'
 };
 
