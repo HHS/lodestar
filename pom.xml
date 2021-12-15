@@ -20,7 +20,7 @@
     <groupId>ebi-lode</groupId>
     <artifactId>ebi-lode</artifactId>
     <packaging>pom</packaging>
-    <version>1.4.1001-SNAPSHOT</version>
+    <version>1.4.1001</version>
     <modules>
         <module>lode-core-api</module>
         <module>lode-virtuoso-impl</module>
@@ -76,7 +76,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.0.0-M2</version>
+                <version>3.0.0-M1</version>
             </plugin>
         </plugins>
         <extensions>
