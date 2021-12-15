@@ -2,7 +2,7 @@
     <parent>
         <artifactId>ebi-lode</artifactId>
         <groupId>ebi-lode</groupId>
-        <version>1.4.2-SNAPSHOT</version>
+        <version>1.4.1001-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>web-ui</artifactId>
@@ -19,16 +19,17 @@
 
         <!-- logging dependencies -->
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
-        <!-- NOTE: Tomcat 7 is providing JSP API 3.0; be careful -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
@@ -36,7 +37,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- NOTE: Tomcat 7 is providing JSP API 2.2; be careful -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jsp-api</artifactId>
@@ -65,6 +65,23 @@
     </dependencies>
     <build>
         <finalName>lodestar</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <configuration>
+                    <cveValidForHours>96</cveValidForHours>
+                    <suppressionFile>${basedir}/suppressions.xml</suppressionFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
     <profiles>
@@ -85,12 +102,11 @@
             </activation>
 
             <build>
-
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-war-plugin</artifactId>
-                        <version>2.1.1</version>
+                        <version>3.2.2</version>
                     </plugin>
                 </plugins>
 
