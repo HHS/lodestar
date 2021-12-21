@@ -20,7 +20,7 @@
     <groupId>ebi-lode</groupId>
     <artifactId>ebi-lode</artifactId>
     <packaging>pom</packaging>
-    <version>1.4.1002-SNAPSHOT</version>
+    <version>1.4.1002</version>
     <modules>
         <module>lode-core-api</module>
         <module>lode-virtuoso-impl</module>
